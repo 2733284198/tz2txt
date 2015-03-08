@@ -1,0 +1,1 @@
+.\tz2txt\tz2txt.py d -t -1 -o dl.txt

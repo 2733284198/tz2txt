@@ -1,0 +1,1 @@
+.\tz2txt\tz2txt.py p -i dl.txt -o bp.txt

@@ -1,0 +1,1 @@
+.\tz2txt\tz2txt.py c -i bp.txt -o final.txt -d ~discard.txt

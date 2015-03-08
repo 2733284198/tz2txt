@@ -1,0 +1,1 @@
+.\tz2txt\tz2txt.py s -i bp.txt
