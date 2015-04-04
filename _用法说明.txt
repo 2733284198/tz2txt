@@ -10,10 +10,10 @@ https://www.python.org/downloads/
 也可以用下面的链接直接下载。如果不清楚是32位还是64位，下载32位即可：
 
 windows 32位版本的Python：
-https://www.python.org/ftp/python/3.4.2/python-3.4.2.msi
+https://www.python.org/ftp/python/3.4.3/python-3.4.3.msi
 
 windows 64位版本的Python：
-https://www.python.org/ftp/python/3.4.2/python-3.4.2.amd64.msi
+https://www.python.org/ftp/python/3.4.3/python-3.4.3.amd64.msi
 
 在安装Python后，执行命令pip install colorama，部分信息将以彩色显示；不执行此命令的话也可以正常运行，但不会显示色彩。
 
