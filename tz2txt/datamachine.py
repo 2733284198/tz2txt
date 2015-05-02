@@ -134,7 +134,7 @@ def internal2_to_bp(all_list, outfile):
         print('无法处理，请检查输入文件是否为编排文本')
         return False
     
-    with open(outfile, 'w', encoding='gbk', errors='replace') as out:
+    with open(outfile, 'w', encoding='gb18030', errors='replace') as out:
         write_list = (to_bp(one) for one in all_list)
         write_buffer = '\n'.join(write_list)
    
@@ -146,7 +146,7 @@ def bp_to_internal2(infile):
     all_list = list()
 
     # 读入编排
-    with open(infile, encoding='gbk', errors='replace') as bp:
+    with open(infile, encoding='gb18030', errors='replace') as bp:
         pattern = red.re_dict(r'<(\d{4}-\d\d-\d\d\s+\d\d:\d\d:\d\d)')
         dt = lambda s:datetime.strptime(s, '%Y-%m-%d  %H:%M:%S')
         
@@ -198,7 +198,7 @@ def bp_to_internal2(infile):
 
             del bptext
         except UnicodeError as e:
-            print('\n文件编码错误，请确保输入文件为GBK编码。')
+            print('\n文件编码错误，请确保输入文件为GBK或GB18030编码。')
             print('异常信息：', e, '\n')
 
     return all_list
@@ -218,7 +218,7 @@ def bp_to_final(infile, outfile, discard=''):
     pattern = red.re_dict(picr)
 
     # 读取编排文本
-    with open(infile, encoding='gbk', errors='replace') as i:
+    with open(infile, encoding='gb18030', errors='replace') as i:
         in_reply = False
         temp = list()
 
@@ -263,7 +263,7 @@ def bp_to_final(infile, outfile, discard=''):
 
             del bptext
         except UnicodeError as e:
-            print('\n文件编码错误，请确保输入文件为GBK编码。')
+            print('\n文件编码错误，请确保输入文件为GBK或GB18030编码。')
             print('异常信息：', e, '\n')
 
     color_p1 = color.fore_color(allcount, color.Fore.YELLOW)
@@ -274,7 +274,7 @@ def bp_to_final(infile, outfile, discard=''):
         info_list.append('\n')
 
     # 写入最终文本
-    with open(outfile, 'w', encoding='gbk', errors='replace') as o:
+    with open(outfile, 'w', encoding='gb18030', errors='replace') as o:
         # 连接
         s_iter = itertools.chain(info_list, text_list)
         s = ''.join(s_iter)
@@ -293,7 +293,7 @@ def bp_to_final(infile, outfile, discard=''):
 
     # 丢弃文本
     if discard and abandon_list:
-        with open(discard, 'w', encoding='gbk', errors='replace') as a:
+        with open(discard, 'w', encoding='gb18030', errors='replace') as a:
             s_iter = itertools.chain(info_list, abandon_list)
             s = ''.join(s_iter)
             a.write(s)
@@ -387,7 +387,7 @@ def internal_to_bp(tz, outfile):
         print('\n没有摘取到回复，不输出文件')
         return 0
 
-    with open(outfile, 'w', encoding='gbk', errors='replace') as o:
+    with open(outfile, 'w', encoding='gb18030', errors='replace') as o:
         o.write(text)
             
     size = os.path.getsize(outfile)
