@@ -1,10 +1,10 @@
 ﻿tz2txt，此工具用于帮助您把<帖子里的楼主发言>转为<纯txt文件>。
 
-本工具已经上传至开源中国社区，要获取最新版本可访问：
-http://git.oschina.net/animalize/tz2txt
+本工具（包括源码）已经上传至GitHub，要获取最新版本可访问：
+https://github.com/animalize/tz2txt
 
 【安装Python】
-此工具用Python编写，必须安装Python运行环境（版本在3.4以上）。到Python官网下载：
+本工具用Python编写，必须安装Python运行环境（版本在3.4以上）。到Python官网下载：
 https://www.python.org/downloads/
 
 也可以用下面的链接直接下载。如果不清楚是32位还是64位，下载32位即可：
