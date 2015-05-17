@@ -21,7 +21,7 @@ from sites import *
 
 tz2txt_prog = 'tz2txt'
 tz2txt_ver = '1.0'
-tz2txt_date = '2015年5月2日'
+tz2txt_date = '2015年5月17日'
 
 # 下载帖子、保存编排
 def download_till(url, pg_count, outfile):
