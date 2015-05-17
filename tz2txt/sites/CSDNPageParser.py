@@ -24,7 +24,6 @@ class CSDNPageParser(AbPageParser):
     def __init__(self):
         super().__init__()
         self.encoding = 'utf-8'
-        # 会在检查解析器时判断版式，1或2
 
     def get_page_num(self):
         '''页号'''
