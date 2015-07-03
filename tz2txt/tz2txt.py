@@ -277,7 +277,7 @@ if __name__ == '__main__':
         else:
             if check_file(args.output):
                 if args.url == '':
-                    url = input('请输入帖子网址(起始下载页)：').strip()
+                    url = input('请输入帖子的某页网址(作为起始下载页)：').strip()
                     print()
                 else:
                     url = args.url
