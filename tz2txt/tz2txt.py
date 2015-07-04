@@ -21,7 +21,7 @@ from sites import *
 
 tz2txt_prog = 'tz2txt'
 tz2txt_ver = '1.0'
-tz2txt_date = '2015年5月17日'
+tz2txt_date = '2015年7月4日'
 
 # 下载帖子、保存编排
 def download_till(url, pg_count, outfile):
@@ -227,7 +227,8 @@ if __name__ == '__main__':
         else:                 
             if check_file(args.output):
                 if args.url == '':
-                    url = input('请输入帖子网址(起始下载页)：').strip()
+                    print('请粘贴(或输入)帖子的某页网址，作为起始下载页。')
+                    url = input('网址：').strip()
                     print()
                 else:
                     url = args.url
@@ -277,7 +278,8 @@ if __name__ == '__main__':
         else:
             if check_file(args.output):
                 if args.url == '':
-                    url = input('请输入帖子的某页网址(作为起始下载页)：').strip()
+                    print('请粘贴(或输入)帖子的某页网址，作为起始下载页。')
+                    url = input('网址：').strip()
                     print()
                 else:
                     url = args.url
