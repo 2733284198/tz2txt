@@ -227,7 +227,7 @@ if __name__ == '__main__':
         else:                 
             if check_file(args.output):
                 if args.url == '':
-                    print('请粘贴(或输入)帖子的某页网址，作为起始下载页。')
+                    print('请粘贴(或输入)帖子的某页网址，作为起始下载页')
                     url = input('网址：').strip()
                     print()
                 else:
@@ -278,7 +278,7 @@ if __name__ == '__main__':
         else:
             if check_file(args.output):
                 if args.url == '':
-                    print('请粘贴(或输入)帖子的某页网址，作为起始下载页。')
+                    print('请粘贴(或输入)帖子的某页网址，作为起始下载页')
                     url = input('网址：').strip()
                     print()
                 else:
