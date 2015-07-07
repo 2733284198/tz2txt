@@ -6,6 +6,7 @@ __all__ = ['SamplePageParser',
            'Tieba1PageParser',
            'CSDNPageParser',
            'cssnPageParser',
+           'kejixunPageParser',
 #===================================
            'SampleProcessor',
            'Tianya1Processor',
