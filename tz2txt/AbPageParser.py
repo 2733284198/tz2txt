@@ -13,16 +13,6 @@ else:
 
 from red import red
 
-# page-parser decorator
-def parser():
-    def pageparser_decorator(cls):
-        if cls not in AbPageParser.registered:
-            AbPageParser.registered.append(cls)
-        else:
-            print('%s already exist in pageparsers' % cls)
-        return cls
-    return pageparser_decorator
-
 class AbPageParser(metaclass=ABCMeta):
     '''页面解析 抽象类'''
 
@@ -186,3 +176,18 @@ class AbPageParser(metaclass=ABCMeta):
             return False
 
         return True
+
+# page-parser decorator
+def parser():
+    def pageparser_decorator(cls):
+        if not issubclass(cls, AbPageParser):
+            print('注册页面解析器时出错，{0}不是AbPageParser的子类'.format(cls))
+            return cls
+        
+        if cls not in AbPageParser.registered:
+            AbPageParser.registered.append(cls)
+        else:
+            print('%s already exist in pageparsers' % cls)
+        return cls
+    return pageparser_decorator
+
