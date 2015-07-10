@@ -5,6 +5,7 @@ from datetime import datetime
 from tzdatastruct import *
 from AbPageParser import *
 
+@parser()
 class Tianya1PageParser(AbPageParser):
     '''天涯页面'''
 
@@ -179,7 +180,3 @@ class Tianya1PageParser(AbPageParser):
 ##            print('-------replys: ', len(replys), '-------')
             
         return replys
-
-
-AbPageParser.register_me(Tianya1PageParser)
-

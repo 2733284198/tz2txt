@@ -1,14 +1,18 @@
 ﻿# coding=utf-8
 
-__all__ = ['SamplePageParser',
-           'Tianya1PageParser',
-           'Sinabbs1PageParser',
-           'Tieba1PageParser',
-           'CSDNPageParser',
-           'cssnPageParser',
-           'kejixunPageParser',
-#===================================
-           'SampleProcessor',
-           'Tianya1Processor',
-           'Sinabbs1Processor',
-           ]
+from glob import glob
+from keyword import iskeyword
+from os.path import dirname, join, split, splitext
+
+basedir = dirname(__file__)
+
+__all__ = []
+for name in glob(join(basedir, '*.py')):
+    module = splitext(split(name)[-1])[0]
+    if not module.startswith('_') and \
+       module.isidentifier() and \
+       not iskeyword(module):
+
+       __import__(__name__+'.'+module)
+       __all__.append(module)
+

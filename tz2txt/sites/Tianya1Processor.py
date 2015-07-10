@@ -16,6 +16,7 @@ re_str = (r'(?:'
           r')'
           )
 
+@processor()
 class Tianya1Processor(BaseProcessor):
 
     # 处理用的正则式list
@@ -188,6 +189,3 @@ class Tianya1Processor(BaseProcessor):
 
         color_p = color.fore_color(quote_count, color.Fore.CYAN)
         print('...处理了{0}条引用'.format(color_p))
-
-
-BaseProcessor.register_me(Tianya1Processor)

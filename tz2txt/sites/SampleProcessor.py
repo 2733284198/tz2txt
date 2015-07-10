@@ -2,6 +2,7 @@
 
 from BaseProcessor import *
 
+@processor()
 class SampleProcessor(BaseProcessor):
 
     # 处理用的正则式list
@@ -37,8 +38,3 @@ class SampleProcessor(BaseProcessor):
     def process_3(self):
         '''自定义处理'''        
         pass
-
-# 注册此自动处理器，参数为自动处理器的类名
-BaseProcessor.register_me(SampleProcessor)
-
-#别忘了把此文件写进__init__.py里

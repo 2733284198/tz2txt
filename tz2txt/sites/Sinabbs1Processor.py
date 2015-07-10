@@ -2,6 +2,7 @@
 
 from BaseProcessor import *
 
+@processor()
 class Sinabbs1Processor(BaseProcessor):
 
     # 处理用的正则式list
@@ -99,9 +100,3 @@ class Sinabbs1Processor(BaseProcessor):
             return True
         else:
             return False
-
-
-# 注册此自动处理器，参数为自动处理器的类名
-BaseProcessor.register_me(Sinabbs1Processor)
-
-#别忘了把此文件写进__init__.py里

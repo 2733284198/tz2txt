@@ -8,6 +8,16 @@ import color
 from red import red
 from tzdatastruct import *
 
+# processor decorator
+def processor():
+    def processor_decorator(cls):
+        if cls not in BaseProcessor.registered:
+            BaseProcessor.registered.append(cls)
+        else:
+            print('%s already exist in processors' % cls)
+        return cls
+    return processor_decorator
+
 class BaseProcessor():
     '''处理器 基类'''
 
@@ -31,15 +41,6 @@ class BaseProcessor():
             return True
         else:
             return False
-
-    @staticmethod
-    def register_me(cls):
-        '''注册自动处理器'''
-        if not issubclass(cls, BaseProcessor):
-            print('注册自动处理器时出错，{0}不是AbPageParser的子类'.format(cls))
-            return
-
-        BaseProcessor.registered.append(cls)
 
     @staticmethod
     def get_processor(local_processor):
@@ -385,6 +386,6 @@ class BaseProcessor():
                                                 )
               )
 
-
-# 注册此自动处理器，用于处理local_processor为null的编排
-BaseProcessor.register_me(BaseProcessor)
+@processor() # 注册NullProcessor为null的处理器
+class NullProcessor(BaseProcessor):
+    pass

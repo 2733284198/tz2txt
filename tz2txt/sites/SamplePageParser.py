@@ -5,6 +5,7 @@ from datetime import datetime
 from tzdatastruct import *
 from AbPageParser import *
 
+@parser()
 class SamplePageParser(AbPageParser):
     '''示例页面解析器'''
 
@@ -42,8 +43,3 @@ class SamplePageParser(AbPageParser):
     def get_replys(self):
         '''返回Reply列表'''
         return None
-
-# 注册此页面解析器，参数为页面解析器的类名
-AbPageParser.register_me(SamplePageParser)
-
-#别忘了把此文件写进__init__.py里
