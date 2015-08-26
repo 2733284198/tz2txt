@@ -7,7 +7,7 @@ from BaseProcessor import nocode
 #     在process(p)函数里进行自定义处理
 #========================================
 
-@nocode() #使用本函数时须注释掉此行
+@nocode #使用本函数时须注释掉此行
 def process(processor):
     '''本函数会在process_3之后、后处理之前被调用'''
     print('>custom.process')

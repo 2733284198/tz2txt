@@ -139,10 +139,9 @@ class Tieba1PageParser(AbPageParser):
             ppp = red.re_dict(ttt)
             if ppp.search(self.html):
                 self.tb_format = 2
-                print('百度贴吧 版式2')
             else:
                 self.tb_format = 1
-                print('百度贴吧 版式1')
+            print('百度贴吧 版式%d' % self.tb_format)
                 
         # 用相应版式的正则式
         if self.tb_format == 1:

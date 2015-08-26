@@ -9,11 +9,9 @@ from red import red
 from tzdatastruct import *
 
 # 装饰器，用于process_x
-def nocode():
-    def set_mark(fn):
-        fn.nocode = True
-        return fn
-    return set_mark
+def nocode(fn):
+    fn.nocode = True
+    return fn
 
 class BaseProcessor():
     '''处理器 基类'''
@@ -182,17 +180,17 @@ class BaseProcessor():
             
         print('...标记了{0}个无法处理引用的回复'.format(color_p))
 
-    @nocode()
+    @nocode
     def process_1(self):
         '''自定义处理1'''
         pass
     
-    @nocode()
+    @nocode
     def process_2(self):
         '''自定义处理2'''
         pass
     
-    @nocode()
+    @nocode
     def process_3(self):
         '''自定义处理3'''
         pass
