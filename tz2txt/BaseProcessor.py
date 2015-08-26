@@ -8,6 +8,13 @@ import color
 from red import red
 from tzdatastruct import *
 
+# 装饰器，用于process_x
+def nocode():
+    def set_mark(fn):
+        fn.nocode = True
+        return fn
+    return set_mark
+
 class BaseProcessor():
     '''处理器 基类'''
 
@@ -175,14 +182,17 @@ class BaseProcessor():
             
         print('...标记了{0}个无法处理引用的回复'.format(color_p))
 
+    @nocode()
     def process_1(self):
         '''自定义处理1'''
         pass
     
+    @nocode()
     def process_2(self):
         '''自定义处理2'''
         pass
     
+    @nocode()
     def process_3(self):
         '''自定义处理3'''
         pass
@@ -195,43 +205,46 @@ class BaseProcessor():
             return
 
         # 预处理
-        print('预处理开始：')
-        t1 = time.perf_counter()
-        self.do_re_list()
-        t2 = time.perf_counter()
-        print('预处理结束，运行了%.5f秒\n' % (t2-t1))
+        if self.re_list != BaseProcessor.re_list:
+            print('预处理开始：')
+            t1 = time.perf_counter()
+            self.do_re_list()
+            t2 = time.perf_counter()
+            print('预处理结束，运行了%.5f秒\n' % (t2-t1))
 
-        print('Process 1开始:')
-        t1 = time.perf_counter()
-        self.process_1()
-        t2 = time.perf_counter()
-        print('Process 1结束，运行了%.5f秒\n' % (t2-t1))
+        if not hasattr(self.process_1, 'nocode'):
+            print('Process 1开始:')
+            t1 = time.perf_counter()
+            self.process_1()
+            t2 = time.perf_counter()
+            print('Process 1结束，运行了%.5f秒\n' % (t2-t1))
         
-        print('Process 2开始:')
-        t1 = time.perf_counter()
-        self.process_2()
-        t2 = time.perf_counter()
-        print('Process 2结束，运行了%.5f秒\n' % (t2-t1))
+        if not hasattr(self.process_2, 'nocode'):
+            print('Process 2开始:')
+            t1 = time.perf_counter()
+            self.process_2()
+            t2 = time.perf_counter()
+            print('Process 2结束，运行了%.5f秒\n' % (t2-t1))
 
-        print('Process 3开始:')
-        t1 = time.perf_counter()
-        self.process_3()
-        t2 = time.perf_counter()
-        print('Process 3结束，运行了%.5f秒\n' % (t2-t1))
-
+        if not hasattr(self.process_3, 'nocode'):
+            print('Process 3开始:')
+            t1 = time.perf_counter()
+            self.process_3()
+            t2 = time.perf_counter()
+            print('Process 3结束，运行了%.5f秒\n' % (t2-t1))
+        
         # custom.py的process(p)函数
-        print('custom.py的process(p)函数开始:')
-        t1 = time.perf_counter()
-        
         try:
             from custom import process as custom_process
         except:
             print('无法import custom.py里的process(p)函数')
         else:
-            custom_process(self)
-            
-        t2 = time.perf_counter()
-        print('custom.py的process(p)函数结束，运行了%.5f秒\n' % (t2-t1))
+            if not hasattr(custom_process, 'nocode'):
+                print('custom.py的process(p)函数开始:')
+                t1 = time.perf_counter()
+                custom_process(self)
+                t2 = time.perf_counter()
+                print('custom.py的process(p)函数结束，运行了%.5f秒\n' % (t2-t1))
 
         # 后处理
         print('后处理开始：')
