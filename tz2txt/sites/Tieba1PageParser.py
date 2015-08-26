@@ -128,15 +128,16 @@ class Tieba1PageParser(AbPageParser):
             r'(?:class="j_reply_data">|date&quot;:&quot;)'
             r'(\d{4}-\d{1,2}-\d{1,2}\s+\d{1,2}:\d{1,2}).*?'
             r'<img\s*username="([^"]+)".*?'
-            r'class="d_post_content\s+j_d_post_content\s+clearfix">'
+            r'class="d_post_content\s+j_d_post_content.*?>'
             r'(.*?)<div\s+class="user-hide-post'
         )
         
         # 检测解析器时确定版式
         if self.tb_format == 0:
 
-            ttt = '''class="d_post_content j_d_post_content  clearfix">'''
-            if ttt in self.html:       
+            ttt = r'''class="d_post_content\s+j_d_post_content\s+clearfix'''
+            ppp = red.re_dict(ttt)
+            if ppp.search(self.html):
                 self.tb_format = 2
                 print('百度贴吧 版式2')
             else:
