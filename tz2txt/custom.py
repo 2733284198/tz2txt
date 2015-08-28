@@ -7,13 +7,13 @@ from BaseProcessor import nocode
 #     在process(p)函数里进行自定义处理
 #========================================
 
-@nocode #使用本函数时须注释掉此行
+@nocode #注释掉此行后，此函数才会生效
 def process(processor):
     '''本函数会在process_3之后、后处理之前被调用'''
     print('>custom.process')
 
-##    # 短引用
-##    short_quote(processor, 30, 30)
+    # 去掉短引用
+    short_quote(processor, 30, 30, 'or')
 
 ##    # 连载过滤
     #regex = r'^[\d一二三四五六七八九十零]{1,3}、?'
@@ -43,20 +43,28 @@ def lianzai_fliter(processor, regex, flags):
 
     print('...选择了{0}条回复作为连载'.format(count))
 
-def short_quote(processor, quote_len, reply_len):
+def short_quote(processor, quote_len, reply_len, logic='and'):
     '''处理短引用'''
     
-    print('>去掉短的引用回复\n...条件:引用部分<{0} 且 回复部分<{1}'.format(
-                                                quote_len,
-                                                reply_len)
-          )
+    # 返回True表示保留，返回False表示去掉
+    def deal_logic(t):
+        if logic == 'or':
+            return t[0] >= quote_len or t[1] >= reply_len
+        else:
+            return t[0] >= quote_len and t[1] >= reply_len
+
+    logic = logic.lower()
+    if logic == 'or':
+        template = '>筛除短引用回复\n...保留:引用部分>={0} 或 回复部分>={1}'
+    else:
+        template = '>筛除短引用回复\n...保留:引用部分>={0} 且 回复部分>={1}'
+    print(template.format(quote_len, reply_len))
     
     len_count = 0
     for i in processor.rlist:
         t = processor.reply_len_quote(i)
-        if t[0] != -1 \
-           and t[0] < quote_len and t[1] < reply_len:
+        if t[0] != -1 and deal_logic(t) == False:
             i.suggest = False
             len_count += 1
-                
+
     print('...去掉{0}条短引用回复'.format(len_count))
