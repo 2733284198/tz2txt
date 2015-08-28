@@ -135,7 +135,8 @@ class Tieba1PageParser(AbPageParser):
         # 检测解析器时确定版式
         if self.tb_format == 0:
 
-            ttt = r'''class="d_post_content\s+j_d_post_content\s+clearfix'''
+            ttt = (r'''class="d_post_content\s+'''
+                   r'''j_d_post_content\s+clearfix\s*"\s*>''')
             ppp = red.re_dict(ttt)
             if ppp.search(self.html):
                 self.tb_format = 2
