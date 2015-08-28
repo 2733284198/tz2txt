@@ -43,21 +43,21 @@ def lianzai_fliter(processor, regex, flags):
 
     print('...选择了{0}条回复作为连载'.format(count))
 
-def short_quote(processor, quote_len, reply_len, logic='and'):
+def short_quote(processor, quote_len, reply_len, logic='or'):
     '''处理短引用'''
     
     # 返回True表示保留，返回False表示去掉
     def deal_logic(t):
-        if logic == 'or':
-            return t[0] >= quote_len or t[1] >= reply_len
-        else:
+        if logic == 'and':
             return t[0] >= quote_len and t[1] >= reply_len
+        else:
+            return t[0] >= quote_len or t[1] >= reply_len
 
     logic = logic.lower()
-    if logic == 'or':
-        template = '>筛除短引用回复\n...保留:引用部分>={0} 或 回复部分>={1}'
-    else:
+    if logic == 'and':
         template = '>筛除短引用回复\n...保留:引用部分>={0} 且 回复部分>={1}'
+    else:
+        template = '>筛除短引用回复\n...保留:引用部分>={0} 或 回复部分>={1}'
     print(template.format(quote_len, reply_len))
     
     len_count = 0
