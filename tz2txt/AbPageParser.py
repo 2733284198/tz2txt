@@ -178,16 +178,14 @@ class AbPageParser(metaclass=ABCMeta):
         return True
 
 # page-parser decorator
-def parser():
-    def pageparser_decorator(cls):
-        if not issubclass(cls, AbPageParser):
-            print('注册页面解析器时出错，{0}不是AbPageParser的子类'.format(cls))
-            return cls
-        
-        if cls not in AbPageParser.registered:
-            AbPageParser.registered.append(cls)
-        else:
-            print('%s already exist in pageparsers' % cls)
+def parser(cls):
+    if not issubclass(cls, AbPageParser):
+        print('注册页面解析器时出错，{0}不是AbPageParser的子类'.format(cls))
         return cls
-    return pageparser_decorator
+    
+    if cls not in AbPageParser.registered:
+        AbPageParser.registered.append(cls)
+    else:
+        print('%s already exist in pageparsers' % cls)
+    return cls
 

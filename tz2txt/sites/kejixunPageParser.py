@@ -6,7 +6,7 @@ from tzdatastruct import *
 from AbPageParser import *
 
 # 科技讯-历史考古
-@parser()
+@parser
 class kejixunPageParser(AbPageParser):
 
     '''示例页面解析器'''

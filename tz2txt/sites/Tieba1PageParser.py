@@ -5,7 +5,7 @@ from datetime import datetime
 from tzdatastruct import *
 from AbPageParser import *
 
-@parser()
+@parser
 class Tieba1PageParser(AbPageParser):
 
     '''示例页面解析器'''

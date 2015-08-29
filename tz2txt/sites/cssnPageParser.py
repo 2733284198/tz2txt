@@ -6,7 +6,7 @@ from tzdatastruct import *
 from AbPageParser import *
 
 # 中国社会科学网
-@parser()
+@parser
 class cssnPageParser(AbPageParser):
 
     '''示例页面解析器'''

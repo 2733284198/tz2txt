@@ -2,7 +2,7 @@
 
 from BaseProcessor import *
 
-@processor()
+@processor
 class SampleProcessor(BaseProcessor):
 
     # 处理用的正则式list

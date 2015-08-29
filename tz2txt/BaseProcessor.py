@@ -388,19 +388,17 @@ class BaseProcessor():
               )
         
 # processor decorator
-def processor():
-    def processor_decorator(cls):
-        if not issubclass(cls, BaseProcessor):
-            print('注册自动处理器时出错，{0}不是BaseProcessor的子类'.format(cls))
-            return cls
-        
-        if cls not in BaseProcessor.registered:
-            BaseProcessor.registered.append(cls)
-        else:
-            print('%s already exist in processors' % cls)
+def processor(cls):
+    if not issubclass(cls, BaseProcessor):
+        print('注册自动处理器时出错，{0}不是BaseProcessor的子类'.format(cls))
         return cls
-    return processor_decorator
+    
+    if cls not in BaseProcessor.registered:
+        BaseProcessor.registered.append(cls)
+    else:
+        print('%s already exist in processors' % cls)
+    return cls
 
-@processor() # 注册NullProcessor为null的处理器
+@processor # 注册NullProcessor为null的处理器
 class NullProcessor(BaseProcessor):
     pass

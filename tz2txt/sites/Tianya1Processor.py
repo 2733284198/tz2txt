@@ -16,7 +16,7 @@ re_str = (r'(?:'
           r')'
           )
 
-@processor()
+@processor
 class Tianya1Processor(BaseProcessor):
 
     # 处理用的正则式list
