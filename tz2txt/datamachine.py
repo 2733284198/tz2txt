@@ -205,6 +205,10 @@ def bp_to_internal2(infile):
 
 def bp_to_final(infile, outfile, discard=''):
     '''编译 编排to最终、丢弃'''
+    def is_not_empty(lst):
+        for i in lst:
+            yield i.strip() != ''
+    
     info_list = list()
     text_list = list()
     
@@ -242,7 +246,7 @@ def bp_to_final(infile, outfile, discard=''):
                         text_list.extend(temp)
                         text_list.append('\n')
                         pickcount += 1
-                    else:
+                    elif any(is_not_empty(temp)):
                         abandon_list.extend(temp)
                         abandon_list.append('∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞\n\n')
                         
