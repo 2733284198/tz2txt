@@ -23,7 +23,7 @@ def main():
     except:
         raise Exception('无法用utf-8解码“版本发布网页”')
     
-    p = r'<title>tz2txt最新版本：([\S]+)'
+    p = r'【最新版本】(.*?)【结束】'
     m = re.search(p, html)
     if not m:
         raise Exception('无法从“版本发布网页”提取最新的版本号')
