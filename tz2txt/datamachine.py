@@ -432,7 +432,9 @@ def web_to_internal(url, pg_count):
             # 检查解析器
             parser.set_page(url, data)
             if not parser.check_parse_methods():
-                print('可能是网页改版，导致无法提取数据。')
+                print(' 可能是网页改版，导致无法提取数据。')
+                print(' 请使用“检测新版本”功能检测是否有新程序可用。')
+                print()
                 break
 
         # 送数据到解析器
