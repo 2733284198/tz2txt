@@ -92,7 +92,7 @@ class Tieba1PageParser(AbPageParser):
             text = p.sub(r'', text)
             
             # 去语音
-            regex = (r'<div class="voice_player voice_player_pb">'
+            regex = (r'<div class="voice_player voice_player_pb'
                      r'.*?'
                      r'</div>\s*'
                      )
