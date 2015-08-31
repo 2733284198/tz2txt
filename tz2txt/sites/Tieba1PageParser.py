@@ -90,7 +90,15 @@ class Tieba1PageParser(AbPageParser):
                      )
             p = red.re_dict(regex, red.IGNORECASE)
             text = p.sub(r'', text)
-
+            
+            # 去语音
+            regex = (r'<div class="voice_player voice_player_pb">'
+                     r'.*?'
+                     r'</div>\s*'
+                     )
+            p = red.re_dict(regex, red.S)
+            text = p.sub(r'【一段语音】\n', text)
+            
             # 去标签
             p = red.re_dict(r'(?!<br\s*/?>|</p>)<[^>]+>', red.I)
             text = p.sub('', text)
