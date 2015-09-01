@@ -37,12 +37,12 @@ def main():
         print('发现新版本：%s' % newver)
         
         answer = input('是否打开浏览器进入下载页面？(输入y打开，否则退出)')
-        if answer.strip().lower() == 'y':           
+        if answer.strip().lower() == 'y': 
             try:
                 webbrowser.open_new_tab(download_url)
             except:
                 s = ('无法调用浏览器打开下载页面。\n'
-                     '请手动打开下载页面： http://pan.baidu.com/s/1ntwkwOD')
+                     '请手动打开下载页面： ' + download_url)
                 raise Exception(s)
 
 if __name__ == '__main__':
