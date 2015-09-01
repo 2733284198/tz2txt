@@ -21,7 +21,7 @@ from sites import *
 
 tz2txt_prog = 'tz2txt'
 tz2txt_ver = '1.2'          # 内部框架的版本
-tz2txt_date = '2015-08-31c'  # 最后更新日期
+tz2txt_date = '2015-09-01'  # 最后更新日期
 
 # 下载帖子、保存编排
 def download_till(url, pg_count, outfile):
@@ -108,8 +108,13 @@ def auto(url, pg_count, outfile, discard):
 
 # 验证url
 def is_url(url):
+    p = red.re_dict(r'^https?://', red.IGNORECASE)
+    if not p.match(url):
+        print('网址须要以http://或https://开头。')
+        return False
+        
     p = red.re_dict(
-        r'^(?:http|ftp)s?://' # http:// or https://
+        r'^https?://' # http:// or https://
         r'(?:(?:[A-Z0-9](?:[A-Z0-9-]{0,61}[A-Z0-9])?\.)+(?:[A-Z]{2,6}\.?|[A-Z0-9-]{2,}\.?)|' #domain...
         r'localhost|' #localhost...
         r'\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})' # ...or ip
