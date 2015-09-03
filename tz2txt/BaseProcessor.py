@@ -141,7 +141,7 @@ class BaseProcessor():
 
         last_reply = None
         reduplicate_list = []
-        r = red.re_dict('^\s*$')
+        r = red.re_dict(r'^\s*$')
 
         # 查找重复
         for rpl in self.rlist:
