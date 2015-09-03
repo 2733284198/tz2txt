@@ -141,10 +141,12 @@ class BaseProcessor():
 
         last_reply = None
         reduplicate_list = []
+        r = red.re_dict('^\s*$')
 
         # 查找重复
         for rpl in self.rlist:
-            if last_reply and last_reply.text == rpl.text:
+            if last_reply and last_reply.text == rpl.text and \
+               not r.match(rpl.text):
                 reduplicate_list.append(rpl)
             last_reply = rpl
 
