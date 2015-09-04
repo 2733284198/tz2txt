@@ -272,9 +272,8 @@ class BaseProcessor():
         print('以下的统计不包括空白、重复和无法处理的回复：\n')
 
         # 排除不想参与统计的回复
+        p_space = red.re_dict(r'^\s*$')
         def should_pick(reply):
-            p_space = red.re_dict(r'^\s*$')
-
             if p_space.match(reply.text):
                 return False
             if reply.text.endswith('【与上一条回复重复】'):
