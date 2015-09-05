@@ -1,3 +1,4 @@
+#! /usr/bin/python3
 # coding=utf-8
 # 本程序用于自动检测最新版本
 

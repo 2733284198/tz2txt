@@ -1,3 +1,4 @@
+#! /usr/bin/python3
 # coding=utf-8
 
 # 使用时from txtformat import txtformat
