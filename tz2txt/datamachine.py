@@ -203,6 +203,19 @@ def bp_to_internal2(infile):
 
     return all_list
 
+def count_chinese(string):
+    '''统计汉字字数'''
+    count = 0
+    for c in string:
+        c = ord(c)
+        # 分别为：CJK统一汉字
+        # CJK统一汉字扩充A、CJK统一汉字扩充B
+        if 0x4E00 <= c <= 0x9FBB or \
+           0x3400 <= c <= 0x4DB5 or \
+           0x20000 <= c <= 0x2A6D6:
+            count += 1
+    return count
+
 def bp_to_final(infile, outfile, discard=''):
     '''编译 编排to最终、丢弃'''
     def is_not_empty(lst):
@@ -291,6 +304,7 @@ def bp_to_final(infile, outfile, discard=''):
         s = red.sub(r'(?:【一张图片(\d+|)】\s+){2}',
                     r'【两张图片\1】\n\n',
                     s)
+        chinese_ct = count_chinese(s)
 
         # 写入
         o.write(s)
@@ -301,6 +315,8 @@ def bp_to_final(infile, outfile, discard=''):
             s_iter = itertools.chain(info_list, abandon_list)
             s = ''.join(s_iter)
             a.write(s)
+            
+    return chinese_ct
 
 def internal_to_bp(tz, outfile):
     '''内部形式 到 编排'''

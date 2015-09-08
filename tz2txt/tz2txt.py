@@ -22,7 +22,7 @@ from sites import *
 
 tz2txt_prog = 'tz2txt'
 tz2txt_ver = '1.2'          # 内部框架的版本
-tz2txt_date = '2015-09-03'  # 最后更新日期
+tz2txt_date = '2015-09-08'  # 最后更新日期
 
 # 下载帖子、保存编排
 def download_till(url, pg_count, outfile):
@@ -63,13 +63,18 @@ def compile_txt(infile, outfile, discard=''):
     size1 = os.path.getsize(infile)
     size1 = format(size1,',')
     
-    datamachine.bp_to_final(infile, outfile, discard)
+    chinese_ct = datamachine.bp_to_final(infile, outfile, discard)
 
     size2 = os.path.getsize(outfile)
     size2 = format(size2,',')
-
-    color_p = color.fore_color(size2, color.Fore.MAGENTA)
-    print('输入文件{0}字节，输出文件{1}字节'.format(size1, color_p))
+    
+    color_size = color.fore_color(size2, color.Fore.MAGENTA)
+    color_chinese = color.fore_color(chinese_ct, color.Fore.CYAN)
+    print('输入文件{0}字节；输出文件{1}字节，约{2}个汉字。'.format(
+                                                size1, 
+                                                color_size,
+                                                color_chinese)
+          )
 
 # 全自动处理
 def auto(url, pg_count, outfile, discard):
