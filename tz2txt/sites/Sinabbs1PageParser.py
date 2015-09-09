@@ -142,9 +142,8 @@ class Sinabbs1PageParser(AbPageParser):
             r'.*?'
             r'>发表于：(\d{4}-\d{1,2}-\d{1,2}\s+\d{1,2}:\d{1,2})</font>'
             r'.*?'
-            r'<div\s+class="mybbs_cont"\s*>\s*(.*?)\s*</div>'
-            r'\s+(?:<fieldset>|<div class="myInfo">'
-            r'|<div\s+id="post_rate_div_\d+">)'
+            r'<div\s+class="mybbs_cont"\s*>\s*(.*?)\s*</div>\s*'
+            r'(?:</td>|<fieldset>|<div class="myInfo">|<div\s+id="post_rate_div_)'
             )
         p = red.re_dict(regex, red.DOTALL)
         miter = p.finditer(self.html)
@@ -154,13 +153,13 @@ class Sinabbs1PageParser(AbPageParser):
         d3 = ( Reply(x, y, z) for x,y,z in d2)
         replys.extend(d3)
 
-##        for i in replys:
-##            print('\n∞∞∞∞∞∞∞∞∞ author:{0} time:{1} ∞∞∞∞∞∞∞∞∞\n{2}'.format(
-##                                                        i.author,
-##                                                        i.time,
-##                                                        i.text)
-##                    )
-##        else:
-##            print('-------replys: ', len(replys), '-------')
+#         for i in replys:
+#             print('\n∞∞∞∞∞∞∞∞∞ author:{0} time:{1} ∞∞∞∞∞∞∞∞∞\n{2}'.format(
+#                                                         i.author,
+#                                                         i.time,
+#                                                         i.text)
+#                     )
+#         else:
+#             print('-------replys: ', len(replys), '-------')
             
         return replys
