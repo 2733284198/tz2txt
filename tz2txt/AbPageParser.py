@@ -83,18 +83,15 @@ class AbPageParser(metaclass=ABCMeta):
                     return ''
          
         return byte_data.decode(encoding, errors='replace')
-
-    # 用于增强去html转义：
-    # gbk对第一个圆点不支持，替换
-    # 第二个空格是U+A0
-    # 第三个空白是U+3000
-    translate_dict = str.maketrans("•\xA0\u3000", "·  ")
     
     @staticmethod
     def de_html_char(text):
         '''去掉html转义'''
         t = html.unescape(text)
-        t = t.translate(AbPageParser.translate_dict)
+        
+        t = t.replace('•', '·')      # gbk对第一个圆点不支持
+        t = t.replace('\xA0', ' ')   # 不间断空格
+        t = t.replace('\u3000', ' ') # 中文(全角)空格
 
         return t
 
