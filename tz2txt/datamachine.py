@@ -108,16 +108,15 @@ def process_internal2(all_list):
     
     return all_list
 
-def reply_to_bp(reply, select, append_n=False):
+def reply_to_bp(reply, select):
     '''回复->编排，鸭子类型'''
     mark = '█' if select else ''
-    n = '\n\n' if append_n else ''
         
     t = ('<time>◇◆◇◆◇◆◇◆◇◆◇ <',
          reply.time.strftime('%Y-%m-%d  %H:%M:%S  %w'),
          '> ◇◆◇◆◇◆◇◆◇◆◇\n',
          reply.text,
-         '\n<mark>══════保留标记：', mark, n
+         '\n<mark>══════保留标记：', mark
          )
     return ''.join(t)
 
@@ -335,7 +334,7 @@ def internal_to_bp(tz, outfile):
     def reply_to_g(reply, user):
         '''一条回复'''
         if reply.author == user:
-            return reply_to_bp(reply, True, append_n=True)
+            return reply_to_bp(reply, True) + '\n\n'
         else:
             return None
 
