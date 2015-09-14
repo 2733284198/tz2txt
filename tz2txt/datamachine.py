@@ -50,11 +50,16 @@ def print_bp_head(all_list):
     for one in all_list:
         if isinstance(one, str):
             if one.startswith('<tiezi>'):
+                print_str = one[len('<tiezi>'):]
                 try:
-                    print(one[len('<tiezi>'):])
-                except UnicodeEncodeError as e:
-                    print('无法显示一条信息，可能其中包含控制台无法显示的字符。')
-                    print('异常信息：', e, '\n')
+                    print(print_str)
+                except UnicodeEncodeError:
+                    for char in print_str:
+                        try:
+                            print(char, end='')
+                        except:
+                            print('?', end='')
+                    print()
         elif isinstance(one, BPReply):
             break
     print()
