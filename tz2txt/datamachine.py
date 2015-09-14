@@ -480,11 +480,17 @@ def web_to_internal(url, pg_count):
                 if not tz.louzhu:
                     tz.louzhu = input('无法提取楼主ID，请手工输入楼主ID：').strip()
 
+            # 打印帖子信息
+            print_str = '标题：{0}\n楼主：{1}'.format(tz.title, tz.louzhu)
             try:
-                print('标题：{0}\n楼主：{1}'.format(tz.title, tz.louzhu))
-            except UnicodeEncodeError as e:
-                print('无法显示标题和楼主ID，可能其中包含控制台无法显示的字符。')
-                print('异常信息：', e, '\n')
+                print(print_str)
+            except UnicodeEncodeError:
+                for char in print_str:
+                    try:
+                        print(char, end='')
+                    except:
+                        print('?', end='')
+                print()
 
             # 得到本地格式名
             tz.local_processor = parser.get_local_processor()
