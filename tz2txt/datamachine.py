@@ -429,8 +429,7 @@ def web_to_internal(url, pg_count):
     '''论坛帖子 到 内部形式'''
     
     # 下载器
-    fetcher_info = FetcherInfo()
-    f = Fetcher(fetcher_info)
+    f = Fetcher()
     # 页面解析器
     parser = None
     

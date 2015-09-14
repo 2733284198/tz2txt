@@ -23,7 +23,10 @@ class FetcherInfo:
 class Fetcher:
     '''web获取器'''
 
-    def __init__(self, fetcher_info):
+    def __init__(self, fetcher_info=None):
+        if fetcher_info == None:
+            fetcher_info = FetcherInfo()
+        
         self.referer = fetcher_info.referer
         self.info = fetcher_info
         
