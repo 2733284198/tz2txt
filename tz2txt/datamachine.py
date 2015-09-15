@@ -45,21 +45,25 @@ from tzdatastruct import *
 from BaseProcessor import *
 from AbPageParser import *
 
+
+def save_print(print_str):
+    try:
+        print(print_str)
+    except UnicodeEncodeError:
+        for char in print_str:
+            try:
+                print(char, end='')
+            except:
+                print('?', end='')
+        print()
+
 # 打印编排头信息
 def print_bp_head(all_list):
     for one in all_list:
         if isinstance(one, str):
             if one.startswith('<tiezi>'):
                 print_str = one[len('<tiezi>'):]
-                try:
-                    print(print_str)
-                except UnicodeEncodeError:
-                    for char in print_str:
-                        try:
-                            print(char, end='')
-                        except:
-                            print('?', end='')
-                    print()
+                save_print(print_str)
         elif isinstance(one, BPReply):
             break
     print()
@@ -487,15 +491,7 @@ def web_to_internal(url, pg_count):
 
             # 打印帖子信息
             print_str = '标题：{0}\n楼主：{1}'.format(tz.title, tz.louzhu)
-            try:
-                print(print_str)
-            except UnicodeEncodeError:
-                for char in print_str:
-                    try:
-                        print(char, end='')
-                    except:
-                        print('?', end='')
-                print()
+            save_print(print_str)
 
             # 得到本地格式名
             tz.local_processor = parser.get_local_processor()
