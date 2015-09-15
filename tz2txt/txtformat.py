@@ -5,19 +5,17 @@
 # 本程序参考了DreamEdit的排版规则
 
 import re#gex as re
+import html
 
 def de_html_char(text):
     '''html转义字符'''
     
-    text = text.replace('&lt;', '<')
-    text = text.replace('&gt;', '>')
-    text = text.replace('&quot;', '"')
-    text = text.replace('&amp;', '&')
-    text = text.replace('&nbsp;', ' ')
-    text = text.replace('&#160;', ' ')
-    text = text.replace('&#8226;', '·')
-    text = text.replace('&#183;', '·')
-    text = text.replace('&#215;', '×')
+    text = html.unescape(text)
+    
+    text = text.replace('•', '·')      # gbk对第一个圆点不支持
+    text = text.replace('\xA0', ' ')   # 不间断空格
+    text = text.replace('\u3000', ' ') # 中文(全角)空格
+        
     return text
 
 def replace_with_list(text):
