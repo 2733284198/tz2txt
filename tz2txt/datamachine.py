@@ -471,22 +471,28 @@ def web_to_internal(url, pg_count):
         parser.set_page(url, data)
 
         # 设置tz的信息
-        if not tz.louzhu:             
+        if not tz.louzhu:
+            pub_date = None
+            
             tz.title = parser.get_title()
             tz.louzhu = parser.get_louzhu()
-
-            if not tz.louzhu:
-                # 第一页第1楼可作为楼主
-                if parser.get_page_num() == 1:
-                    rplys = parser.get_replys()
-                    if rplys:
+            
+            # 首页1楼作楼主、发帖日期
+            if parser.get_page_num() == 1:
+                rplys = parser.get_replys()
+                if rplys:
+                    if not tz.louzhu:
                         tz.louzhu = rplys[0].author
-                # 手工输入
-                if not tz.louzhu:
-                    tz.louzhu = input('无法提取楼主ID，请手工输入楼主ID：').strip()
+                    pub_date = rplys[0].time.strftime('%Y-%m-%d')
+
+            # 手工输入楼主ID
+            if not tz.louzhu:
+                tz.louzhu = input('无法提取楼主ID，请手工输入楼主ID：').strip()
 
             # 打印帖子信息
-            print_str = '标题：{0}\n楼主：{1}'.format(tz.title, tz.louzhu)
+            print_str = '标题：%s\n楼主：%s\n' % (tz.title, tz.louzhu) 
+            if pub_date != None:
+                print_str += '发帖日期：%s\n' % pub_date
             save_print(print_str)
 
             # 得到本地格式名

@@ -41,12 +41,15 @@ def statistic(infile):
     datamachine.statistic(lst)
 
 # 读入编排、自动处理、保存编排
-def bp_process_bp(infile, outfile):
+def bp_process_bp(infile, outfile, automode=False):
     # 文件大小
     size1 = os.path.getsize(infile)
     
     lst = datamachine.bp_to_internal2(infile)
-    datamachine.print_bp_head(lst)
+    
+    if not automode:
+        datamachine.print_bp_head(lst)
+    
     lst = datamachine.process_internal2(lst)
     wrote = datamachine.internal2_to_bp(lst, outfile)
 
@@ -101,7 +104,7 @@ def auto(url, pg_count, outfile, discard):
     print('\n ===下载完毕，准备自动处理===\n')
 
     # 自动处理
-    bp_process_bp(f_name, f_name)
+    bp_process_bp(f_name, f_name, automode=True)
     print('\n ===自动处理完毕，准备编译===\n')
 
     # 编译
