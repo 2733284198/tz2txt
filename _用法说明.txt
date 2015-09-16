@@ -76,7 +76,7 @@ final.txt就是编译后的纯文本，~discard.txt就是自动处理时标记�
       -i 文件名：输入的<编排文本>
       -o 文件名：输出的<纯文本>
       -d 文件名：保存编译过程中丢弃的回复到这个文件
-      -l 标签：是否显示位置信息，默认是不显示。page为每页显示，floor为每层显示。
+      -w 是否显示位置信息，默认是不显示。-w page为每页显示，-w floor为每层显示。
 
       例： tz2txt.py c -i bp.txt -o final.txt -d ~discard.txt
              把<编排文本>bp.txt编译为<纯文本>final.txt，
@@ -89,7 +89,7 @@ final.txt就是编译后的纯文本，~discard.txt就是自动处理时标记�
       -t 页数：打算下载的总页数，-1表示到最终页（如果帖子很长，慎用-1）
       -o 文件名：是输出的<纯文本>文件名
       -d 文件名：保存编译过程中丢弃的回复到这个文件
-      -l 标签：是否显示位置信息，默认是不显示。page为每页显示，floor为每层显示。
+      -w 是否显示位置信息，默认是不显示。-w page为每页显示，-w floor为每层显示。
 	  
       例： tz2txt.py a -u http://bbs.sample.com/thread-12345.html -t 10 -o auto.txt -d ~discard.txt
              从当前页开始，一共下载10页，生成<纯文本>到auto.txt，
