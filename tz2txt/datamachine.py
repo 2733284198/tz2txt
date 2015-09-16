@@ -340,17 +340,11 @@ def bp_to_final(infile, outfile, discard=''):
 def internal_to_bp(tz, outfile):
     '''内部形式 到 编排'''
     
-    def reply_to_g(reply, user):
-        '''一条回复'''
-        if reply.author == user:
-            return reply_to_bp(reply, True) + '\n\n'
-        else:
-            return None
-
     def page_to_g(page, user):
-        '''一页，返回：文本，摘取回复数，总回复数'''
-        rpls = (reply_to_g(r, user) for r in page.replys)
-        rpls = [one for one in rpls if one != None]
+        '''一页，返回：文本，摘取回复数，总回复数'''        
+        rpls = [reply_to_bp(r, True) + '\n\n' 
+                for r in page.replys
+                if r.author == user]
         pickcount = len(rpls)
         allcount = len(page.replys)
 
