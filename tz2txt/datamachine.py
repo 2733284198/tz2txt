@@ -341,10 +341,11 @@ def internal_to_bp(tz, outfile):
     '''内部形式 到 编排'''
     
     def page_to_g(page, user):
-        '''一页，返回：文本，摘取回复数，总回复数'''        
-        rpls = [reply_to_bp(r, True) + '\n\n' 
-                for r in page.replys
-                if r.author == user]
+        '''一页，返回：文本，摘取回复数，总回复数'''
+        rpls = [reply_to_bp(r, True)
+                    for r in page.replys
+                    if r.author == user]
+        
         pickcount = len(rpls)
         allcount = len(page.replys)
 
@@ -356,11 +357,12 @@ def internal_to_bp(tz, outfile):
                     '<page>网址: ', page.url, '\n',
                     '<page>是否完结: ', str(page.finished), '\n',
                     '<page>总回复数: ', str(allcount),
-                    '  摘取回复数: ', str(pickcount), '\n\n'
+                    '  摘取回复数: ', str(pickcount)
                     )
+            head = ''.join(head)
             # 头信息 和 文本
-            s_iter = itertools.chain(head, rpls)
-            s = ''.join(s_iter)
+            s_iter = itertools.chain((head,), rpls, ('',))
+            s = '\n\n'.join(s_iter)
             return s, pickcount, allcount
 
     def tiezi_to_g(tiezi):
