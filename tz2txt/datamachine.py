@@ -466,9 +466,9 @@ def web_to_internal(url, pg_count):
                 print(' 请使用“检测新版本”功能检测是否有新程序可用。')
                 print()
                 break
-
-        # 送数据到解析器
-        parser.set_page(url, data)
+        else:
+            # 送数据到解析器
+            parser.set_page(url, data)
 
         # 设置tz的信息
         if not tz.louzhu:
