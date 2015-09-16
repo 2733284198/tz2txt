@@ -102,27 +102,57 @@ class AbPageParser(metaclass=ABCMeta):
         # 解码byte data到html用的编码
         self.encoding = ''
         
-        self.temp_replys = None
+        self.__clear_cache()
+    
+    def __clear_cache(self):
+        '''清空缓存'''
+        self.cache_pagenum = None
+        self.cache_title = None
+        self.cache_louzhu = None
+        self.cache_nexturl = None
+        self.cache_replys = None
 
     def set_page(self, url, byte_data):
         '''设置网址和html'''
         self.url = url
         self.html = AbPageParser.decode(byte_data, self.encoding)
         
-        self.temp_replys = None
+        self.__clear_cache()
 
     def get_hostname(self):
         '''从url得到主机域名'''
         parsed = urlparse(self.url)
         return r'http://' + parsed.netloc
     
+    # 5个wrap
+    
+    def wrap_get_page_num(self):
+        if self.cache_pagenum == None:
+            self.cache_pagenum = self.get_page_num()
+        return self.cache_pagenum
+    
+    def wrap_get_title(self):
+        if self.cache_title == None:
+            self.cache_title = self.get_title()
+        return self.cache_title
+    
+    def wrap_get_louzhu(self):
+        if self.cache_louzhu == None:
+            self.cache_louzhu = self.get_louzhu()
+        return self.cache_louzhu
+    
+    def wrap_get_next_pg_url(self):
+        if self.cache_nexturl == None:
+            self.cache_nexturl = self.get_next_pg_url()
+        return self.cache_nexturl
+    
     def wrap_get_replys(self):
-        '''缓存获得的回复'''
-        if self.temp_replys == None:
-            self.temp_replys = self.get_replys()
-        
-        return self.temp_replys
+        if self.cache_replys == None:
+            self.cache_replys = self.get_replys()
+        return self.cache_replys
 
+    # 5个抽象get
+    
     @abstractmethod
     def get_page_num(self):
         '''页号'''
@@ -150,22 +180,25 @@ class AbPageParser(metaclass=ABCMeta):
 
     def check_parse_methods(self):
         '''检测页面解析器是否正常'''
+        
+        # 保持这个顺序，因为get_replys可能调用get_page_num()
+        
         try:
-            self.get_page_num()
+            self.wrap_get_page_num()
         except Exception as e:
             print('!页面解析器出现异常，无法解析此页面')
             print('!get_page_num():', e, '\n')
             return False
 
         try:
-            self.get_title()
+            self.wrap_get_title()
         except Exception as e:
             print('!页面解析器出现异常，无法解析此页面')
             print('!get_title():', e, '\n')
             return False
 
         try:
-            self.get_next_pg_url()
+            self.wrap_get_next_pg_url()
         except Exception as e:
             print('!页面解析器出现异常，无法解析此页面')
             print('!get_next_pg_url():', e, '\n')
@@ -181,7 +214,7 @@ class AbPageParser(metaclass=ABCMeta):
             return False
 
         try:
-            self.get_louzhu()
+            self.wrap_get_louzhu()
         except Exception as e:
             print('!页面解析器出现异常，无法解析此页面')
             print('!get_louzhu():', e, '\n')

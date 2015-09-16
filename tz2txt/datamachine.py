@@ -520,11 +520,11 @@ def web_to_internal(url, pg_count):
         if not tz.louzhu:
             pub_date = None
             
-            tz.title = parser.get_title()
-            tz.louzhu = parser.get_louzhu()
+            tz.title = parser.wrap_get_title()
+            tz.louzhu = parser.wrap_get_louzhu()
             
             # 首页1楼作楼主、发帖日期
-            if parser.get_page_num() == 1:
+            if parser.wrap_get_page_num() == 1:
                 rplys = parser.wrap_get_replys()
                 if rplys:
                     if not tz.louzhu:
@@ -544,8 +544,8 @@ def web_to_internal(url, pg_count):
             # 得到本地格式名
             tz.local_processor = parser.get_local_processor()
 
-        next_url = parser.get_next_pg_url()
-        pg_num = parser.get_page_num()
+        next_url = parser.wrap_get_next_pg_url()
+        pg_num = parser.wrap_get_page_num()
         # 添加页
         pg = Page(url,
                   pg_num,
