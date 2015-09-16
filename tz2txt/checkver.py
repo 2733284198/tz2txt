@@ -40,6 +40,7 @@ def main():
         answer = input('是否打开浏览器进入下载页面？(输入y打开，否则退出)')
         if answer.strip().lower() == 'y': 
             try:
+                print('正在尝试调用浏览器打开： %s' % download_url)
                 webbrowser.open_new_tab(download_url)
             except:
                 s = ('无法调用浏览器打开下载页面。\n'
