@@ -172,7 +172,7 @@ class AbPageParser(metaclass=ABCMeta):
             return False
 
         try:
-            rpls = self.get_replys()
+            rpls = self.wrap_get_replys()
             if not rpls:
                 raise Exception('异常：回复列表为空')
         except Exception as e:
