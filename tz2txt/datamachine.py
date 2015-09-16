@@ -235,7 +235,7 @@ def count_chinese(string):
             count += 1
     return count
 
-def bp_to_final(infile, outfile, discard=''):
+def bp_to_final(infile, outfile, discard='', label=0):
     '''编译 编排to最终、丢弃'''
     def is_not_empty(lst):
         for i in lst:
@@ -252,11 +252,22 @@ def bp_to_final(infile, outfile, discard=''):
     # 替换成 【图片：1234567.jpg】
     picr = (r'\[img\s*(\d+|)\].*?\[/img\]')
     pattern = red.re_dict(picr)
+    
+    # 提取页号
+    re_pagenum = red.re_dict(r'^<page>页号:\s*(\d+)\s*$')
+    
+    # 提取时间
+    p_time = (r'^<time>[^<]*<\d\d(\d\d-\d{1,2}-\d{1,2})\s+'
+              r'(\d{1,2}:\d{1,2})')
+    re_time = red.re_dict(p_time)
 
     # 读取编排文本
     with open(infile, encoding='gb18030', errors='replace') as i:
         in_reply = False
         temp = list()
+        
+        current_page = 0
+        current_time = ''
 
         try:
             bptext = i.readlines()
@@ -268,6 +279,14 @@ def bp_to_final(infile, outfile, discard=''):
                         break
                     in_reply = True
                     
+                    # current_time
+                    if label == 2:
+                        m = re_time.search(line)
+                        if m:
+                            current_time = m.group(1) + ' ' + m.group(2)
+                        else:
+                            current_time = ''
+                    
                 elif line.startswith('<mark>'):
                     if in_reply == False:
                         print('格式错误：回复文本的前后包括标志不配对。\n',
@@ -275,9 +294,23 @@ def bp_to_final(infile, outfile, discard=''):
                         break
                                            
                     if line.endswith('█\n') or line.endswith('█'):
+                        pickcount += 1
+                        
+                        if label == 2 and \
+                           current_page != 0 and current_time:
+                            floor_label = ('№.%d ☆☆☆'
+                                           ' 发表于%s  P.%d '
+                                           '☆☆☆\n'
+                                           '-------------------------'
+                                           '-------------------------'
+                                           '\n')
+                            floor_label = floor_label % \
+                                (pickcount, current_time, current_page)
+                            text_list.append(floor_label)
+                            
                         text_list.extend(temp)
                         text_list.append('\n')
-                        pickcount += 1
+
                     elif any(is_not_empty(temp)):
                         abandon_list.extend(temp)
                         abandon_list.append('∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞\n\n')
@@ -290,9 +323,23 @@ def bp_to_final(infile, outfile, discard=''):
                     line = pattern.sub(r'【一张图片\1】', line)
                     temp.append(line)
 
-                elif not text_list and not abandon_list \
-                     and not in_reply and line.startswith('<tiezi>'):
+                # 由于上一个elif，以下必定not in_reply
+                elif not text_list and not abandon_list and \
+                     line.startswith('<tiezi>'):
                     info_list.append(line[len('<tiezi>'):])
+                
+                elif label != 0:
+                    m = re_pagenum.search(line)
+                    if m:
+                        current_page = int(m.group(1))
+                        if label == 1:
+                            page_label = ('☆☆☆☆☆'
+                                          ' 进入第%d页 '
+                                          '☆☆☆☆☆\n'
+                                          '----------------'
+                                          '----------------'
+                                          '\n\n') % current_page
+                            text_list.append(page_label)
 
             if in_reply == True:
                 print('格式错误：最后一个回复文本的前后包括标志不配对。')

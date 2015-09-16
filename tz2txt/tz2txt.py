@@ -61,12 +61,22 @@ def bp_process_bp(infile, outfile, automode=False):
               )
 
 # 读入编排、保存纯文本
-def compile_txt(infile, outfile, discard=''):
+def compile_txt(infile, outfile, discard='', label=''):
     # 文件大小
     size1 = os.path.getsize(infile)
     size1 = format(size1, ',')
     
-    chinese_ct = datamachine.bp_to_final(infile, outfile, discard)
+    # 格式
+    label = label.lower()
+    if label == 'page':
+        label = 1
+    elif label == 'floor':
+        label = 2
+    else:
+        label = 0
+    
+    chinese_ct = datamachine.bp_to_final(infile, outfile, 
+                                         discard, label)
     chinese_ct = format(chinese_ct, ',')
 
     size2 = os.path.getsize(outfile)
@@ -81,7 +91,7 @@ def compile_txt(infile, outfile, discard=''):
           )
 
 # 全自动处理
-def auto(url, pg_count, outfile, discard):
+def auto(url, pg_count, outfile, discard, label):
     # 创建临时文件
     try:
         f = tempfile.NamedTemporaryFile(delete=False)
@@ -108,7 +118,7 @@ def auto(url, pg_count, outfile, discard):
     print('\n ===自动处理完毕，准备编译===\n')
 
     # 编译
-    compile_txt(f_name, outfile, discard)
+    compile_txt(f_name, outfile, discard, label)
 
     # 删除临时文件
     try:
@@ -211,6 +221,11 @@ if __name__ == '__main__':
                           metavar='文件名',
                           default='',
                           dest='discard')
+    parser_c.add_argument('-l',
+                          type=str, help='txt文件包含位置信息，默认无位置信息',
+                          metavar='page或floor',
+                          default='',
+                          dest='label')
 
     # 全自动处理a
     parser_a = subparsers.add_parser('a', help='全自动生成最终文本')
@@ -233,6 +248,11 @@ if __name__ == '__main__':
                           metavar='文件名',
                           default='',
                           dest='discard')
+    parser_a.add_argument('-l',
+                          type=str, help='txt文件包含位置信息，默认无位置信息',
+                          metavar='page或floor',
+                          default='',
+                          dest='label')
 
     args = parser.parse_args()
     
@@ -285,7 +305,8 @@ if __name__ == '__main__':
             print('输入文件{0}不存在'.format(args.input))
         else:
             if check_file(args.output):
-                compile_txt(args.input, args.output, args.discard)
+                compile_txt(args.input, args.output, 
+                            args.discard, args.label)
 
     elif args.subparser == 'a':
         if args.output == None:
@@ -308,7 +329,8 @@ if __name__ == '__main__':
                                                     pgnum,
                                                     args.output)
                           )
-                    auto(url, args.tillnum, args.output, args.discard)
+                    auto(url, args.tillnum, args.output, 
+                         args.discard, args.label)
     
     else:
         parser.print_help()
