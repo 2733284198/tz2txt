@@ -151,7 +151,7 @@ def check_file(filename):
                               
 if __name__ == '__main__':
     color.init()
-    print('tz2txt %s\n' % tz2txt_date)
+    print('tz2txt 程序版本: %s\n' % tz2txt_date)
 
     parser = argparse.ArgumentParser(prog=tz2txt_prog,
                                      description='用于帮助把帖子转为txt文件'

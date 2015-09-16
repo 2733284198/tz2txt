@@ -479,7 +479,7 @@ def web_to_internal(url, pg_count):
             
             # 首页1楼作楼主、发帖日期
             if parser.get_page_num() == 1:
-                rplys = parser.get_replys()
+                rplys = parser.wrap_get_replys()
                 if rplys:
                     if not tz.louzhu:
                         tz.louzhu = rplys[0].author
@@ -504,7 +504,7 @@ def web_to_internal(url, pg_count):
         pg = Page(url,
                   pg_num,
                   bool(next_url),
-                  parser.get_replys()
+                  parser.wrap_get_replys()
                   )
         tz.add_page(pg)
         dl_count += 1

@@ -101,16 +101,27 @@ class AbPageParser(metaclass=ABCMeta):
         
         # 解码byte data到html用的编码
         self.encoding = ''
+        
+        self.temp_replys = None
 
     def set_page(self, url, byte_data):
         '''设置网址和html'''
         self.url = url
         self.html = AbPageParser.decode(byte_data, self.encoding)
+        
+        self.temp_replys = None
 
     def get_hostname(self):
         '''从url得到主机域名'''
         parsed = urlparse(self.url)
         return r'http://' + parsed.netloc
+    
+    def wrap_get_replys(self):
+        '''缓存获得的回复'''
+        if self.temp_replys == None:
+            self.temp_replys = self.get_replys()
+        
+        return self.temp_replys
 
     @abstractmethod
     def get_page_num(self):
