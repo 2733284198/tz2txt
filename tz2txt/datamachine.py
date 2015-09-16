@@ -296,8 +296,7 @@ def bp_to_final(infile, outfile, discard='', label=0):
                     if line.endswith('█\n') or line.endswith('█'):
                         pickcount += 1
                         
-                        if label == 2 and \
-                           current_page != 0 and current_time:
+                        if label == 2:
                             floor_label = ('№.%d ☆☆☆'
                                            ' 发表于%s  P.%d '
                                            '☆☆☆\n'

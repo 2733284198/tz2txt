@@ -221,8 +221,8 @@ if __name__ == '__main__':
                           metavar='文件名',
                           default='',
                           dest='discard')
-    parser_c.add_argument('-l',
-                          type=str, help='txt文件包含位置信息，默认无位置信息',
+    parser_c.add_argument('-w',
+                          type=str, help='是否有位置信息，默认为没有',
                           metavar='page或floor',
                           default='',
                           dest='label')
@@ -248,8 +248,8 @@ if __name__ == '__main__':
                           metavar='文件名',
                           default='',
                           dest='discard')
-    parser_a.add_argument('-l',
-                          type=str, help='txt文件包含位置信息，默认无位置信息',
+    parser_a.add_argument('-w',
+                          type=str, help='是否有位置信息，默认为没有',
                           metavar='page或floor',
                           default='',
                           dest='label')
