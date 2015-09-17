@@ -529,7 +529,7 @@ def web_to_internal(url, pg_count):
                 if rplys:
                     if not tz.louzhu:
                         tz.louzhu = rplys[0].author
-                    pub_date = rplys[0].time.strftime('%Y-%m-%d')
+                    pub_date = rplys[0].time.strftime('%Y-%m-%d %H:%M')
 
             # 手工输入楼主ID
             if not tz.louzhu:
