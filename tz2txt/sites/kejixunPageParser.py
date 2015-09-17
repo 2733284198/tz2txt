@@ -125,7 +125,7 @@ class kejixunPageParser(AbPageParser):
         p = red.re_dict(re, red.DOTALL)
         m = p.search(self.html)
         
-        item = Reply(self.get_louzhu(),
+        item = Reply(self.wrap_get_louzhu(),
                       dt(date_str),
                       process_text(m.group(1)))
         replys.append(item)

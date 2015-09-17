@@ -72,7 +72,7 @@ class cssnPageParser(AbPageParser):
             return ''
         
         # 是首页
-        if self.get_page_num() == 1:
+        if self.wrap_get_page_num() == 1:
             return self.url.replace('.shtml', '_1.shtml')
 
         # 其它情况
@@ -134,7 +134,7 @@ class cssnPageParser(AbPageParser):
         p = red.re_dict(re, red.DOTALL)
         m = p.search(self.html)
         
-        item = Reply(self.get_louzhu(),
+        item = Reply(self.wrap_get_louzhu(),
                       dt(date_str),
                       process_text(m.group(1)))
         replys.append(item)

@@ -129,7 +129,7 @@ class Tianya1PageParser(AbPageParser):
         # ----------------------
         dt = lambda s:datetime.strptime(s, '%Y-%m-%d %H:%M:%S')
         replys = list()
-        pg_num = self.get_page_num()
+        pg_num = self.wrap_get_page_num()
         
         # 独特的第一页第1楼
         if pg_num == 1:
