@@ -181,7 +181,9 @@ class AbPageParser(metaclass=ABCMeta):
     def check_parse_methods(self):
         '''检测页面解析器是否正常'''
         
-        # 保持这个顺序，因为get_replys可能调用get_page_num()
+        # 保持这个顺序，因为：
+        # get_replys()可能调用get_page_num()
+        # get_louzhu()可能调用get_replys()
         
         try:
             self.wrap_get_page_num()
