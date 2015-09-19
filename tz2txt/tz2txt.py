@@ -22,7 +22,7 @@ from sites import *
 
 tz2txt_prog = 'tz2txt'
 tz2txt_ver = '1.3'          # 内部框架的版本
-tz2txt_date = '2015-09-17'  # 最后更新日期
+tz2txt_date = '2015-09-19'  # 最后更新日期
 
 # 下载帖子、保存编排
 def download_till(url, pg_count, outfile):

@@ -77,7 +77,7 @@ class Tieba1PageParser(AbPageParser):
             # 替换图片
             regex = (r'<img\s+'
                      r'[^>]*?'
-                     r'class="BDE_Image"\s+'
+                     r'class="BDE_Image"[^>]*?'
                      r'src\s*=\s*"([^"]+)"[^>]*>'
                      )
             p = red.re_dict(regex, red.IGNORECASE)
