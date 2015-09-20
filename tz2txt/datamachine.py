@@ -435,8 +435,8 @@ def internal_to_bp(tz, outfile):
 
             fmark = '(已完结)' if lastpg.finished else '(未完结)'
 
-            post_time = '<tiezi>发帖日期：' + \
-                        firstpg.replys[0].time.strftime('%Y-%m-%d') + \
+            post_time = '<tiezi>发帖时间：' + \
+                        firstpg.replys[0].time.strftime('%Y-%m-%d %H:%M') + \
                         '\n' \
                         if firstpg.page_num == 1 and firstpg.replys \
                         else ''
@@ -445,7 +445,7 @@ def internal_to_bp(tz, outfile):
                     '<tiezi>标题：', tiezi.title, '\n',
                     '<tiezi>楼主：', tiezi.louzhu, '\n',
                     post_time,
-                    '<tiezi>下载日期：',datetime.now().strftime('%Y-%m-%d'),'\n',
+                    '<tiezi>下载时间：',datetime.now().strftime('%Y-%m-%d %H:%M'),'\n',
                     '起始页号', str(firstpg.page_num),
                     '，末尾页号', str(lastpg.page_num), fmark, '\n',
                     '总回复数: ', str(allcount),
@@ -538,7 +538,7 @@ def web_to_internal(url, pg_count):
             # 打印帖子信息
             print_str = '标题：%s\n楼主：%s\n' % (tz.title, tz.louzhu) 
             if pub_date != None:
-                print_str += '发帖日期：%s\n' % pub_date
+                print_str += '发帖时间：%s\n' % pub_date
             save_print(print_str)
 
             # 得到本地格式名
