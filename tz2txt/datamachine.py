@@ -574,7 +574,7 @@ def web_to_internal(url, pg_count):
     # 发出响声
     if has_winsound:
         try:
-            winsound.Beep(2000, 450)
+            winsound.Beep(400, 300) # (frequency, duration)
         except:
             pass
 
