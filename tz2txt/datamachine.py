@@ -237,13 +237,20 @@ def count_chinese(string):
 
 def bp_to_final(infile, outfile, discard='', label=0):
     '''编译 编排to最终、丢弃'''
+    class placeholder:
+        def __init__(self, posi=0, pagenum=0, show=False):
+            self.posi = posi
+            self.pagenum = pagenum
+            self.show = show
+
     def is_not_empty(lst):
         for i in lst:
             yield i.strip() != ''
     
     info_list = list()
-    text_list = list()
+    holder_list = [placeholder()]
     
+    text_list = list()
     abandon_list = list()
     
     pickcount, allcount = 0, 0
@@ -296,7 +303,11 @@ def bp_to_final(infile, outfile, discard='', label=0):
                     if line.endswith('█\n') or line.endswith('█'):
                         pickcount += 1
                         
-                        if label == 2:
+                        if label == 0:
+                            pass
+                        elif label == 1:
+                            holder_list[-1].show = True
+                        elif label == 2:
                             floor_label = ('№.%d ☆☆☆'
                                            ' 发表于%s  P.%d '
                                            '☆☆☆\n'
@@ -332,13 +343,11 @@ def bp_to_final(infile, outfile, discard='', label=0):
                     if m:
                         current_page = int(m.group(1))
                         if label == 1:
-                            page_label = ('☆☆☆☆☆'
-                                          ' 进入第%d页 '
-                                          '☆☆☆☆☆\n'
-                                          '----------------'
-                                          '----------------'
-                                          '\n\n') % current_page
-                            text_list.append(page_label)
+                            text_list.append('')
+                            holder = placeholder(len(text_list)-1,
+                                                 current_page
+                                                 )
+                            holder_list.append(holder)
 
             if in_reply == True:
                 print('格式错误：最后一个回复文本的前后包括标志不配对。')
@@ -347,6 +356,18 @@ def bp_to_final(infile, outfile, discard='', label=0):
         except UnicodeError as e:
             print('\n文件编码错误，请确保输入文件为GBK或GB18030编码。')
             print('异常信息：', e, '\n')
+    
+    # 页码 辅助格式
+    if label == 1:
+        for holder in holder_list[1:]:
+            if holder.show:
+                page_label = ('☆☆☆☆☆'
+                              ' 进入第%d页 '
+                              '☆☆☆☆☆\n'
+                              '----------------'
+                              '----------------'
+                              '\n\n') % holder.pagenum
+                text_list[holder.posi] = page_label
 
     color_p1 = color.fore_color(allcount, color.Fore.YELLOW)
     color_p2 = color.fore_color(pickcount, color.Fore.YELLOW)
