@@ -112,6 +112,7 @@ class Gui(Frame):
             till = -1
         
         # 执行命令
+        self.status['fg'] = '#993300'
         self.status['text'] = '处理中'
         self.update()
         try:
@@ -122,6 +123,7 @@ class Gui(Frame):
             print('出现异常：', e)
             info_list = None
 
+        self.status['fg'] = 'blue'
         self.status['text'] = '待机'
         if info_list:
             print()
