@@ -9,7 +9,7 @@ import webbrowser
 from fetcher import *
 from tz2txt import tz2txt_date
 
-def main():
+def check():
     fetcher_info = FetcherInfo()
     f = Fetcher(fetcher_info)
     url = 'http://www.cnblogs.com/animalize/p/4773363.html'
@@ -31,6 +31,11 @@ def main():
     
     newver = m.group(1)
     download_url = m.group(2)
+    
+    return newver, download_url
+
+def main():
+    newver, download_url = check()
     
     if newver == tz2txt_date:
         print('检测完毕，正在使用的是最新版。\n')

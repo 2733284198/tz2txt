@@ -9,6 +9,7 @@ import color
 color.disable()
 import tz2txt
 import datamachine
+import checkver
 
 output = 'auto.txt'
 discard = '~discard.txt'
@@ -19,6 +20,7 @@ class Gui(Frame):
         
         # url
         self.url = StringVar()
+        self.url.set('复制某页的网址，直接按<处理网址>')
         entry = Entry(self, textvariable=self.url,
                       bg='#666699', fg='#FFFFFF')
         entry.grid(row=0, column=0, columnspan=3, sticky=W+E)
@@ -36,10 +38,9 @@ class Gui(Frame):
                          text = '覆盖文件')
         cb.grid(row=1, column=1)
         
-        # 删除文件
-        delfile = Button(self, text='删除文件', command=self.delfile,
-                         fg='#990000')
-        delfile.grid(row=1, column=2)
+        # 状态
+        self.status = Label(self, text='待机', fg='blue')
+        self.status.grid(row=1, column=2)
         
         # 辅助格式
         self.assist = IntVar()
@@ -58,17 +59,26 @@ class Gui(Frame):
         self.r3.grid(row=2, column=2)
         
         # 末页
-        l2 = Label(self, text='下载页数:')
-        l2.grid(row=3, column=0)
+        l2 = Label(self, text='下载页数(-1为到末页):')
+        l2.grid(row=3, column=0, columnspan=2)
         
         self.till = StringVar()
         self.till.set('-1')
         entry = Entry(self, textvariable=self.till, width=7)
-        entry.grid(row=3, column=1)
+        entry.grid(row=3, column=2)
+                
+        # 重命名
+        rename_bt = Button(self, text='自动重命名', command=self.rncmd)
+        rename_bt.grid(row=4, column=0)
         
-        # 状态
-        self.status = Label(self, text='待机', fg='blue')
-        self.status.grid(row=3, column=2)
+        # 检查更新
+        update_bt = Button(self, text='检查更新', command=self.checkver)
+        update_bt.grid(row=4, column=1)
+        
+        # 删除文件
+        delfile = Button(self, text='删auto.txt', command=self.delfile,
+                         fg='#990000')
+        delfile.grid(row=4, column=2)
         
         # self
         self.pack()
@@ -128,6 +138,8 @@ class Gui(Frame):
         if info_list:
             print()
             for line in info_list:
+                if line.startswith('下载时间：'):
+                    continue
                 datamachine.save_print(line.rstrip('\n'))
             print('===================================\n')
         
@@ -139,6 +151,45 @@ class Gui(Frame):
         
         try:
             os.remove(discard)
+        except:
+            pass
+        
+    def checkver(self):
+        self.status['fg'] = '#993300'
+        self.status['text'] = '处理中'
+        self.update()
+        
+        print('当前版本:', tz2txt.tz2txt_date)
+        
+        try:
+            newver, download_url = checkver.check()
+        except Exception as e:
+            print('出现异常：', e)
+        else:
+            if tz2txt.tz2txt_date != newver:
+                print('发现新版本:', newver)
+            else:
+                print('检查完毕，没有发现新版本')
+            print()
+        
+        self.status['fg'] = 'blue'
+        self.status['text'] = '待机'
+        
+    def rncmd(self):
+        try:
+            title = ''
+            with open(output, encoding='gb18030') as f:
+                for i, line in enumerate(f):
+                    if i > 1:
+                        break
+                    if line.startswith('标题：'):
+                        title = line[len('标题：'):].strip()
+                        
+            if title:
+                os.renames(output, title+'.txt')
+                print('重命名为：', title+'.txt')
+            else:
+                print('无法提取标题')
         except:
             pass
         
