@@ -116,7 +116,7 @@ class Gui(Frame):
         try:
             tz2txt.auto(u, till,
                         output, discard,
-                        label)
+                        label, print_info=True)
         except Exception as e:
             print('出现异常：', e)
 

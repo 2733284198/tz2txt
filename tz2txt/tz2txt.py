@@ -72,7 +72,7 @@ def compile_txt(infile, outfile, discard='', label=''):
     else:
         label = 0
     
-    chinese_ct = datamachine.bp_to_final(infile, outfile, 
+    chinese_ct, info_list = datamachine.bp_to_final(infile, outfile, 
                                          discard, label)
     chinese_ct = format(chinese_ct, ',')
 
@@ -86,9 +86,12 @@ def compile_txt(infile, outfile, discard='', label=''):
                                                 color_size,
                                                 color_chinese)
           )
+    
+    return info_list
 
 # 全自动处理
-def auto(url, pg_count, outfile, discard, label):
+def auto(url, pg_count, outfile, discard,
+         label, print_info=False):
     # 创建临时文件
     try:
         f = tempfile.NamedTemporaryFile(delete=False)
@@ -115,7 +118,12 @@ def auto(url, pg_count, outfile, discard, label):
     print('\n ===自动处理完毕，准备编译===\n')
 
     # 编译
-    compile_txt(f_name, outfile, discard, label)
+    info_list = compile_txt(f_name, outfile, discard, label)
+    if print_info:
+        print()
+        for line in info_list:
+            datamachine.save_print(line.rstrip('\n'))
+        print('===================================\n')
 
     # 删除临时文件
     try:

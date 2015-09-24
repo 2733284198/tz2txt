@@ -373,13 +373,13 @@ def bp_to_final(infile, outfile, discard='', label=0):
     color_p2 = color.fore_color(pickcount, color.Fore.YELLOW)
     print('共有{0}条回复，选择了其中{1}条回复'.format(color_p1, color_p2))
 
-    if info_list:
-        info_list.append('\n')
-
     # 写入最终文本
     with open(outfile, 'w', encoding='gb18030', errors='replace') as o:
         # 连接
-        s_iter = itertools.chain(info_list, text_list)
+        if info_list:
+            s_iter = itertools.chain(info_list, '\n', text_list)
+        else:
+            s_iter = iter(text_list)
         s = ''.join(s_iter)
 
         # 连续的多张图片
@@ -402,7 +402,7 @@ def bp_to_final(infile, outfile, discard='', label=0):
             s = ''.join(s_iter)
             a.write(s)
             
-    return chinese_ct
+    return chinese_ct, info_list
 
 def internal_to_bp(tz, outfile):
     '''内部形式 到 编排'''
