@@ -8,6 +8,7 @@ from tkinter.ttk import Radiobutton
 import color
 color.disable()
 import tz2txt
+import datamachine
 
 output = 'auto.txt'
 discard = '~discard.txt'
@@ -114,13 +115,19 @@ class Gui(Frame):
         self.status['text'] = '处理中'
         self.update()
         try:
-            tz2txt.auto(u, till,
-                        output, discard,
-                        label, print_info=True)
+            info_list = tz2txt.auto(u, till,
+                                     output, discard,
+                                     label)
         except Exception as e:
             print('出现异常：', e)
+            info_list = None
 
         self.status['text'] = '待机'
+        if info_list:
+            print()
+            for line in info_list:
+                datamachine.save_print(line.rstrip('\n'))
+            print('===================================\n')
         
     def delfile(self):
         try:

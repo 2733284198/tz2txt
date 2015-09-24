@@ -90,8 +90,7 @@ def compile_txt(infile, outfile, discard='', label=''):
     return info_list
 
 # 全自动处理
-def auto(url, pg_count, outfile, discard,
-         label, print_info=False):
+def auto(url, pg_count, outfile, discard, label):
     # 创建临时文件
     try:
         f = tempfile.NamedTemporaryFile(delete=False)
@@ -119,17 +118,14 @@ def auto(url, pg_count, outfile, discard,
 
     # 编译
     info_list = compile_txt(f_name, outfile, discard, label)
-    if print_info:
-        print()
-        for line in info_list:
-            datamachine.save_print(line.rstrip('\n'))
-        print('===================================\n')
 
     # 删除临时文件
     try:
         os.remove(f_name)
     except:
         print('删除临时文件{0}时出错'.format(f_name))
+        
+    return info_list
 
 # 验证url
 def is_url(url, silence=False):
