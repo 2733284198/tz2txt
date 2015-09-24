@@ -9,20 +9,17 @@ if sys.version_info < (3, 4, 0):
     if os.name == 'nt':
         os.system('pause')
     exit()
-
-import argparse
 import tempfile
 
 import color
-
 from red import red
 import datamachine
 from tzdatastruct import *
 from sites import *
 
 tz2txt_prog = 'tz2txt'
-tz2txt_ver = '1.3'          # 内部框架的版本
-tz2txt_date = '2015-09-21'  # 最后更新日期
+tz2txt_ver  = '1.3'         # 内部框架的版本
+tz2txt_date = '2015-09-24'  # 最后更新日期
 
 # 下载帖子、保存编排
 def download_till(url, pg_count, outfile):
@@ -127,11 +124,12 @@ def auto(url, pg_count, outfile, discard, label):
         print('删除临时文件{0}时出错'.format(f_name))
 
 # 验证url
-def is_url(url):
-    p = red.re_dict(r'^https?://', red.IGNORECASE)
-    if not p.match(url):
-        print('网址须要以http://或https://开头。')
-        return False
+def is_url(url, silence=False):
+    if not silence:
+        p = red.re_dict(r'^https?://', red.IGNORECASE)
+        if not p.match(url):
+            print('网址须要以http://或https://开头。')
+            return False
         
     p = red.re_dict(
         r'^https?://' # http:// or https://
@@ -163,6 +161,7 @@ if __name__ == '__main__':
     color.init()
     print('tz2txt 程序版本: %s\n' % tz2txt_date)
 
+    import argparse
     parser = argparse.ArgumentParser(prog=tz2txt_prog,
                                      description='用于帮助把帖子转为txt文件'
                                      )

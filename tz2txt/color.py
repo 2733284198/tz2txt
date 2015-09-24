@@ -19,6 +19,10 @@ else:
         CYAN = None
         WHITE = None
         RESET = None
+        
+def disable():
+    global colorama
+    colorama = None
 
 # 参数：原始内容，颜色（如color.Fore.RED），高亮
 def fore_color(raw, color, bright=True):

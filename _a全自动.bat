@@ -1,1 +1,1 @@
-.\tz2txt\tz2txt.py a -o auto.txt -d ~discard.txt
+.\tz2txt\gui.py
