@@ -194,10 +194,11 @@ class Gui(Frame):
             
         # 覆盖？
         ok = False
-        if not os.path.isfile(output) or \
-           self.override.get() == 1 or \
+        if (not os.path.isfile(output) or \
+            self.override.get() == 1 or \
             messagebox.askyesno('输出文件已存在', 
-                                '是否覆盖？\n%s' % output):
+                                '是否覆盖？\n%s' % output)) and \
+            os.path.getsize(f_name) > 0:
                 # 删除已有目标
                 try:
                     os.remove(output)
