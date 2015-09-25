@@ -1,6 +1,7 @@
 # coding=utf-8
 
 import os
+import tempfile
 from tkinter import *
 from tkinter import messagebox
 from tkinter.ttk import Radiobutton
@@ -11,74 +12,104 @@ import tz2txt
 import datamachine
 import checkver
 
-output = 'auto.txt'
+#output = 'auto.txt'
 discard = '~discard.txt'
         
 class Gui(Frame):
     def __init__(self, root):
         super().__init__(root)
         
-        # url
+        # url ============================
         self.url = StringVar()
-        self.url.set('复制某页的网址，直接按<处理网址>')
+        self.url.set('复制帖子某页的网址，然后直接按<处理网址>')
         entry = Entry(self, textvariable=self.url,
                       bg='#666699', fg='#FFFFFF')
-        entry.grid(row=0, column=0, columnspan=3, sticky=W+E)
+        entry.grid(row=0, column=0, columnspan=4, sticky=W+E)
         
+        #==================================
         # 粘贴并打开
         self.paste_do = Button(self, text='处理网址', command=self.doit,
                                bg='#cc9933')
         self.paste_do.grid(row=1, column=0)
+    
+        # 状态
+        self.status = Label(self, text='待机', fg='blue')
+        self.status.grid(row=1, column=1)
+        
+        # 检查更新
+        update_bt = Button(self, text='检测新版本', command=self.checkver)
+        update_bt.grid(row=1, column=2)
+        
+        # 删除文件
+        delfile = Button(self, text='删输出文件', command=self.delfile,
+                         fg='#990000')
+        delfile.grid(row=1, column=3)
+        
+        #================================
+        
+        # 辅助格式
+        l4 = Label(self, text='辅助格式:')
+        l4.grid(row=2, column=0)
+        
+        self.assist = IntVar()
+        self.assist.set(2)
+        
+        r1 = Radiobutton(self, text='无辅助',
+                         variable=self.assist, value=1)
+        r1.grid(row=2, column=1)
+        
+        r2 = Radiobutton(self, text='页码模式',
+                         variable=self.assist, value=2)
+        r2.grid(row=2, column=2)
+        
+        self.r3 = Radiobutton(self, text='楼层模式',
+                         variable=self.assist, value=3)
+        self.r3.grid(row=2, column=3)
+        
+        # 末页
+        l2 = Label(self, text='下载页数(-1为到末页):')
+        l2.grid(row=3, column=0, columnspan=2, sticky=E)
+        
+        self.till = StringVar()
+        self.till.set('-1')
+        entry = Entry(self, textvariable=self.till, width=7)
+        entry.grid(row=3, column=2)
+        
+        #====================================
+        # 输出文件
+        l3 = Label(self, text='输出文件:')
+        l3.grid(row=4, column=0)
+        
+        self.output = StringVar()
+        self.output.set('auto.txt')
+        self.e_out = Entry(self, textvariable=self.output, width=10)
+        self.e_out.grid(row=4, column=1)
+
+        # 重命名
+        self.rename = IntVar()
+        self.rename.set(0)
+        def callCheckbutton():
+            v = self.rename.get()
+            if v:
+                self.e_out.config(state='disabled')
+            else:
+                self.e_out.config(state='normal')
+            
+        cb = Checkbutton(self,
+                         variable=self.rename,
+                         text='自动重命名',
+                         command=callCheckbutton)
+        cb.grid(row=4, column=2)
         
         # 覆盖
         self.override = IntVar()
         self.override.set(0)
         cb = Checkbutton(self,
                          variable=self.override,
-                         text = '覆盖文件')
-        cb.grid(row=1, column=1)
+                         text = '覆盖已有文件')
+        cb.grid(row=4, column=3)
         
-        # 状态
-        self.status = Label(self, text='待机', fg='blue')
-        self.status.grid(row=1, column=2)
-        
-        # 辅助格式
-        self.assist = IntVar()
-        self.assist.set(2)
-        
-        r1 = Radiobutton(self, text='无辅助',
-                         variable=self.assist, value=1)
-        r1.grid(row=2, column=0)
-        
-        r2 = Radiobutton(self, text='页码模式',
-                         variable=self.assist, value=2)
-        r2.grid(row=2, column=1)
-        
-        self.r3 = Radiobutton(self, text='楼层模式',
-                         variable=self.assist, value=3)
-        self.r3.grid(row=2, column=2)
-        
-        # 末页
-        l2 = Label(self, text='下载页数(-1为到末页):')
-        l2.grid(row=3, column=0, columnspan=2)
-        
-        self.till = StringVar()
-        self.till.set('-1')
-        entry = Entry(self, textvariable=self.till, width=7)
-        entry.grid(row=3, column=2)
-                
-        # 重命名
-        rename_bt = Button(self, text='自动重命名', command=self.rncmd)
-        rename_bt.grid(row=4, column=0)
-        
-        # 检查更新
-        update_bt = Button(self, text='检查更新', command=self.checkver)
-        update_bt.grid(row=4, column=1)
-        
-        # 删除文件
-        delfile = Button(self, text='删auto.txt', command=self.delfile,
-                         fg='#990000')
-        delfile.grid(row=4, column=2)
+        #====================================
         
         # self
         self.pack()
@@ -91,19 +122,12 @@ class Gui(Frame):
         self.paste_do.focus_force()
     
     def doit(self):
+        # 获取、显示网址
         u = self.master.clipboard_get().strip()
         if not tz2txt.is_url(u, silence=True):
             self.url.set('无效网址')
             return
         self.url.set(u)
-        
-        # 覆盖？
-        override = self.override.get()
-        if override == 0 and os.path.isfile(output):
-            answer = messagebox.askyesno('输出文件已存在', 
-                                         '是否覆盖？')
-            if answer == False:
-                return
         
         # 辅助模式
         assist = self.assist.get()
@@ -120,22 +144,75 @@ class Gui(Frame):
             till = int(till)
         except:
             till = -1
+            
+        # 得到临时文件名
+        try:
+            curdir = os.getcwd()
+            f = tempfile.NamedTemporaryFile(delete=False,dir=curdir)
+            f_name = f.name
+            f.close()
+        except:
+            print('无法创建临时文件')
+            return
         
         # 执行命令
         self.status['fg'] = '#993300'
         self.status['text'] = '处理中'
         self.update()
+        
+        title = '没有找到标题'
         try:
             info_list = tz2txt.auto(u, till,
-                                     output, discard,
+                                     f_name, discard,
                                      label)
         except Exception as e:
             print('出现异常：', e)
             info_list = None
+        else:
+            # 提取标题
+            if self.rename.get():
+                for line in info_list:
+                    if line.startswith('标题：'):
+                        title = line[len('标题：'):].strip()
+                        break
+        finally:
+            self.status['fg'] = 'blue'
+            self.status['text'] = '待机'
+                    
+        # 输出文件名
+        if self.rename.get():
+            output = title + '.txt'
+        else:
+            output = self.output.get().strip()
+            
+        # 覆盖？
+        ok = False
+        if not os.path.isfile(output) or \
+           self.override.get() == 1 or \
+            messagebox.askyesno('输出文件已存在', 
+                                '是否覆盖？\n%s' % output):
+                # 删除已有
+                try:
+                    os.remove(output)
+                except:
+                    pass
+                
+                # 重命名
+                try:
+                    os.renames(f_name, output)
+                    print('\n重命名为：', output)
+                except Exception as e:
+                    print('\n重命名时出现异常', e)
+                else:
+                    ok = True
+        else:
+            # 删除已有
+            try:
+                os.remove(f_name)
+            except:
+                pass
 
-        self.status['fg'] = 'blue'
-        self.status['text'] = '待机'
-        if info_list:
+        if ok and info_list:
             print()
             for line in info_list:
                 if line.startswith('下载时间：'):
@@ -145,6 +222,7 @@ class Gui(Frame):
         
     def delfile(self):
         try:
+            output = self.output.get().strip()
             os.remove(output)
         except:
             pass
@@ -175,27 +253,9 @@ class Gui(Frame):
         self.status['fg'] = 'blue'
         self.status['text'] = '待机'
         
-    def rncmd(self):
-        try:
-            title = ''
-            with open(output, encoding='gb18030') as f:
-                for i, line in enumerate(f):
-                    if i > 1:
-                        break
-                    if line.startswith('标题：'):
-                        title = line[len('标题：'):].strip()
-                        
-            if title:
-                os.renames(output, title+'.txt')
-                print('重命名为：', title+'.txt')
-            else:
-                print('无法提取标题')
-        except:
-            pass
-        
 def main():
     root = Tk()
-    root.wm_title('tz2txt图形界面')
+    root.wm_title('tz2txt - 全自动处理')
     
     gui = Gui(root)
     
