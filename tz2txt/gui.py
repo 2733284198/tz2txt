@@ -175,6 +175,7 @@ class Gui(Frame):
         except Exception as e:
             print('出现异常：', e)
             info_list = None
+            return
         else:
             # 提取标题
             if self.rename.get():
