@@ -123,8 +123,15 @@ class Gui(Frame):
     
     def doit(self):
         # 获取、显示网址
-        u = self.master.clipboard_get().strip()
-        if not tz2txt.is_url(u, silence=True):
+        try:
+            u = self.master.clipboard_get().strip()
+        except:
+            bad = True
+            u = ''
+        else:
+            bad = False
+
+        if bad or not tz2txt.is_url(u, silence=True):
             self.url.set('无效网址')
             return
         self.url.set(u)
