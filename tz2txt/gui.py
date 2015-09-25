@@ -191,7 +191,7 @@ class Gui(Frame):
            self.override.get() == 1 or \
             messagebox.askyesno('输出文件已存在', 
                                 '是否覆盖？\n%s' % output):
-                # 删除已有
+                # 删除已有目标
                 try:
                     os.remove(output)
                 except:
@@ -206,7 +206,7 @@ class Gui(Frame):
                 else:
                     ok = True
         else:
-            # 删除已有
+            # 删除临时文件
             try:
                 os.remove(f_name)
             except:
