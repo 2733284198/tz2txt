@@ -48,7 +48,7 @@ class Gui(Frame):
         #================================
         
         # 辅助格式
-        l4 = Label(self, text='辅助格式:')
+        l4 = Label(self, text='辅助格式：')
         l4.grid(row=2, column=0)
         
         self.assist = IntVar()
@@ -67,7 +67,7 @@ class Gui(Frame):
         self.r3.grid(row=2, column=3)
         
         # 末页
-        l2 = Label(self, text='下载页数(-1为到末页):')
+        l2 = Label(self, text='下载页数(-1为到末页)：')
         l2.grid(row=3, column=0, columnspan=2, sticky=E)
         
         self.till = StringVar()
