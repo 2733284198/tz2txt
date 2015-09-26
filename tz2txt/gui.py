@@ -77,7 +77,7 @@ class Gui(Frame):
         
         #====================================
         # 输出文件
-        l3 = Label(self, text='输出文件:')
+        l3 = Label(self, text='输出文件：')
         l3.grid(row=4, column=0)
         
         self.output = StringVar()

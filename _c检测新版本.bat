@@ -1,1 +1,0 @@
-.\tz2txt\checkver.py
