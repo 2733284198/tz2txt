@@ -209,7 +209,7 @@ class Gui(Frame):
                 # 重命名
                 try:
                     os.renames(f_name, output)
-                    print('\n重命名为：', output)
+                    print('\n已保存为：', output)
                 except Exception as e:
                     print('\n重命名时出现异常', e)
                 else:
