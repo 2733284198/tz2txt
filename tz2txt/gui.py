@@ -131,8 +131,8 @@ class Gui(Frame):
         else:
             bad = False
 
-        if bad or not tz2txt.is_url(u, silence=True):
-            self.url.set('无效网址')
+        if bad or not tz2txt.is_url(u):
+            self.url.set('无效网址，网址须以http://或https://开头。')
             return
         self.url.set(u)
         

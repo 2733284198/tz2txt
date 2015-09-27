@@ -19,7 +19,7 @@ from sites import *
 
 tz2txt_prog = 'tz2txt'
 tz2txt_ver  = '1.3'         # 内部框架的版本
-tz2txt_date = '2015-09-25'  # 最后更新日期
+tz2txt_date = '2015-09-27'  # 最后更新日期
 
 # 下载帖子、保存编排
 def download_till(url, pg_count, outfile):
@@ -128,13 +128,7 @@ def auto(url, pg_count, outfile, discard, label):
     return info_list
 
 # 验证url
-def is_url(url, silence=False):
-    if not silence:
-        p = red.re_dict(r'^https?://', red.IGNORECASE)
-        if not p.match(url):
-            print('网址须要以http://或https://开头。')
-            return False
-        
+def is_url(url):
     p = red.re_dict(
         r'^https?://' # http:// or https://
         r'(?:(?:[A-Z0-9](?:[A-Z0-9-]{0,61}[A-Z0-9])?\.)+(?:[A-Z]{2,6}\.?|[A-Z0-9-]{2,}\.?)|' #domain...
@@ -272,7 +266,7 @@ if __name__ == '__main__':
                     url = args.url
 
                 if not is_url(url):
-                    print('网址格式错误，请检查。')
+                    print('网址格式错误，请检查，网址须以http://或https://开头。')
                 else:
                     pgnum = '末页' if args.tillnum == -1 else args.tillnum
                     print('网址：{0}\n下载页数：{1}\n输出文件：{2}\n'.format(
@@ -324,7 +318,7 @@ if __name__ == '__main__':
                     url = args.url
 
                 if not is_url(url):
-                    print('网址格式错误，请检查。')
+                    print('网址格式错误，请检查，网址须以http://或https://开头。')
                 else:
                     pgnum = '末页' if args.tillnum == -1 else args.tillnum
                     print('网址：{0}\n下载页数：{1}\n输出文件：{2}\n'.format(
