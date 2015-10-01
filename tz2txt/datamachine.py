@@ -398,7 +398,7 @@ def bp_to_final(infile, outfile, discard='', label=0):
     # 丢弃文本
     if discard and abandon_list:
         with open(discard, 'w', encoding='gb18030', errors='replace') as a:
-            s_iter = itertools.chain(info_list, abandon_list)
+            s_iter = itertools.chain(info_list, '\n', abandon_list)
             s = ''.join(s_iter)
             a.write(s)
             
@@ -422,7 +422,7 @@ def internal_to_bp(tz, outfile):
             # 头信息
             head = ('<page>页号: ', str(page.page_num), '\n',
                     '<page>网址: ', page.url, '\n',
-                    '<page>是否完结: ', str(page.finished), '\n',
+                    '<page>有后页: ', str(page.finished), '\n',
                     '<page>总回复数: ', str(allcount),
                     '  摘取回复数: ', str(pickcount)
                     )
@@ -454,7 +454,7 @@ def internal_to_bp(tz, outfile):
                              if tiezi.local_processor \
                              else ''
 
-            fmark = '(已完结)' if lastpg.finished else '(未完结)'
+            fmark = '(未下载到末页)' if lastpg.finished else '(已下载到末页)'
 
             post_time = '<tiezi>发帖时间：' + \
                         firstpg.replys[0].time.strftime('%Y-%m-%d %H:%M') + \
@@ -468,7 +468,7 @@ def internal_to_bp(tz, outfile):
                     post_time,
                     '<tiezi>下载时间：',datetime.now().strftime('%Y-%m-%d %H:%M'),'\n',
                     '起始页号', str(firstpg.page_num),
-                    '，末尾页号', str(lastpg.page_num), fmark, '\n',
+                    '，末尾页号', str(lastpg.page_num), ' ', fmark, '\n',
                     '总回复数: ', str(allcount),
                     '  摘取回复数: ', str(pickcount), '\n\n'
                     )
