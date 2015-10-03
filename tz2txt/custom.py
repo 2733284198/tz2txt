@@ -13,7 +13,7 @@ def process(processor):
     print('>custom.process')
 
     # 去掉短引用
-    short_quote(processor, 30, 30, 'or')
+    keep_long_quote(processor, 30, 30, 'or')
 
 ##    # 连载过滤
     #regex = r'^[\d一二三四五六七八九十零]{1,3}、?'
@@ -43,8 +43,12 @@ def lianzai_fliter(processor, regex, flags):
 
     print('...选择了{0}条回复作为连载'.format(count))
 
-def short_quote(processor, quote_len, reply_len, logic='or'):
-    '''处理短引用'''
+def keep_long_quote(processor, quote_len, reply_len, logic='or'):
+    '''
+    只保留长引用
+    被引用字数 >= quote_len，回复字数 >= reply_len
+    logic为逻辑关系
+    '''
     
     # 返回True表示保留，返回False表示去掉
     def deal_logic(t):
@@ -55,9 +59,9 @@ def short_quote(processor, quote_len, reply_len, logic='or'):
 
     logic = logic.lower()
     if logic == 'and':
-        template = '>筛除短引用回复\n...保留:引用部分>={0} 且 回复部分>={1}'
+        template = '>只保留长引用回复\n...保留:引用部分>={0} 且 回复部分>={1}'
     else:
-        template = '>筛除短引用回复\n...保留:引用部分>={0} 或 回复部分>={1}'
+        template = '>只保留长引用回复\n...保留:引用部分>={0} 或 回复部分>={1}'
     print(template.format(quote_len, reply_len))
     
     len_count = 0
