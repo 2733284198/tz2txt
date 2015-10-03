@@ -2,6 +2,7 @@
 
 import os
 import tempfile
+import webbrowser
 from tkinter import *
 from tkinter import messagebox
 from tkinter.ttk import Radiobutton
@@ -40,10 +41,9 @@ class Gui(Frame):
         update_bt = Button(self, text='检测新版本', command=self.checkver)
         update_bt.grid(row=1, column=2)
         
-        # 删除文件
-        delfile = Button(self, text='删输出文件', command=self.delfile,
-                         fg='#990000')
-        delfile.grid(row=1, column=3)
+        # 使用帮助
+        help = Button(self, text='使用帮助', command=self.help_bt)
+        help.grid(row=1, column=3)
         
         #================================
         
@@ -74,6 +74,11 @@ class Gui(Frame):
         self.till.set('-1')
         entry = Entry(self, textvariable=self.till, width=7)
         entry.grid(row=3, column=2)
+        
+        # 删除文件
+        delfile = Button(self, text='删输出文件', command=self.delfile,
+                         fg='#990000')
+        delfile.grid(row=3, column=3)
         
         #====================================
         # 输出文件
@@ -114,9 +119,6 @@ class Gui(Frame):
         # self
         self.pack()
         
-        self.fixrb()
-        
-    def fixrb(self):
         # fix radiobutton draw
         self.r3.focus_force()
         self.paste_do.focus_force()
@@ -261,6 +263,13 @@ class Gui(Frame):
         
         self.status['fg'] = 'blue'
         self.status['text'] = '待机'
+        
+    def help_bt(self):
+        url = 'http://www.cnblogs.com/animalize/p/4770397.html'
+        try:
+            webbrowser.open_new_tab(url)
+        except:
+            print('无法用浏览器打开使用帮助，网址：', url)
         
 def main():
     root = Tk()

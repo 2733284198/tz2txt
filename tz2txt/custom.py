@@ -26,7 +26,7 @@ def process(processor):
 # 通常是：把不想要的标为False
 
 def lianzai_fliter(processor, regex, flags):
-    '''连载过滤器。注意：只标记suggest，不考虑select'''
+    '''连载过滤器。注意：只标记suggest，不会考虑select'''
     
     print('>连载过滤器\n...正则式:{0}'.format(regex))
     
