@@ -257,6 +257,12 @@ class Gui(Frame):
         else:
             if tz2txt.tz2txt_date != newver:
                 print('发现新版本:', newver)
+                if messagebox.askyesno('发现新版本', 
+                        '最新版本：%s\n是否用浏览器打开下载网址？' % newver):
+                    try:
+                        webbrowser.open_new_tab(download_url)
+                    except:
+                        print('无法用浏览器打开下载网址：', download_url)
             else:
                 print('检查完毕，没有发现新版本')
             print()
