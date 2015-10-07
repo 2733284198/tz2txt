@@ -15,6 +15,7 @@ import checkver
 
 #output = 'auto.txt'
 discard = '~discard.txt'
+url_use = '复制帖子某页的网址，然后直接按<处理网址>'
         
 class Gui(Frame):
     def __init__(self, root):
@@ -22,7 +23,7 @@ class Gui(Frame):
         
         # url ============================
         self.url = StringVar()
-        self.url.set('复制帖子某页的网址，然后直接按<处理网址>')
+        self.url.set(url_use)
         entry = Entry(self, textvariable=self.url,
                       bg='#666699', fg='#FFFFFF')
         entry.grid(row=0, column=0, columnspan=4, sticky=W+E)
@@ -244,6 +245,8 @@ class Gui(Frame):
             os.remove(discard)
         except:
             pass
+        
+        self.url.set(url_use)
         
     def checkver(self):
         self.status['fg'] = '#993300'
