@@ -33,8 +33,8 @@ class red:
     @staticmethod
     def re_dict(re_str, flags=0):
         '''使正则式只编译一次'''
-        compiled = red.regexs.get((re_str, flags), -1)
-        if compiled == -1:
+        compiled = red.regexs.get((re_str, flags), 0)
+        if compiled == 0:
             try:
                 compiled = re.compile(re_str, flags)
             except Exception as e:
