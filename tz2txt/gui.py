@@ -169,7 +169,8 @@ class Gui(Frame):
         self.status['text'] = '处理中'
         self.update()
         
-        title = '没有找到标题'
+        # except里return
+        # else里提取title
         try:
             info_list = tz2txt.auto(u, till,
                                      f_name, discard,
@@ -180,11 +181,12 @@ class Gui(Frame):
             return
         else:
             # 提取标题
-            if self.rename.get():
-                for line in info_list:
-                    if line.startswith('标题：'):
-                        title = line[len('标题：'):].strip()
-                        break
+            for line in info_list:
+                if line.startswith('标题：'):
+                    title = line[len('标题：'):].strip()
+                    break
+            # 显示标题
+            self.url.set(title)
         finally:
             self.status['fg'] = 'blue'
             self.status['text'] = '待机'
