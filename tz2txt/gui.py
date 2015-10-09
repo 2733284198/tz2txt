@@ -176,10 +176,20 @@ class Gui(Frame):
             info_list = tz2txt.auto(u, till,
                                      f_name, discard,
                                      label)
+            if info_list == None:
+                raise Exception('无法完成自动处理')
+        
         except Exception as e:
-            print('出现异常：', e)
-            info_list = None
+            print('\n出现异常：', e)
+            print('===================================\n')
+
+            try:
+                os.remove(f_name)
+            except:
+                pass
+            
             return
+        
         else:
             # 提取标题
             for line in info_list:
@@ -188,6 +198,7 @@ class Gui(Frame):
                     break
             # 显示标题
             self.url.set(title)
+        
         finally:
             self.status['fg'] = 'blue'
             self.status['text'] = '待机'

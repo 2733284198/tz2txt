@@ -19,7 +19,7 @@ from sites import *
 
 tz2txt_prog = 'tz2txt'
 tz2txt_ver  = '1.3'         # 内部框架的版本
-tz2txt_date = '2015-10-07'  # 最后更新日期
+tz2txt_date = '2015-10-09'  # 最后更新日期
 
 # 下载帖子、保存编排
 def download_till(url, pg_count, outfile):
@@ -89,7 +89,7 @@ def compile_txt(infile, outfile, discard='', label=''):
     
     return info_list
 
-# 全自动处理
+# 全自动处理，返回info_list或None
 def auto(url, pg_count, outfile, discard, label):
     # 创建临时文件
     try:
@@ -98,7 +98,7 @@ def auto(url, pg_count, outfile, discard, label):
         f.close()
     except:
         print('无法创建临时文件')
-        return
+        return None
 
     # 下载
     outfilesize = download_till(url, pg_count, f_name)
@@ -108,7 +108,7 @@ def auto(url, pg_count, outfile, discard, label):
             os.remove(f_name)
         except:
             print('删除临时文件{0}时出错'.format(f_name))
-        return
+        return None
     
     print('\n ===下载完毕，准备自动处理===\n')
 
