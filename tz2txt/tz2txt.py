@@ -93,6 +93,10 @@ def auto(url, pg_count, outfile, discard, label):
     # 下载
     outfilesize = download_till(url, pg_count, outfile)
     if not outfilesize:
+        try:
+            os.remove(outfile)
+        except:
+            print('删除文件{0}时出错'.format(outfile))
         return None
     
     print('\n ===下载完毕，准备自动处理===\n')
