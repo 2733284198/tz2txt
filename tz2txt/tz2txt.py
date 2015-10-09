@@ -9,7 +9,6 @@ if sys.version_info < (3, 4, 0):
     if os.name == 'nt':
         os.system('pause')
     exit()
-import tempfile
 
 import color
 from red import red
@@ -91,39 +90,19 @@ def compile_txt(infile, outfile, discard='', label=''):
 
 # 全自动处理，返回info_list或None
 def auto(url, pg_count, outfile, discard, label):
-    # 创建临时文件
-    try:
-        f = tempfile.NamedTemporaryFile(delete=False)
-        f_name = f.name
-        f.close()
-    except:
-        print('无法创建临时文件')
-        return None
-
     # 下载
-    outfilesize = download_till(url, pg_count, f_name)
+    outfilesize = download_till(url, pg_count, outfile)
     if not outfilesize:
-        # 删除临时文件
-        try:
-            os.remove(f_name)
-        except:
-            print('删除临时文件{0}时出错'.format(f_name))
         return None
     
     print('\n ===下载完毕，准备自动处理===\n')
 
     # 自动处理
-    bp_process_bp(f_name, f_name, automode=True)
+    bp_process_bp(outfile, outfile, automode=True)
     print('\n ===自动处理完毕，准备编译===\n')
 
     # 编译
-    info_list = compile_txt(f_name, outfile, discard, label)
-
-    # 删除临时文件
-    try:
-        os.remove(f_name)
-    except:
-        print('删除临时文件{0}时出错'.format(f_name))
+    info_list = compile_txt(outfile, outfile, discard, label)
         
     return info_list
 
