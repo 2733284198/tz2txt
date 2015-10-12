@@ -527,7 +527,7 @@ def web_to_internal(url, pg_count):
             parser = AbPageParser.get_parser(url, data)
             if not parser:
                 print('无法找到页面解析器')
-                break
+                return None
             
             # 检查解析器
             parser.set_page(url, data)
@@ -535,7 +535,7 @@ def web_to_internal(url, pg_count):
                 print(' 可能是网页改版，导致无法提取数据。')
                 print(' 请使用“检测新版本”功能检测是否有新程序可用。')
                 print()
-                break
+                return None
         else:
             # 送数据到解析器
             parser.set_page(url, data)
