@@ -173,7 +173,7 @@ class Gui(Frame):
         # except里return
         # else里提取title
         try:
-            info_list = tz2txt.auto(u, till,
+            title, info_list = tz2txt.auto(u, till,
                                      f_name, discard,
                                      label)
             if info_list == None:
@@ -191,11 +191,6 @@ class Gui(Frame):
             return
         
         else:
-            # 提取标题
-            for line in info_list:
-                if line.startswith('标题：'):
-                    title = line[len('标题：'):].strip()
-                    break
             # 显示标题
             self.url.set(title)
         
@@ -311,6 +306,7 @@ def main():
     
     print('程序版本: %s\n' % tz2txt.tz2txt_date)
     
+    root.resizable(False, False)
     root.mainloop()
 
 if __name__ == '__main__':

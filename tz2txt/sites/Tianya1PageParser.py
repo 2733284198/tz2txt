@@ -96,6 +96,10 @@ class Tianya1PageParser(AbPageParser):
             # [来自UC浏览器]
             p = red.re_dict(r'\[来自[^\n]{1,15}浏览器\]')
             text = p.sub(r'', text)
+            
+            # 本帖发自天涯社区手机客户端
+            p = red.re_dict(r'\s*本帖发自天涯社区手机客户端')
+            text = p.sub(r'', text)
 
             # 替换图片
             regex = (r'''<img\s+.*?original\s*=\s*['"]'''

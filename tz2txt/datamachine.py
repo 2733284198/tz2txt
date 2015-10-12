@@ -405,7 +405,10 @@ def bp_to_final(infile, outfile, discard='', label=0):
     return chinese_ct, info_list
 
 def internal_to_bp(tz, outfile):
-    '''内部形式 到 编排'''
+    '''
+    内部形式 到 编排
+    返回(标题,输出文件字节)
+    '''
     
     def page_to_g(page, user):
         '''一页，返回：文本，摘取回复数，总回复数'''
@@ -482,12 +485,12 @@ def internal_to_bp(tz, outfile):
     #----------------------------------
     if not tz or not tz.pages:
         print('一页也没有，不输出编排文件')
-        return 0
+        return '', 0
 
     text = tiezi_to_g(tz)
     if text == None:
         print('\n没有摘取到回复，不输出文件')
-        return 0
+        return '', 0
 
     with open(outfile, 'w', encoding='gb18030', errors='replace') as o:
         o.write(text)
@@ -495,7 +498,7 @@ def internal_to_bp(tz, outfile):
     size = os.path.getsize(outfile)
     print('\n输出文件共{0}字节'.format(format(size,',')))
     
-    return size
+    return tz.title, size
 
 def web_to_internal(url, pg_count):
     '''论坛帖子 到 内部形式'''

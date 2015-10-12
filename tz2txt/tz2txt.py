@@ -18,7 +18,7 @@ from sites import *
 
 tz2txt_prog = 'tz2txt'
 tz2txt_ver  = '1.3'         # 内部框架的版本
-tz2txt_date = '2015-10-09'  # 最后更新日期
+tz2txt_date = '2015-10-12'  # 最后更新日期
 
 # 下载帖子、保存编排
 def download_till(url, pg_count, outfile):
@@ -91,7 +91,7 @@ def compile_txt(infile, outfile, discard='', label=''):
 # 全自动处理，返回info_list或None
 def auto(url, pg_count, outfile, discard, label):
     # 下载
-    outfilesize = download_till(url, pg_count, outfile)
+    title, outfilesize = download_till(url, pg_count, outfile)
     if not outfilesize:
         try:
             os.remove(outfile)
@@ -108,7 +108,7 @@ def auto(url, pg_count, outfile, discard, label):
     # 编译
     info_list = compile_txt(outfile, outfile, discard, label)
         
-    return info_list
+    return title, info_list
 
 # 验证url
 def is_url(url):
