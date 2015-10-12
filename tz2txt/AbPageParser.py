@@ -48,7 +48,7 @@ class AbPageParser(metaclass=ABCMeta):
                 #print('找到解析器', i)
                 return i()
         else:
-            print('无法找到页面解析器')
+            print('无法找到处理这个网址的解析器')
             return None
 
     @staticmethod

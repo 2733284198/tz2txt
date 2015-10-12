@@ -526,7 +526,6 @@ def web_to_internal(url, pg_count):
         if not parser:
             parser = AbPageParser.get_parser(url, data)
             if not parser:
-                print('无法找到页面解析器')
                 return None
             
             # 检查解析器
