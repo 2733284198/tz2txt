@@ -18,7 +18,7 @@ from sites import *
 
 tz2txt_prog = 'tz2txt'
 tz2txt_ver  = '1.3'         # 内部框架的版本
-tz2txt_date = '2015-10-12'  # 最后更新日期
+tz2txt_date = '2015-10-12a'  # 最后更新日期
 
 # 下载帖子、保存编排
 def download_till(url, pg_count, outfile):
@@ -97,7 +97,7 @@ def auto(url, pg_count, outfile, discard, label):
             os.remove(outfile)
         except:
             print('删除文件{0}时出错'.format(outfile))
-        return None
+        return None, None
     
     print('\n ===下载完毕，准备自动处理===\n')
 

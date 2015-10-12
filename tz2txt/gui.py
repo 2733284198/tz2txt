@@ -171,12 +171,11 @@ class Gui(Frame):
         self.update()
         
         # except里return
-        # else里提取title
         try:
             title, info_list = tz2txt.auto(u, till,
                                      f_name, discard,
                                      label)
-            if info_list == None:
+            if title == None:
                 raise Exception('无法完成自动处理')
         
         except Exception as e:
