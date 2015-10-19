@@ -1,6 +1,7 @@
 # coding=utf-8
 
 import os
+import re
 import tempfile
 import webbrowser
 from tkinter import *
@@ -202,6 +203,9 @@ class Gui(Frame):
             output = title + '.txt'
         else:
             output = self.output.get().strip()
+        
+        # 合法文件名
+        output = re.sub(r'[\\/:*?"<>|]', r'', output)
             
         # 覆盖？
         ok = False
