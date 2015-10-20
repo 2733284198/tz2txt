@@ -1,7 +1,7 @@
 # coding=utf-8
 
 import os
-import re
+from red import red
 import tempfile
 import webbrowser
 from tkinter import *
@@ -205,7 +205,9 @@ class Gui(Frame):
             output = self.output.get().strip()
         
         # 合法文件名
-        output = re.sub(r'[\\/:*?"<>|]', r'', output)
+        output = red.sub(r'[\\/:*?"<>|]', r'', output)
+        if output == '.txt':
+            output = '楼主.txt'
             
         # 覆盖？
         ok = False
