@@ -271,7 +271,7 @@ class Gui(Frame):
         except Exception as e:
             print('出现异常：', e)
         else:
-            if tz2txt.tz2txt_date != newver:
+            if newver > tz2txt.tz2txt_date:
                 print('发现新版本:', newver)
                 if messagebox.askyesno('发现新版本', 
                         '最新版本：%s\n是否用浏览器打开下载网址？' % newver):
@@ -279,6 +279,8 @@ class Gui(Frame):
                         webbrowser.open_new_tab(download_url)
                     except:
                         print('无法用浏览器打开下载网址：', download_url)
+            elif newver != tz2txt.tz2txt_date:
+                print('当前版本比网盘版本(%s)新' % newver)
             else:
                 print('检查完毕，没有发现新版本')
             print()

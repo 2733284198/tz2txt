@@ -18,7 +18,7 @@ from sites import *
 
 tz2txt_prog = 'tz2txt'
 tz2txt_ver  = '1.3'         # 内部框架的版本
-tz2txt_date = '2015-10-20'  # 最后更新日期
+tz2txt_date = '2015-10-21'  # 最后更新日期
 
 # 下载帖子、保存编排，返回(标题,输出文件字节数)
 def download_till(url, pg_count, outfile):
