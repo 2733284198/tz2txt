@@ -192,6 +192,7 @@ class Gui(Frame):
         
         else:
             # 显示标题
+            title = red.sub(r'[\U00010000-\U0010FFFF]', r'', title)
             self.url.set(title)
         
         finally:
