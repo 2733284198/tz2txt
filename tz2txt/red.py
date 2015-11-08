@@ -1,6 +1,13 @@
 # coding=utf-8
 
-import re
+try:
+    import regex as re
+    vt = tuple(int(i.strip()) for i in re.__version__.split('.'))
+    if vt < (2, 4, 85):
+        print('regex版本较低:%s, 使用内置re' % re.__version__)
+        raise Exception('regex version is low')
+except:
+    import re
 
 #========================================
 #       正则字典
