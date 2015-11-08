@@ -39,6 +39,7 @@ class Page:
 class Tiezi:
     '''一个帖子'''
     def __init__(self):
+        self.begin_url = ''
         self.title = ''
         self.louzhu = ''
         self.pages = list()

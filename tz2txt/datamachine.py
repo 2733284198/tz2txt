@@ -470,6 +470,7 @@ def internal_to_bp(tz, outfile):
                     '<tiezi>楼主：', tiezi.louzhu, '\n',
                     post_time,
                     '<tiezi>下载时间：',datetime.now().strftime('%Y-%m-%d %H:%M'),'\n',
+                    '<tiezi>起始网址：', tiezi.begin_url, '\n',
                     '起始页号', str(firstpg.page_num),
                     '，末尾页号', str(lastpg.page_num), ' ', fmark, '\n',
                     '总回复数: ', str(allcount),
@@ -535,6 +536,9 @@ def web_to_internal(url, pg_count):
                 print(' 请使用“检测新版本”功能检测是否有新程序可用。')
                 print()
                 return None
+            
+            # 起始下载页
+            tz.begin_url = url
         else:
             # 送数据到解析器
             parser.set_page(url, data)
