@@ -242,7 +242,7 @@ class Gui(Frame):
             print()
             for line in info_list:
                 if line.startswith('下载时间：'):
-                    continue
+                    break
                 datamachine.save_print(line.rstrip('\n'))
             print('===================================\n')
         
