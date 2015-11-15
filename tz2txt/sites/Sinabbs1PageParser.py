@@ -87,7 +87,7 @@ class Sinabbs1PageParser(AbPageParser):
                      r'"([^"]+)"[^>]*?onmouseout="attachimginfo\(this'
                      r'[^>]*>'
                      )
-            p = red.re_dict(regex, red.IGNORECASE)
+            p = red.re_dict(regex, red.IGNORECASE|red.A)
             text = p.sub(r'\n[img]\1[/img]', text)
 
             # 图片下面的日期
@@ -95,7 +95,7 @@ class Sinabbs1PageParser(AbPageParser):
                      r'\d{4}-\d{1,2}-\d{1,2}\s+\d{1,2}:\d{1,2}'
                      r'<br\s*/?></div>'
                      )
-            p = red.re_dict(regex, red.IGNORECASE)
+            p = red.re_dict(regex, red.IGNORECASE|red.A)
             text = p.sub(r'', text)
 
             # 引用
@@ -105,18 +105,18 @@ class Sinabbs1PageParser(AbPageParser):
                  r'(.*?)(?:<br\s*/?>|\s)*'
                  r'</blockquote></div>'
                  )
-            p = red.re_dict(r, red.I|red.S)
+            p = red.re_dict(r, red.I|red.S|red.A)
             text = p.sub(r'\n回复 \1:\n【引用开始】\2\n【引用结束】\n', text)
 
             # 去标签
-            p = red.re_dict(r'(?!<br\s*/?>|</p>)<[^>]+>', red.I)
+            p = red.re_dict(r'(?!<br\s*/?>|</p>)<[^>]+>', red.I|red.A)
             text = p.sub('', text)
 
             # 去html转义
             text = self.de_html_char(text)
             
             # 换行、行首空格
-            p = red.re_dict(r'(?:\x0D\x0A?|<br\s*/?>|</p>)\s*', red.I)
+            p = red.re_dict(r'(?:\x0D\x0A?|<br\s*/?>|</p>)\s*', red.I|red.A)
             text = p.sub(r'\n', text)
 
             # 三个以上换行

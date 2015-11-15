@@ -11,7 +11,7 @@ class Sinabbs1Processor(BaseProcessor):
                 # ^RE:title\n
                 [
                     r'^RE:[^\n]{1,50}\n',
-                    red.I,
+                    red.I|red.A,
                     r''
                 ],
 

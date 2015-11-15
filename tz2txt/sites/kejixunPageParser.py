@@ -79,15 +79,15 @@ class kejixunPageParser(AbPageParser):
             '''子函数，返回处理后的文本'''
             
             # 去style
-            p = red.re_dict(r'<style.*?</style>', red.I|red.S)
+            p = red.re_dict(r'<style.*?</style>', red.I|red.S|red.A)
             text = p.sub('', text)
 
             # 去标签
-            p = red.re_dict(r'(?!<br\s*/?>|</p>)<[^>]+>', red.I)
+            p = red.re_dict(r'(?!<br\s*/?>|</p>)<[^>]+>', red.I|red.A)
             text = p.sub('', text)
 
             # 换行、行首空格
-            p = red.re_dict(r'(?:\x0D\x0A?|<br\s*/?>|</p>)\s*', red.I)
+            p = red.re_dict(r'(?:\x0D\x0A?|<br\s*/?>|</p>)\s*', red.I|red.A)
             text = p.sub(r'\n', text)
             
             # 去html转义

@@ -80,7 +80,7 @@ class Tieba1PageParser(AbPageParser):
                      r'class="BDE_Image"[^>]*?'
                      r'src\s*=\s*"([^"]+)"[^>]*>'
                      )
-            p = red.re_dict(regex, red.IGNORECASE)
+            p = red.re_dict(regex, red.IGNORECASE|red.A)
             text = p.sub(r'\n[img]\1[/img]', text)
 
             # 去掉图片，来自...相册
@@ -88,7 +88,7 @@ class Tieba1PageParser(AbPageParser):
                      r'.*?'
                      r'</span>'
                      )
-            p = red.re_dict(regex, red.IGNORECASE)
+            p = red.re_dict(regex, red.IGNORECASE|red.A)
             text = p.sub(r'', text)
             
             # 去语音
@@ -100,14 +100,14 @@ class Tieba1PageParser(AbPageParser):
             text = p.sub(r'【一段语音】\n', text)
             
             # 去标签
-            p = red.re_dict(r'(?!<br\s*/?>|</p>)<[^>]+>', red.I)
+            p = red.re_dict(r'(?!<br\s*/?>|</p>)<[^>]+>', red.I|red.A)
             text = p.sub('', text)
 
             # 去html转义
             text = self.de_html_char(text)
 
             # 换行、行首空格
-            p = red.re_dict(r'(?:\x0D\x0A?|<br\s*/?>|</p>)\s*', red.I)
+            p = red.re_dict(r'(?:\x0D\x0A?|<br\s*/?>|</p>)\s*', red.I|red.A)
             text = p.sub(r'\n', text)
 
             # 三个以上换行

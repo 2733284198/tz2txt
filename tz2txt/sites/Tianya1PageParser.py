@@ -78,15 +78,15 @@ class Tianya1PageParser(AbPageParser):
             text = text.replace('　', ' ')
             
             # <br>->\n，去掉行首空格
-            p = red.re_dict(r'(?:\n|<br/??>)\s*', red.IGNORECASE)
+            p = red.re_dict(r'(?:\n|<br/??>)\s*', red.IGNORECASE|red.A)
             text = p.sub(r'\n', text)
 
             # <p ..></p>
-            p = red.re_dict(r'<p[\s>].*?</p>', red.IGNORECASE)
+            p = red.re_dict(r'<p[\s>].*?</p>', red.IGNORECASE|red.A)
             text = p.sub(r'', text)
 
             # <table></table>
-            p = red.re_dict(r'<table[\s>].*?</table>', red.IGNORECASE)
+            p = red.re_dict(r'<table[\s>].*?</table>', red.IGNORECASE|red.A)
             text = p.sub(r'', text)
 
             # 【发自爱天涯Android客户端】
@@ -107,7 +107,7 @@ class Tianya1PageParser(AbPageParser):
             regex = (r'''<img\s+.*?original\s*=\s*['"]'''
                      r'''(http://[^'"]+)['"].*?(?:/>|</img>|>)'''
                      )
-            p = red.re_dict(regex, red.IGNORECASE)
+            p = red.re_dict(regex, red.IGNORECASE|red.A)
             text = p.sub(r'\n[img '+str(pg_num)+r']\1[/img]', text)
 
             # 链接

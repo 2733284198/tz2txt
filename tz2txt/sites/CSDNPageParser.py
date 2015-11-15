@@ -83,11 +83,11 @@ class CSDNPageParser(AbPageParser):
             text = p.sub(r'回复 \1：\n【引用开始】\2\n【引用结束】\3', text)
 
             # 去标签
-            p = red.re_dict(r'(?!<br\s*/?>|</p>)<[^>]+>', red.I)
+            p = red.re_dict(r'(?!<br\s*/?>|</p>)<[^>]+>', red.I|red.A)
             text = p.sub('', text)
 
             # 换行、行首空格
-            p = red.re_dict(r'(?:\x0D\x0A?|<br\s*/?>|</p>)\s*', red.I)
+            p = red.re_dict(r'(?:\x0D\x0A?|<br\s*/?>|</p>)\s*', red.I|red.A)
             text = p.sub(r'\n', text)
             
             # 去html转义
