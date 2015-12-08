@@ -242,7 +242,7 @@ class Gui(Frame):
             pass
         
         try:
-            os.remove(discard)
+            os.remove(discard_fn)
         except:
             pass
         

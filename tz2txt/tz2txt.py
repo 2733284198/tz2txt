@@ -126,7 +126,7 @@ def compile_txt(infile, outfile,
         infile = read_input(infile)
         
     # keep_discard
-    keep_discard = False if not discard else True
+    keep_discard = True if discard else False
     
     # 格式
     label = label.lower()
@@ -186,7 +186,7 @@ def auto(url, pg_count, outfile, discard, label, from_gui=False):
 
     # 编译
     output, discard_output, info_list, chinese_ct = \
-        compile_txt(bp_object, '', '', label, automode=True)
+        compile_txt(bp_object, '', discard, label, automode=True)
         
     if not from_gui:
         # write file
