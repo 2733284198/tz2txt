@@ -66,9 +66,11 @@ def download_till(url, pg_count, outfile, automode=False):
         write_output(output, outfile)
 
 # 读入编排、统计
-def statistic(infile):
-    size = os.path.getsize(infile)
-    print('编排文件{0}，共{1}字节\n'.format(infile, format(size,',')))
+def statistic(infile, automode=False):
+    if not automode:
+        size = os.path.getsize(infile)
+        print('编排文件{0}，共{1}字节\n'.format(infile, format(size,',')))
+        infile = read_input(infile)
           
     lst = datamachine.bp_to_internal2(infile)
     datamachine.print_bp_head(lst)
