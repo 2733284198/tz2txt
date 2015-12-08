@@ -4,7 +4,7 @@
 ##  tz = web_to_internal(url, pg_count)
 ##
 ##  内部状态1 到 编排
-##  internal_to_bp(tz, outfile)
+##  internal_to_bp(tz)
 ##
 ##  ----------------------------
 ##
@@ -15,7 +15,7 @@
 ##  lst = process_internal2(lst)
 ##
 ##  内部状态2 到 编排
-##  internal2_to_bp(lst, outfile)
+##  internal2_to_bp(lst)
 ##
 ##  ----------------------------
 ##
@@ -130,7 +130,7 @@ def reply_to_bp(reply, select):
          )
     return ''.join(t)
 
-def internal2_to_bp(all_list, outfile):
+def internal2_to_bp(all_list):
     '''中间形式2 到 编排文本'''
     def to_bp(obj):
         if isinstance(obj, str):
@@ -141,74 +141,63 @@ def internal2_to_bp(all_list, outfile):
     
     if not all_list:
         print('无法处理，请检查输入文件是否为编排文本')
-        return False
+        return None
     
-    with open(outfile, 'w', encoding='gb18030', errors='replace') as out:
-        write_list = (to_bp(one) for one in all_list)
-        write_buffer = '\n'.join(write_list)
-   
-        out.write(write_buffer)
-    return True
+    write_list = (to_bp(one) for one in all_list)
+    output = StringIO('\n'.join(write_list))
+    
+    return output
 
-def bp_to_internal2(infile):
+def bp_to_internal2(input):
     '''编排文本 到 中间形式2'''
     all_list = list()
 
-    # 读入编排
-    with open(infile, encoding='gb18030', errors='replace') as bp:
-        pattern = red.re_dict(r'<(\d{4}-\d\d-\d\d\s+\d\d:\d\d:\d\d)')
-        dt = lambda s:datetime.strptime(s, '%Y-%m-%d  %H:%M:%S')
+    pattern = red.re_dict(r'<(\d{4}-\d\d-\d\d\s+\d\d:\d\d:\d\d)')
+    dt = lambda s:datetime.strptime(s, '%Y-%m-%d  %H:%M:%S')
+    
+    temp = list()
+    temp_date = None
+    in_reply = False
+
+    for line in input.readlines():
+        line = line.rstrip('\n')
         
-        temp = list()
-        temp_date = None
-        in_reply = False
-
-        try:
-            bptext = bp.readlines()
-            for line in bptext:
-                line = line.rstrip('\n')
-                
-                if line.startswith('<time>'):
-                    if in_reply == True:
-                        print('格式错误：回复文本的前后包括标志不配对。\n',
-                              '丢失<mark>行')
-                        break
-                    m = pattern.search(line)
-                    if not m:
-                        print('无法解析日期')
-                        break
-                    temp_date = dt(m.group(1))
-                    in_reply = True
-
-                elif line.startswith('<mark>'):
-                    if in_reply == False:
-                        print('格式错误：回复文本的前后包括标志不配对。\n',
-                              '丢失<time>行')
-                        break
-                    if line.endswith('█'):
-                        select = True
-                    else:
-                        select = False
-                    # 添加回复
-                    rpl = BPReply(temp_date, '\n'.join(temp), select)
-                    all_list.append(rpl)
-                    
-                    temp.clear()
-                    in_reply = False
-
-                elif in_reply:
-                    temp.append(line)
-
-                elif not in_reply:
-                    all_list.append(line)
-                    
+        if line.startswith('<time>'):
             if in_reply == True:
-                print('格式错误：最后一个回复文本的前后包括标志不配对。')
+                print('格式错误：回复文本的前后包括标志不配对。\n',
+                      '丢失<mark>行')
+                break
+            m = pattern.search(line)
+            if not m:
+                print('无法解析日期')
+                break
+            temp_date = dt(m.group(1))
+            in_reply = True
 
-            del bptext
-        except UnicodeError as e:
-            print('\n文件编码错误，请确保输入文件为GBK或GB18030编码。')
-            print('异常信息：', e, '\n')
+        elif line.startswith('<mark>'):
+            if in_reply == False:
+                print('格式错误：回复文本的前后包括标志不配对。\n',
+                      '丢失<time>行')
+                break
+            if line.endswith('█'):
+                select = True
+            else:
+                select = False
+            # 添加回复
+            rpl = BPReply(temp_date, '\n'.join(temp), select)
+            all_list.append(rpl)
+            
+            temp.clear()
+            in_reply = False
+
+        elif in_reply:
+            temp.append(line)
+
+        elif not in_reply:
+            all_list.append(line)
+            
+    if in_reply == True:
+        print('格式错误：最后一个回复文本的前后包括标志不配对。')
 
     return all_list
 

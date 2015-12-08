@@ -9,6 +9,7 @@ if sys.version_info < (3, 4, 0):
     if os.name == 'nt':
         os.system('pause')
     exit()
+from io import StringIO
 
 import color
 from red import red
@@ -20,6 +21,19 @@ tz2txt_prog = 'tz2txt'
 tz2txt_ver  = '1.3'         # 内部框架的版本
 tz2txt_date = '2015-11-24'  # 最后更新日期
 
+# read to StringIO object
+def read_input(filename):
+    try:
+        with open(filename, 
+                  encoding='gb18030', errors='replace') as i:
+            text = i.read()
+        input = StringIO(text)  
+    except Exception as e:
+        print('读取文件时异常:', e)
+        return None
+    else:
+        return input  
+        
 # write StringIO object
 def write_output(output, filename):
     try:
@@ -62,23 +76,36 @@ def statistic(infile):
 
 # 读入编排、自动处理、保存编排
 def bp_process_bp(infile, outfile, automode=False):
-    # 文件大小
-    size1 = os.path.getsize(infile)
+    if not automode:
+        # 文件大小
+        size1 = os.path.getsize(infile)
+        infile = read_input(infile)
     
+    # read to internal2
     lst = datamachine.bp_to_internal2(infile)
     
     if not automode:
         datamachine.print_bp_head(lst)
     
+    # process
     lst = datamachine.process_internal2(lst)
-    wrote = datamachine.internal2_to_bp(lst, outfile)
-
-    if wrote:
+    
+    # get output
+    output = datamachine.internal2_to_bp(lst)
+    if output == None:
+        return None
+    
+    # 写文件
+    if automode:
+        return output
+    else:
+        write_output(output, outfile)
         size2 = os.path.getsize(outfile)
         print('输入文件{0}字节，输出文件{1}字节'.format(format(size1,','),
                                                     format(size2,',')
                                                     )
               )
+        return None
 
 # 读入编排、保存纯文本
 def compile_txt(infile, outfile, discard='', label=''):
