@@ -19,7 +19,7 @@ from sites import *
 
 tz2txt_prog = 'tz2txt'
 tz2txt_ver  = '1.3'         # 内部框架的版本
-tz2txt_date = '2015-11-24'  # 最后更新日期
+tz2txt_date = '2015-12-08'  # 最后更新日期
 
 # read to StringIO object
 def read_input(filename):
@@ -108,10 +108,15 @@ def bp_process_bp(infile, outfile, automode=False):
         return None
 
 # 读入编排、保存纯文本
-def compile_txt(infile, outfile, discard='', label=''):
-    # 文件大小
-    size1 = os.path.getsize(infile)
-    size1 = format(size1, ',')
+def compile_txt(infile, outfile, 
+                discard='', label='', automode=False):
+    if not automode:
+        # 文件大小
+        size1 = os.path.getsize(infile)
+        infile = read_input(infile)
+        
+    # keep_discard
+    keep_discard = False if not discard else True
     
     # 格式
     label = label.lower()
@@ -122,22 +127,30 @@ def compile_txt(infile, outfile, discard='', label=''):
     else:
         label = 0
     
-    chinese_ct, info_list = datamachine.bp_to_final(infile, outfile, 
-                                         discard, label)
-    chinese_ct = format(chinese_ct, ',')
+    output, discard_output, chinese_ct, info_list = \
+                datamachine.bp_to_final(infile, keep_discard, label)
 
-    size2 = os.path.getsize(outfile)
-    size2 = format(size2, ',')
+    write_output(output, outfile)
+    if discard_output:
+        write_output(discard_output, discard)
     
-    color_size = color.fore_color(size2, color.Fore.MAGENTA)
-    color_chinese = color.fore_color(chinese_ct, color.Fore.CYAN)
-    print('输入文件{0}字节；输出文件{1}字节，约{2}个汉字。'.format(
-                                                size1, 
-                                                color_size,
-                                                color_chinese)
-          )
+    if not automode:
+        size2 = os.path.getsize(outfile)
+
+        # format
+        size1 = format(size1, ',')
+        size2 = format(size2, ',')
+        chinese_ct = format(chinese_ct, ',')
+        
+        color_size = color.fore_color(size2, color.Fore.MAGENTA)
+        color_chinese = color.fore_color(chinese_ct, color.Fore.CYAN)
+        print('输入文件{0}字节；输出文件{1}字节，约{2}个汉字。'.format(
+                                                    size1, 
+                                                    color_size,
+                                                    color_chinese)
+              )
     
-    return info_list
+    return info_list, chinese_ct
 
 # 全自动处理，返回info_list或None
 def auto(url, pg_count, outfile, discard, label):

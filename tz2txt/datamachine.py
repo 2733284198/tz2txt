@@ -20,7 +20,7 @@
 ##  ----------------------------
 ##
 ##  编排 到 最终
-##  bp_to_final(infile, outfile, discard)
+##  bp_to_final(infile, keep_discard=True, label=0)
 ##
 ##  ----------------------------
 ##
@@ -225,7 +225,7 @@ def count_chinese(string):
             count += 1
     return count
 
-def bp_to_final(infile, outfile, discard='', label=0):
+def bp_to_final(infile, keep_discard=True, label=0):
     '''编译 编排to最终、丢弃'''
     class placeholder:
         def __init__(self, posi=0, pagenum=0, show=False):
@@ -259,93 +259,86 @@ def bp_to_final(infile, outfile, discard='', label=0):
     re_time = red.re_dict(p_time)
 
     # 读取编排文本
-    with open(infile, encoding='gb18030', errors='replace') as i:
-        in_reply = False
-        temp = list()
-        
-        current_page = 0
-        current_time = ''
+    in_reply = False
+    temp = list()
+    
+    current_page = 0
+    current_time = ''
 
-        try:
-            bptext = i.readlines()
-            for line in bptext:
-                if line.startswith('<time>'):
-                    if in_reply == True:
-                        print('格式错误：回复文本的前后包括标志不配对。\n',
-                              '丢失<mark>行')
-                        break
-                    in_reply = True
-                    
-                    # current_time
-                    if label == 2:
-                        m = re_time.search(line)
-                        if m:
-                            current_time = m.group(1) + ' ' + m.group(2)
-                        else:
-                            current_time = ''
-                    
-                elif line.startswith('<mark>'):
-                    if in_reply == False:
-                        print('格式错误：回复文本的前后包括标志不配对。\n',
-                              '丢失<time>行')
-                        break
-                                           
-                    if line.endswith('█\n') or line.endswith('█'):
-                        pickcount += 1
-                        
-                        if label == 0:
-                            pass
-                        elif label == 1:
-                            holder_list[-1].show = True
-                        elif label == 2:
-                            floor_label = ('№.%d ☆☆☆'
-                                           ' 发表于%s  P.%d '
-                                           '☆☆☆\n'
-                                           '-------------------------'
-                                           '-------------------------'
-                                           '\n')
-                            floor_label = floor_label % \
-                                (pickcount, current_time, current_page)
-                            text_list.append(floor_label)
-                            
-                        text_list.extend(temp)
-                        text_list.append('\n')
-
-                    elif any(is_not_empty(temp)):
-                        abandon_list.extend(temp)
-                        abandon_list.append('∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞\n\n')
-                        
-                    temp.clear()
-                    allcount += 1
-                    in_reply = False
-                    
-                elif in_reply:
-                    line = pattern.sub(r'【一张图片\1】', line)
-                    temp.append(line)
-
-                # 由于上一个elif，以下必定not in_reply
-                elif not text_list and not abandon_list and \
-                     line.startswith('<tiezi>'):
-                    info_list.append(line[len('<tiezi>'):])
-                
-                elif label != 0:
-                    m = re_pagenum.search(line)
-                    if m:
-                        current_page = int(m.group(1))
-                        if label == 1:
-                            text_list.append('')
-                            holder = placeholder(len(text_list)-1,
-                                                 current_page
-                                                 )
-                            holder_list.append(holder)
-
+    for line in infile.readlines():
+        if line.startswith('<time>'):
             if in_reply == True:
-                print('格式错误：最后一个回复文本的前后包括标志不配对。')
+                print('格式错误：回复文本的前后包括标志不配对。\n',
+                      '丢失<mark>行')
+                break
+            in_reply = True
+            
+            # current_time
+            if label == 2:
+                m = re_time.search(line)
+                if m:
+                    current_time = m.group(1) + ' ' + m.group(2)
+                else:
+                    current_time = ''
+            
+        elif line.startswith('<mark>'):
+            if in_reply == False:
+                print('格式错误：回复文本的前后包括标志不配对。\n',
+                      '丢失<time>行')
+                break
+                                   
+            if line.endswith('█\n') or line.endswith('█'):
+                pickcount += 1
+                
+                if label == 0:
+                    pass
+                elif label == 1:
+                    holder_list[-1].show = True
+                elif label == 2:
+                    floor_label = ('№.%d ☆☆☆'
+                                   ' 发表于%s  P.%d '
+                                   '☆☆☆\n'
+                                   '-------------------------'
+                                   '-------------------------'
+                                   '\n')
+                    floor_label = floor_label % \
+                        (pickcount, current_time, current_page)
+                    text_list.append(floor_label)
+                    
+                text_list.extend(temp)
+                text_list.append('\n')
 
-            del bptext
-        except UnicodeError as e:
-            print('\n文件编码错误，请确保输入文件为GBK或GB18030编码。')
-            print('异常信息：', e, '\n')
+            elif any(is_not_empty(temp)):
+                abandon_list.extend(temp)
+                abandon_list.append('∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞∞\n\n')
+                
+            temp.clear()
+            allcount += 1
+            in_reply = False
+            
+        elif in_reply:
+            line = pattern.sub(r'【一张图片\1】', line)
+            temp.append(line)
+
+        # 由于上一个elif，以下必定not in_reply
+        elif not text_list and not abandon_list and \
+             line.startswith('<tiezi>'):
+            info_list.append(line[len('<tiezi>'):])
+        
+        elif label != 0:
+            m = re_pagenum.search(line)
+            if m:
+                current_page = int(m.group(1))
+                if label == 1:
+                    text_list.append('')
+                    holder = placeholder(len(text_list)-1,
+                                         current_page
+                                         )
+                    holder_list.append(holder)
+
+    if in_reply == True:
+        print('格式错误：最后一个回复文本的前后包括标志不配对。')
+
     
     # 页码 辅助格式
     if label == 1:
@@ -363,36 +356,38 @@ def bp_to_final(infile, outfile, discard='', label=0):
     color_p2 = color.fore_color(pickcount, color.Fore.YELLOW)
     print('共有{0}条回复，选择了其中{1}条回复'.format(color_p1, color_p2))
 
-    # 写入最终文本
-    with open(outfile, 'w', encoding='gb18030', errors='replace') as o:
-        # 连接
-        if info_list:
-            s_iter = itertools.chain(info_list, '\n', text_list)
-        else:
-            s_iter = iter(text_list)
-        s = ''.join(s_iter)
+    # output的内容============
+    # 连接
+    if info_list:
+        s_iter = itertools.chain(info_list, '\n', text_list)
+    else:
+        s_iter = iter(text_list)
+    s = ''.join(s_iter)
 
-        # 连续的多张图片
-        s = red.sub(r'(?:【一张图片(\d+|)】\s+){3,}',
-                    r'【多张图片\1】\n\n',
-                    s)
-        
-        s = red.sub(r'(?:【一张图片(\d+|)】\s+){2}',
-                    r'【两张图片\1】\n\n',
-                    s)
-        chinese_ct = count_chinese(s)
+    # 连续的多张图片
+    s = red.sub(r'(?:【一张图片(\d+|)】\s+){3,}',
+                r'【多张图片\1】\n\n',
+                s)
+    
+    s = red.sub(r'(?:【一张图片(\d+|)】\s+){2}',
+                r'【两张图片\1】\n\n',
+                s)
 
-        # 写入
-        o.write(s)
+    # 输出StringIO
+    output = StringIO(s)
+    
+    # 汉字字数
+    chinese_ct = count_chinese(s)
 
     # 丢弃文本
-    if discard and abandon_list:
-        with open(discard, 'w', encoding='gb18030', errors='replace') as a:
-            s_iter = itertools.chain(info_list, '\n', abandon_list)
-            s = ''.join(s_iter)
-            a.write(s)
+    if keep_discard and abandon_list:
+        s_iter = itertools.chain(info_list, '\n', abandon_list)
+        s = ''.join(s_iter)
+        discard = StringIO(s)
+    else:
+        discard = None
             
-    return chinese_ct, info_list
+    return output, discard, chinese_ct, info_list
 
 def internal_to_bp(tz):
     '''
