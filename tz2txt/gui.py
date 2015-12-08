@@ -2,7 +2,6 @@
 
 import os
 from red import red
-import tempfile
 import webbrowser
 from tkinter import *
 from tkinter import messagebox
@@ -14,8 +13,8 @@ import tz2txt
 import datamachine
 import checkver
 
-#output = 'auto.txt'
-discard = '~discard.txt'
+#discard_fn = 'auto.txt'
+discard_fn = '~discard.txt'
 url_use = '复制帖子某页的网址，然后直接按<处理网址>'
         
 class Gui(Frame):
@@ -155,16 +154,6 @@ class Gui(Frame):
             till = int(till)
         except:
             till = -1
-            
-        # 得到临时文件名
-        try:
-            curdir = os.getcwd()
-            f = tempfile.NamedTemporaryFile(delete=False,dir=curdir)
-            f_name = f.name
-            f.close()
-        except:
-            print('无法创建临时文件')
-            return
         
         # 执行命令
         self.status['fg'] = '#993300'
@@ -173,21 +162,14 @@ class Gui(Frame):
         
         # except里return
         try:
-            title, info_list, chinese_ct = tz2txt.auto(u, till,
-                                                       f_name, discard,
-                                                       label)
+            output, discard_output, title, info_list, chinese_ct = \
+                tz2txt.auto(u, till, '', '', label, from_gui=True)
             if title == None:
-                raise Exception('无法完成自动处理')
+                raise Exception('无法完成全自动处理')
         
         except Exception as e:
             print('\n出现异常：', e)
-            print('===================================\n')
-
-            try:
-                os.remove(f_name)
-            except:
-                pass
-            
+            print('===================================\n')            
             return
         
         else:
@@ -202,44 +184,49 @@ class Gui(Frame):
                     
         # 输出文件名
         if self.rename.get():
-            output = title + '.txt'
+            output_fn = title + '.txt'
         else:
-            output = self.output.get().strip()
+            output_fn = self.output.get().strip()
         
         # 合法文件名
-        output = red.sub(r'[\\/:*?"<>|]', r'', output)
-        if output == '.txt':
-            output = '楼主.txt'
+        output_fn = red.sub(r'[\\/:*?"<>|]', r'', output_fn)
+        if output_fn == '.txt':
+            output_fn = '楼主.txt'
             
         # 覆盖？
-        ok = False
-        if (not os.path.isfile(output) or \
-            self.override.get() == 1 or \
-            messagebox.askyesno('输出文件已存在', 
-                                '是否覆盖？\n%s' % output)) and \
-            os.path.getsize(f_name) > 0:
-                # 删除已有目标
-                try:
-                    os.remove(output)
-                except:
-                    pass
-                
-                # 重命名
-                try:
-                    os.renames(f_name, output)
-                    print('\n已保存为：', output)
-                except Exception as e:
-                    print('\n重命名时出现异常', e)
-                else:
-                    ok = True
-        else:
-            # 删除临时文件
+        if os.path.isfile(output_fn) and \
+           (self.override.get() == 1 or \
+            messagebox.askyesno('输出文件已存在', '是否覆盖？\n%s' % output_fn)
+            ):
+            # 删除已有目标
             try:
-                os.remove(f_name)
+                os.remove(output_fn)
             except:
                 pass
+        
+        if not os.path.isfile(output_fn):
+            # 写入output
+            try:
+                text = output.getvalue()
+                with open(output_fn, 'w', 
+                          encoding='gb18030', errors='replace') as f:
+                    f.write(text)
+                output.close()
+                print('\n已保存为：', output_fn)
+            except Exception as e:
+                print('\n保存文件时出现异常', e)
+                
+            # 写入discard
+            if discard_output != None:
+                try:
+                    text = discard_output.getvalue()
+                    with open(discard_fn, 'w', 
+                              encoding='gb18030', errors='replace') as f:
+                        f.write(text)
+                    discard_output.close()
+                except Exception as e:
+                    print('\n保存文件时出现异常', e)
 
-        if ok and info_list:
             print()
             for line in info_list:
                 if line.startswith('下载时间：'):
