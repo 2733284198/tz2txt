@@ -35,7 +35,7 @@ def read_input(filename):
         return input  
         
 # write StringIO object
-def write_output(output, filename):
+def write_output(output, filename, show_size=True):
     try:
         with open(filename, 'w', 
                   encoding='gb18030', errors='replace') as o:
@@ -45,9 +45,10 @@ def write_output(output, filename):
             o.write(text)
     except Exception as e:
         print('输出文件时异常:', e)
-    else:       
-        size = os.path.getsize(filename)
-        print('\n输出文件共{0}字节'.format(format(size,',')))
+    else:
+        if show_size:
+            size = os.path.getsize(filename)
+            print('输出文件共{0}字节'.format(format(size,',')))
 
 # 下载帖子、保存编排，返回(标题,输出文件字节数)
 def download_till(url, pg_count, outfile, automode=False):
@@ -58,12 +59,14 @@ def download_till(url, pg_count, outfile, automode=False):
     
     # 得到编排
     output, title = datamachine.internal_to_bp(tz)
+    output.seek(0)
     
     # 写文件
     if automode:
         return output, title
     else:
         write_output(output, outfile)
+        return None, None
 
 # 读入编排、统计
 def statistic(infile, automode=False):
@@ -129,23 +132,28 @@ def compile_txt(infile, outfile,
     else:
         label = 0
     
-    output, discard_output, chinese_ct, info_list = \
+    output, discard_output, info_list, chinese_ct = \
                 datamachine.bp_to_final(infile, keep_discard, label)
 
-    write_output(output, outfile)
+    write_output(output, outfile, show_size=False)
     if discard_output:
-        write_output(discard_output, discard)
+        write_output(discard_output, discard, show_size=False)
     
-    if not automode:
-        size2 = os.path.getsize(outfile)
+    # format & color
+    size2 = os.path.getsize(outfile)
+    size2 = format(size2, ',')
+    color_size = color.fore_color(size2, color.Fore.MAGENTA)
 
-        # format
+    chinese_ct = format(chinese_ct, ',')
+    color_chinese = color.fore_color(chinese_ct, color.Fore.CYAN)
+
+    if automode:
+        print('输出文件{0}字节，约{1}个汉字。'.format(
+                                                    color_size, 
+                                                    color_chinese)
+              )
+    else:
         size1 = format(size1, ',')
-        size2 = format(size2, ',')
-        chinese_ct = format(chinese_ct, ',')
-        
-        color_size = color.fore_color(size2, color.Fore.MAGENTA)
-        color_chinese = color.fore_color(chinese_ct, color.Fore.CYAN)
         print('输入文件{0}字节；输出文件{1}字节，约{2}个汉字。'.format(
                                                     size1, 
                                                     color_size,
@@ -157,21 +165,22 @@ def compile_txt(infile, outfile,
 # 全自动处理，返回info_list或None
 def auto(url, pg_count, outfile, discard, label):
     # 下载
-    dl_object, title = download_till(url, pg_count, outfile, 
-                                       automode=True)
+    dl_object, title = download_till(url, pg_count,
+                                     '', automode=True)
     if dl_object == None:
         return None, None
     
     print('\n ===下载完毕，准备自动处理===\n')
 
     # 自动处理
-    bp_process_bp(outfile, outfile, automode=True)
+    bp_object = bp_process_bp(dl_object, '', automode=True)
     print('\n ===自动处理完毕，准备编译===\n')
 
     # 编译
-    info_list = compile_txt(outfile, outfile, discard, label)
+    info_list, chinese_ct = compile_txt(bp_object, outfile, 
+                                        discard, label, automode=True)
         
-    return title, info_list
+    return title, info_list, chinese_ct
 
 # 验证url
 def is_url(url):

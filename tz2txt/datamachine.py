@@ -110,7 +110,7 @@ def process_internal2(all_list):
     processor.set_rlist(rlist)
     processor.process()
 
-    print('共有{0}条回复，选择了{1}条回复。\n'.format(
+    print('共有{0}条回复，选择了{1}条回复。'.format(
                         len(rlist),
                         sum(1 for i in rlist if i.select and i.suggest)
                         )
@@ -387,7 +387,7 @@ def bp_to_final(infile, keep_discard=True, label=0):
     else:
         discard = None
             
-    return output, discard, chinese_ct, info_list
+    return output, discard, info_list, chinese_ct
 
 def internal_to_bp(tz):
     '''
