@@ -59,8 +59,7 @@ def download_till(url, pg_count, outfile, automode=False):
     
     # 得到编排
     output, title = datamachine.internal_to_bp(tz)
-    output.seek(0)
-    
+
     # 写文件
     if automode:
         return output, title
@@ -104,7 +103,7 @@ def bp_process_bp(infile, outfile, automode=False):
     if automode:
         return output
     else:
-        write_output(output, outfile)
+        write_output(output, outfile, show_size=False)
         size2 = os.path.getsize(outfile)
         print('输入文件{0}字节，输出文件{1}字节'.format(format(size1,','),
                                                     format(size2,',')

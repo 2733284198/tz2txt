@@ -479,8 +479,7 @@ def internal_to_bp(tz):
         return None, ''
 
     # StringIO object
-    output = StringIO()
-    output.write(text)
+    output = StringIO(text)
 
     return output, tz.title
 
