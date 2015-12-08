@@ -173,9 +173,9 @@ class Gui(Frame):
         
         # except里return
         try:
-            title, info_list = tz2txt.auto(u, till,
-                                     f_name, discard,
-                                     label)
+            title, info_list, chinese_ct = tz2txt.auto(u, till,
+                                                       f_name, discard,
+                                                       label)
             if title == None:
                 raise Exception('无法完成自动处理')
         
