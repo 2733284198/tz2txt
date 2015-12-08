@@ -20,15 +20,36 @@ tz2txt_prog = 'tz2txt'
 tz2txt_ver  = '1.3'         # 内部框架的版本
 tz2txt_date = '2015-11-24'  # 最后更新日期
 
+# write StringIO object
+def write_output(output, filename):
+    try:
+        with open(filename, 'w', 
+                  encoding='gb18030', errors='replace') as o:
+            text = output.getvalue()
+            output.close()
+            
+            o.write(text)
+    except Exception as e:
+        print('输出文件时异常:', e)
+    else:       
+        size = os.path.getsize(filename)
+        print('\n输出文件共{0}字节'.format(format(size,',')))
+
 # 下载帖子、保存编排，返回(标题,输出文件字节数)
-def download_till(url, pg_count, outfile):
+def download_till(url, pg_count, outfile, automode=False):
     # 读入
     tz = datamachine.web_to_internal(url, pg_count)
     if tz == None:
         return None, None
     
-    # 写编排
-    return datamachine.internal_to_bp(tz, outfile)
+    # 得到编排
+    output, title = datamachine.internal_to_bp(tz)
+    
+    # 写文件
+    if automode:
+        return output, title
+    else:
+        write_output(output, outfile)
 
 # 读入编排、统计
 def statistic(infile):
@@ -94,12 +115,9 @@ def compile_txt(infile, outfile, discard='', label=''):
 # 全自动处理，返回info_list或None
 def auto(url, pg_count, outfile, discard, label):
     # 下载
-    title, outfilesize = download_till(url, pg_count, outfile)
-    if not outfilesize:
-        try:
-            os.remove(outfile)
-        except:
-            print('删除文件{0}时出错'.format(outfile))
+    dl_object, title = download_till(url, pg_count, outfile, 
+                                       automode=True)
+    if dl_object == None:
         return None, None
     
     print('\n ===下载完毕，准备自动处理===\n')
