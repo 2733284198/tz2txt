@@ -163,7 +163,7 @@ class Gui(Frame):
         # except里return
         try:
             output, discard_output, title, info_list, chinese_ct = \
-                tz2txt.auto(u, till, '', 'from_gui', label, from_gui=True)
+                tz2txt.auto(u, till, '', '', label, from_gui=True)
             if title == None:
                 raise Exception('无法完成全自动处理')
         

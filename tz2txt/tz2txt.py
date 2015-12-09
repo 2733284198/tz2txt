@@ -190,6 +190,8 @@ def auto(url, pg_count, outfile, discard, label, from_gui=False):
     print('\n ===自动处理完毕，准备编译===\n')
     
     # 编译
+    if from_gui:
+        discard = 'from_gui'
     output, discard_output, info_list, chinese_ct = \
         compile_txt(bp_object, '', discard, label, automode=True)
         
