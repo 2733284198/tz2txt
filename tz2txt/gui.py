@@ -208,9 +208,10 @@ class Gui(Frame):
             # 写入output
             try:
                 text = output.getvalue()
-                with open(output_fn, 'w', 
-                          encoding='gb18030', errors='replace') as f:
-                    f.write(text)
+                if text:
+                    with open(output_fn, 'w', 
+                              encoding='gb18030', errors='replace') as f:
+                        f.write(text)
                 print('\n已保存为：', output_fn)
             except Exception as e:
                 print('\n保存文件时出现异常', e)
@@ -227,9 +228,10 @@ class Gui(Frame):
             if discard_output != None:
                 try:
                     text = discard_output.getvalue()
-                    with open(discard_fn, 'w', 
-                              encoding='gb18030', errors='replace') as f:
-                        f.write(text)
+                    if text:
+                        with open(discard_fn, 'w', 
+                                  encoding='gb18030', errors='replace') as f:
+                            f.write(text)
                 except Exception as e:
                     print('\n保存文件时出现异常', e)
 

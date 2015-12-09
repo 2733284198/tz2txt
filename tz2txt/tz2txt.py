@@ -19,7 +19,7 @@ from sites import *
 
 tz2txt_prog = 'tz2txt'
 tz2txt_ver  = '1.3'         # 内部框架的版本
-tz2txt_date = '2015-12-09a'  # 最后更新日期
+tz2txt_date = '2015-12-09b'  # 最后更新日期
 
 # read to StringIO object
 def read_input(filename):
@@ -32,14 +32,20 @@ def read_input(filename):
         print('读取文件时异常:', e)
         return None
     else:
-        return infile  
+        return infile
         
 # write StringIO object
 def write_output(output, filename, show_size=True):
+    if output == None:
+        return
+    
+    text = output.getvalue()
+    if not text:
+        return
+    
     try:
         with open(filename, 'w', 
                   encoding='gb18030', errors='replace') as o:
-            text = output.getvalue()
             o.write(text)
     except Exception as e:
         print('输出文件时异常:', e)
@@ -73,6 +79,8 @@ def statistic(infile, automode=False):
         size = os.path.getsize(infile)
         print('编排文件{0}，共{1}字节\n'.format(infile, format(size,',')))
         infile = read_input(infile)
+        if infile == None:
+            return
           
     lst = datamachine.bp_to_internal2(infile)
     
@@ -85,6 +93,8 @@ def bp_process_bp(infile, outfile, automode=False):
         # 文件大小
         size1 = os.path.getsize(infile)
         infile = read_input(infile)
+        if infile == None:
+            return None
     
     # read to internal2
     lst = datamachine.bp_to_internal2(infile)
@@ -120,6 +130,8 @@ def compile_txt(infile, outfile,
         # 文件大小
         size1 = os.path.getsize(infile)
         infile = read_input(infile)
+        if infile == None:
+            return None, None, None, None
         
     # keep_discard
     keep_discard = True if discard else False
