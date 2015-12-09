@@ -192,9 +192,14 @@ class Gui(Frame):
         output_fn = red.sub(r'[\\/:*?"<>|]', r'', output_fn)
         if output_fn == '.txt':
             output_fn = '楼主.txt'
+        
+        # 输出内容
+        text = output.getvalue()
+        output.close()
             
-        # 覆盖？
+        # 覆盖判断：文件已存在 and 输出有内容 and (强制覆盖 or 选择覆盖)
         if os.path.isfile(output_fn) and \
+           text and \
            (self.override.get() == 1 or \
             messagebox.askyesno('输出文件已存在', '是否覆盖？\n%s' % output_fn)
             ):
@@ -204,18 +209,16 @@ class Gui(Frame):
             except:
                 pass
         
-        if not os.path.isfile(output_fn):
-            # 写入output
+        # 写入output
+        if not os.path.isfile(output_fn) and text:
             try:
-                text = output.getvalue()
-                if text:
-                    with open(output_fn, 'w', 
-                              encoding='gb18030', errors='replace') as f:
-                        f.write(text)
+                with open(output_fn, 'w', 
+                          encoding='gb18030', errors='replace') as f:
+                    f.write(text)
                 print('\n已保存为：', output_fn)
             except Exception as e:
                 print('\n保存文件时出现异常', e)
-            
+        
             # 显示信息 
             size2 = os.path.getsize(output_fn)  
             chinese_ct = format(chinese_ct, ',')
@@ -224,28 +227,26 @@ class Gui(Frame):
                                                         chinese_ct)
                   )
                 
-            # 写入discard
-            if discard_output != None:
-                try:
-                    text = discard_output.getvalue()
-                    if text:
-                        with open(discard_fn, 'w', 
-                                  encoding='gb18030', errors='replace') as f:
-                            f.write(text)
-                except Exception as e:
-                    print('\n保存文件时出现异常', e)
-
-            print()
-            for line in info_list:
-                if line.startswith('下载时间：'):
-                    break
-                datamachine.save_print(line.rstrip('\n'))
-            print('===================================\n')
-        
-        # close StringIO
-        output.close()
+        # 写入discard
         if discard_output != None:
-            discard_output.close()
+            try:
+                text = discard_output.getvalue()
+                discard_output.close()
+                
+                if text:
+                    with open(discard_fn, 'w', 
+                              encoding='gb18030', errors='replace') as f:
+                        f.write(text)
+            except Exception as e:
+                print('\n保存文件时出现异常', e)
+
+        print()
+        for line in info_list:
+            if line.startswith('下载时间：'):
+                break
+            datamachine.save_print(line.rstrip('\n'))
+        print('===================================\n')
+
         
     def delfile(self):
         try:
