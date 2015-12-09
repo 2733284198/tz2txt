@@ -19,7 +19,7 @@ from sites import *
 
 tz2txt_prog = 'tz2txt'
 tz2txt_ver  = '1.3'         # 内部框架的版本
-tz2txt_date = '2015-12-09c'  # 最后更新日期
+tz2txt_date = '2015-12-09d'  # 最后更新日期
 
 # read to StringIO object
 def read_input(filename):
@@ -188,7 +188,7 @@ def auto(url, pg_count, outfile, discard, label, from_gui=False):
     # 自动处理
     bp_object = bp_process_bp(dl_object, '', automode=True)
     print('\n ===自动处理完毕，准备编译===\n')
-
+    
     # 编译
     output, discard_output, info_list, chinese_ct = \
         compile_txt(bp_object, '', discard, label, automode=True)
