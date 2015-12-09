@@ -195,7 +195,8 @@ def bp_to_internal2(input):
 
         elif not in_reply:
             all_list.append(line)
-            
+    
+    input.close()
     if in_reply == True:
         print('格式错误：最后一个回复文本的前后包括标志不配对。')
 
@@ -336,6 +337,7 @@ def bp_to_final(infile, keep_discard=True, label=0):
                                          )
                     holder_list.append(holder)
 
+    infile.close()
     if in_reply == True:
         print('格式错误：最后一个回复文本的前后包括标志不配对。')
 

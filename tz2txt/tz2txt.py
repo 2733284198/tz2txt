@@ -19,7 +19,7 @@ from sites import *
 
 tz2txt_prog = 'tz2txt'
 tz2txt_ver  = '1.3'         # 内部框架的版本
-tz2txt_date = '2015-12-08'  # 最后更新日期
+tz2txt_date = '2015-12-09'  # 最后更新日期
 
 # read to StringIO object
 def read_input(filename):
@@ -40,8 +40,6 @@ def write_output(output, filename, show_size=True):
         with open(filename, 'w', 
                   encoding='gb18030', errors='replace') as o:
             text = output.getvalue()
-            output.close()
-            
             o.write(text)
     except Exception as e:
         print('输出文件时异常:', e)
@@ -49,6 +47,8 @@ def write_output(output, filename, show_size=True):
         if show_size:
             size = os.path.getsize(filename)
             print('输出文件共{0}字节'.format(format(size,',')))
+    finally:
+        output.close()
 
 # 下载帖子、保存编排，返回(标题,输出文件字节数)
 def download_till(url, pg_count, outfile, automode=False):
@@ -65,7 +65,6 @@ def download_till(url, pg_count, outfile, automode=False):
         return output, title
     else:
         write_output(output, outfile)
-        output.close()
         return None, None
 
 # 读入编排、统计
@@ -76,7 +75,6 @@ def statistic(infile, automode=False):
         infile = read_input(infile)
           
     lst = datamachine.bp_to_internal2(infile)
-    infile.close()
     
     datamachine.print_bp_head(lst)
     datamachine.statistic(lst)
@@ -90,7 +88,6 @@ def bp_process_bp(infile, outfile, automode=False):
     
     # read to internal2
     lst = datamachine.bp_to_internal2(infile)
-    infile.close()
     
     if not automode:
         datamachine.print_bp_head(lst)
@@ -108,7 +105,6 @@ def bp_process_bp(infile, outfile, automode=False):
         return output
     else:
         write_output(output, outfile, show_size=False)
-        output.close()
         
         size2 = os.path.getsize(outfile)
         print('输入文件{0}字节，输出文件{1}字节'.format(format(size1,','),
@@ -139,18 +135,15 @@ def compile_txt(infile, outfile,
     
     output, discard_output, info_list, chinese_ct = \
                 datamachine.bp_to_final(infile, keep_discard, label)
-    infile.close()
 
     if automode:
         return output, discard_output, info_list, chinese_ct
     else:
         # write file
         write_output(output, outfile, show_size=False)
-        output.close()
         
         if discard_output and discard:
             write_output(discard_output, discard, show_size=False)
-            discard_output.close()
         
         # format & color
         size1 = format(size1, ',')
@@ -191,11 +184,9 @@ def auto(url, pg_count, outfile, discard, label, from_gui=False):
     if not from_gui:
         # write file
         write_output(output, outfile, show_size=False)
-        output.close()
         
         if discard_output:
             write_output(discard_output, discard, show_size=False)
-            discard_output.close()
         
         # format & color        
         size2 = os.path.getsize(outfile)

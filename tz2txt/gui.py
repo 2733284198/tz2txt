@@ -211,10 +211,17 @@ class Gui(Frame):
                 with open(output_fn, 'w', 
                           encoding='gb18030', errors='replace') as f:
                     f.write(text)
-                output.close()
                 print('\n已保存为：', output_fn)
             except Exception as e:
                 print('\n保存文件时出现异常', e)
+            
+            # 显示信息 
+            size2 = os.path.getsize(output_fn)  
+            chinese_ct = format(chinese_ct, ',')
+            print('输出文件{0}字节，约{1}个汉字。'.format(
+                                                        size2,
+                                                        chinese_ct)
+                  )
                 
             # 写入discard
             if discard_output != None:
@@ -223,7 +230,6 @@ class Gui(Frame):
                     with open(discard_fn, 'w', 
                               encoding='gb18030', errors='replace') as f:
                         f.write(text)
-                    discard_output.close()
                 except Exception as e:
                     print('\n保存文件时出现异常', e)
 
@@ -233,6 +239,11 @@ class Gui(Frame):
                     break
                 datamachine.save_print(line.rstrip('\n'))
             print('===================================\n')
+        
+        # close StringIO
+        output.close()
+        if discard_output != None:
+            discard_output.close()
         
     def delfile(self):
         try:
