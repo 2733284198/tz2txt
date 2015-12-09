@@ -19,7 +19,7 @@ from sites import *
 
 tz2txt_prog = 'tz2txt'
 tz2txt_ver  = '1.3'         # 内部框架的版本
-tz2txt_date = '2015-12-09'  # 最后更新日期
+tz2txt_date = '2015-12-09a'  # 最后更新日期
 
 # read to StringIO object
 def read_input(filename):
@@ -27,12 +27,12 @@ def read_input(filename):
         with open(filename, 
                   encoding='gb18030', errors='replace') as i:
             text = i.read()
-        input = StringIO(text)  
+        infile = StringIO(text)  
     except Exception as e:
         print('读取文件时异常:', e)
         return None
     else:
-        return input  
+        return infile  
         
 # write StringIO object
 def write_output(output, filename, show_size=True):

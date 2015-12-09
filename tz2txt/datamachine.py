@@ -148,7 +148,7 @@ def internal2_to_bp(all_list):
     
     return output
 
-def bp_to_internal2(input):
+def bp_to_internal2(infile):
     '''编排文本 到 中间形式2'''
     all_list = list()
 
@@ -159,7 +159,7 @@ def bp_to_internal2(input):
     temp_date = None
     in_reply = False
 
-    for line in input.readlines():
+    for line in infile.readlines():
         line = line.rstrip('\n')
         
         if line.startswith('<time>'):
@@ -196,7 +196,7 @@ def bp_to_internal2(input):
         elif not in_reply:
             all_list.append(line)
     
-    input.close()
+    infile.close()
     if in_reply == True:
         print('格式错误：最后一个回复文本的前后包括标志不配对。')
 
