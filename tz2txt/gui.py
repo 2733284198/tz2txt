@@ -220,7 +220,8 @@ class Gui(Frame):
                 print('\n保存文件时出现异常', e)
         
             # 显示信息 
-            size2 = os.path.getsize(output_fn)  
+            size2 = os.path.getsize(output_fn)
+            size2 = format(size2, ',')
             chinese_ct = format(chinese_ct, ',')
             print('输出文件{0}字节，约{1}个汉字。'.format(
                                                         size2,
