@@ -203,7 +203,7 @@ def bp_to_internal2(infile):
     return all_list
 
 def count_chinese(string):
-    '''统计汉字字数'''
+    '''统计汉字字数，不含汉字标点符号'''
     count = 0
     for c in string:
         c = ord(c)
