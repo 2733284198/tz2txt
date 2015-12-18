@@ -255,11 +255,15 @@ class Gui(Frame):
             os.remove(output)
         except:
             pass
+        else:
+            print('已删除输出文件')
         
         try:
             os.remove(discard_fn)
         except:
             pass
+        else:
+            print('已删除丢弃文件')
         
         self.url.set(url_use)
         
