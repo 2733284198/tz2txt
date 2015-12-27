@@ -34,9 +34,7 @@ import itertools
 try:
     import winsound
 except:
-    has_winsound = False
-else:
-    has_winsound = True
+    winsound = None
 
 import color
 
@@ -583,7 +581,7 @@ def web_to_internal(url, pg_count):
     print(info)
 
     # 发出响声
-    if has_winsound:
+    if winsound != None:
         try:
             winsound.Beep(400, 320) # (frequency, duration)
         except:
