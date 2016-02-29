@@ -167,7 +167,7 @@ def compile_txt(infile, outfile,
         chinese_ct = format(chinese_ct, ',')
         color_chinese = color.fore_color(chinese_ct, color.Fore.CYAN)
         
-        print('输入文件{0}字节；输出文件{1}字节，约{2}个汉字。'.format(
+        print('输入文件{0}字节；输出文件{1}字节，约{2}个汉字(不含标点符号)。'.format(
                                                     size1, 
                                                     color_size,
                                                     color_chinese)
