@@ -133,11 +133,11 @@ class BaseProcessor():
         else:
             color_p = color.fore_color(blank_count, color.Fore.GREEN)
 
-        print('...标记了{0}个空白回复'.format(color_p))
+        print('...有{0}个空白回复'.format(color_p))
         
     def mark_reduplicate(self):
         '''标记相邻重复'''        
-        print('>检查相邻重复：')
+        print('>标记相邻重复的回复：')
 
         last_reply = None
         reduplicate_list = []
@@ -161,11 +161,49 @@ class BaseProcessor():
         else:
             color_p = color.fore_color(reduplicate_count, color.Fore.GREEN)
 
-        print('...标记了{0}个重复回复'.format(color_p))
+        print('...有{0}个重复回复'.format(color_p))
+        
+    def mark_multireply(self):
+        '''标记连续重复引用'''
+        print('>标记连续重复引用的回复')
+        
+        r = red.re_dict(r'^.*?【引用开始】(.*?)\n【引用结束】\n(.*)$', red.S)
+        last_reply = None  # 最后一条引用回复
+        last_quote = None  # 最后一条引用回复的引用部分
+        count = 0
+        
+        for rpl in self.rlist:
+            if not rpl.suggest:
+                last_reply = None
+                last_quote = None
+                continue
 
+            m = r.match(rpl.text)
+            if m == None:
+                last_reply = None
+                last_quote = None
+                continue
+            
+            temp = m.group(1)
+            if last_quote == temp:
+                last_reply.text += '\n\n' + m.group(2)
+                rpl.text = ''
+                rpl.suggest = False
+                count += 1
+            else:
+                last_reply = rpl
+                last_quote = temp
+                
+        if count:
+            color_p = color.fore_color(count, color.Fore.RED)
+        else:
+            color_p = color.fore_color(count, color.Fore.GREEN)
+
+        print('...有{0}个连续重复引用的回复'.format(color_p))
+        
     def mark_cantdeal(self):
         '''标记无法处理'''       
-        print('>查找无法处理的引用')
+        print('>标记无法处理的引用')
         
         quote_count = 0
 
@@ -180,7 +218,7 @@ class BaseProcessor():
         else:
             color_p = color.fore_color(quote_count, color.Fore.GREEN)
             
-        print('...标记了{0}个无法处理引用的回复'.format(color_p))
+        print('...有{0}个无法处理引用的回复'.format(color_p))
 
     @nocode
     def process_1(self):
@@ -252,6 +290,7 @@ class BaseProcessor():
         
         self.mark_empty()
         self.mark_reduplicate()
+        self.mark_multireply()
         self.mark_cantdeal()
         
         t2 = time.perf_counter()
