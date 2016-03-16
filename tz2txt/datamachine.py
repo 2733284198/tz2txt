@@ -395,11 +395,9 @@ def internal_to_bp(tz):
     返回(标题,输出文件字节)
     '''
     
-    def page_to_g(page, user):
+    def page_to_g(page):
         '''一页，返回：文本，摘取回复数，总回复数'''
-        rpls = [reply_to_bp(r, True)
-                    for r in page.replys
-                    if r.author == user]
+        rpls = [reply_to_bp(r, True) for r in page.replys]
         
         pickcount = len(rpls)
         allcount = len(page.replys)
@@ -421,7 +419,7 @@ def internal_to_bp(tz):
             return s, pickcount, allcount
 
     def tiezi_to_g(tiezi):
-        pgs = [page_to_g(p, tiezi.louzhu) for p in tiezi.pages]
+        pgs = [page_to_g(p) for p in tiezi.pages]
         
         text = (x for x,y,z in pgs if y > 0)
         pickcount = sum(y for x,y,z in pgs)
@@ -543,6 +541,9 @@ def web_to_internal(url, pg_count):
             # 手工输入楼主ID
             if not tz.louzhu:
                 tz.louzhu = input('无法提取楼主ID，请手工输入楼主ID：').strip()
+                if not tz.louzhu:
+                    print('无法得到楼主ID')
+                    break
 
             # 打印帖子信息
             print_str = '标题：%s\n楼主：%s\n' % (tz.title, tz.louzhu) 
@@ -555,15 +556,18 @@ def web_to_internal(url, pg_count):
 
         next_url = parser.wrap_get_next_pg_url()
         pg_num = parser.wrap_get_page_num()
+        replys = parser.wrap_get_replys()
+        print('已下载第{0}页, 共{1}层'.format(pg_num, len(replys)))
+        
         # 添加页
+        replys = [r for r in replys if r.author == tz.louzhu]
         pg = Page(url,
                   pg_num,
                   bool(next_url),
-                  parser.wrap_get_replys()
+                  replys
                   )
         tz.add_page(pg)
         dl_count += 1
-        print('已下载第{0}页, 共{1}层'.format(pg_num, len(pg.replys)))
 
         # 帖子的最后一页?
         if not next_url:
