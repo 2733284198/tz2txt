@@ -167,7 +167,7 @@ class BaseProcessor():
         '''标记连续重复引用'''
         print('>标记连续重复引用的回复')
         
-        r = red.re_dict(r'^(.*?【引用开始】.*?)【引用结束】\n(.*)$', red.S)
+        r = red.re_dict(r'^(.*?【引用开始】.*?)【引用结束】\n?(.*)$', red.S)
         last_reply = None  # 最后一条引用回复
         last_quote = None  # 最后一条引用回复的引用部分
         count = 0
