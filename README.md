@@ -32,4 +32,5 @@ tz2txt是一个开源的小工具，用于把帖子的楼主发言保存为txt�
 详细用法
 ------
 
-更详细的用法，参见此文：[http://www.cnblogs.com/animalize/p/4770397.html](http://www.cnblogs.com/animalize/p/4770397.html)
+更详细的用法，参见此文：[http://www.cnblogs.com/animalize/p/4770397.html](http://www.cnblogs.com/animalize/p/4770397.html)  
+反馈交流帖：[http://tieba.baidu.com/p/3109406847](http://tieba.baidu.com/p/3109406847)
