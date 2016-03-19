@@ -118,7 +118,7 @@ class BaseProcessor():
 
     def mark_empty(self):
         '''标记空回复'''
-        print('>标记空白回复：')
+        print('>开始标记 空白回复：')
         
         p = red.re_dict(r'^\s*$')
         blank_count = 0
@@ -137,7 +137,7 @@ class BaseProcessor():
         
     def mark_reduplicate(self):
         '''标记相邻重复'''        
-        print('>标记相邻重复的回复：')
+        print('>开始标记 相邻重复的回复：')
 
         last_reply = None
         reduplicate_list = []
@@ -161,11 +161,11 @@ class BaseProcessor():
         else:
             color_p = color.fore_color(reduplicate_count, color.Fore.GREEN)
 
-        print('...有{0}个重复回复'.format(color_p))
+        print('...有{0}个相邻重复的回复'.format(color_p))
         
     def mark_multireply(self):
         '''标记连续重复引用'''
-        print('>标记连续重复引用的回复')
+        print('>开始标记 连续重复引用的回复')
         
         r = red.re_dict(r'^(.*?【引用开始】.*?)【引用结束】\n?(.*)$', red.S)
         last_reply = None  # 最后一条引用回复
@@ -184,7 +184,7 @@ class BaseProcessor():
             
             temp = m.group(1)
             if last_quote == temp:
-                last_reply.text += '\n\n' + m.group(2)
+                last_reply.text += '\n\n【补充回复】\n' + m.group(2)
                 rpl.text = ''
                 rpl.suggest = False
                 count += 1
@@ -201,7 +201,7 @@ class BaseProcessor():
         
     def mark_cantdeal(self):
         '''标记无法处理'''       
-        print('>标记无法处理的引用')
+        print('>开始标记 无法处理的引用')
         
         quote_count = 0
 
@@ -216,7 +216,7 @@ class BaseProcessor():
         else:
             color_p = color.fore_color(quote_count, color.Fore.GREEN)
             
-        print('...有{0}个无法处理引用的回复'.format(color_p))
+        print('...有{0}个无法处理的引用'.format(color_p))
 
     @nocode
     def process_1(self):
