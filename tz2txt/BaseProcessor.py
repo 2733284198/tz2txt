@@ -118,7 +118,7 @@ class BaseProcessor():
 
     def mark_empty(self):
         '''标记空回复'''
-        print('>开始标记 空白回复：')
+        print('>开始标记 空白回复')
         
         p = red.re_dict(r'^\s*$')
         blank_count = 0
@@ -137,7 +137,7 @@ class BaseProcessor():
         
     def mark_reduplicate(self):
         '''标记相邻重复'''        
-        print('>开始标记 相邻重复的回复：')
+        print('>开始标记 相邻重复的回复')
 
         last_reply = None
         reduplicate_list = []
