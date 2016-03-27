@@ -77,16 +77,16 @@ class Tianya1PageParser(AbPageParser):
             # utf-8编码0xe38080的空白，变成普通空格
             text = text.replace('　', ' ')
             
+            # <style>..</style>
+            p = red.re_dict(r'<style.*?</style>', red.S|red.I|red.A)
+            text = p.sub('', text)
+            
             # <br>->\n，去掉行首空格
-            p = red.re_dict(r'(?:\n|<br/??>)\s*', red.IGNORECASE|red.A)
+            p = red.re_dict(r'(?:\n|<br/??>)\s*', red.I|red.A)
             text = p.sub(r'\n', text)
 
-            # <p ..></p>
-            p = red.re_dict(r'<p[\s>].*?</p>', red.IGNORECASE|red.A)
-            text = p.sub(r'', text)
-
             # <table></table>
-            p = red.re_dict(r'<table[\s>].*?</table>', red.IGNORECASE|red.A)
+            p = red.re_dict(r'<table.*?</table>', red.S|red.I|red.A)
             text = p.sub(r'', text)
 
             # 【发自爱天涯Android客户端】
