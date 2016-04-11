@@ -112,12 +112,12 @@ class FTChinesePageParser(AbPageParser):
         # ----------------------
         # get_replys(self) 开始
         # ----------------------
-        dt = lambda s: datetime.strptime(s, '%Y年%m月%d日 %I:%M %p')
+        dt = lambda s: datetime.strptime(s, '%Y年%m月%d日 %H:%M')
         replys = list()
 
         # 日期
         r = (r'<a class=storytime.*?'
-             r'>(\d{4}年\d\d月\d\d日 \d\d:\d\d (?:A|P)M)'
+             r'>(\d{4}年\d\d月\d\d日 \d\d:\d\d)'
              )
         p = red.re_dict(r, red.S)
         m = p.search(self.html)
