@@ -95,7 +95,7 @@ class Tianya1PageParser(AbPageParser):
             p = red.re_dict( (r'(?:'
                               r'【发自[^\n]{1,20}】'
                               r'|'
-                              r'\[来自[^\n]{1,15}浏览器\]'
+                              r'\[来自[^\n]{1,15}\]'
                               r'|'
                               r'本帖发自天涯社区手机客户端'
                               r')'
