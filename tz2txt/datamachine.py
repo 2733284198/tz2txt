@@ -557,10 +557,17 @@ def web_to_internal(url, pg_count):
         next_url = parser.wrap_get_next_pg_url()
         pg_num = parser.wrap_get_page_num()
         replys = parser.wrap_get_replys()
-        print('已下载第{0}页, 共{1}层'.format(pg_num, len(replys)))
+        
+        # 本页总回复
+        page_reply_count = len(replys)
+        # 只保留楼主
+        replys = [r for r in replys if r.author == tz.louzhu]
+        
+        print('已下载第%d页, 共%d条回复, 楼主回复%d条' % 
+              (pg_num, page_reply_count, len(replys))
+              )
         
         # 添加页
-        replys = [r for r in replys if r.author == tz.louzhu]
         pg = Page(url,
                   pg_num,
                   bool(next_url),
