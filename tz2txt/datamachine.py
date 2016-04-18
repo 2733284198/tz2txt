@@ -563,8 +563,8 @@ def web_to_internal(url, pg_count):
         # 只保留楼主
         replys = [r for r in replys if r.author == tz.louzhu]
         
-        print('已下载第%d页, 共%d条回复, 楼主回复%d条' % 
-              (pg_num, page_reply_count, len(replys))
+        print('已下载第%d页, 有%d/%d条回复' % 
+              (pg_num, len(replys), page_reply_count)
               )
         
         # 添加页
