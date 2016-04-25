@@ -205,22 +205,14 @@ def count_chinese(string):
     count = 0
     for c in string:
         c = ord(c)
-        # CJK统一汉字          20924
-        # CJK统一汉字扩充A     6582
-        
-        # 3块CJK兼容汉字       467
-        
-        # CJK统一汉字扩充B     42711
-        # CJK兼容汉字补充      542
-        if 0x4E00 <= c <= 0x9FBB or \
-           0x3400 <= c <= 0x4DB5 or \
-           \
-           0xF900 <= c <= 0xFA2D or \
-           0xFA30 <= c <= 0xFA6A or \
-           0xFA70 <= c <= 0xFAD9 or \
-           \
-           0x20000 <= c <= 0x2A6D6 or \
-           0x2F800 <= c <= 0x2FA1D:
+        # CJK统一汉字                  20,950
+        # CJK统一汉字扩展A区      6,582
+        # CJK兼容汉字                  472
+        # CJK统一汉字扩展B~E区   52844
+        if 0x4E00 <= c <= 0x9FFF or \
+           0x3400 <= c <= 0x4DBF or \
+           0xF900 <= c <= 0xFAFF or \
+           0x20000 <= c <= 0x2CEAF:
             count += 1
     return count
 

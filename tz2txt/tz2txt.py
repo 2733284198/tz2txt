@@ -19,7 +19,7 @@ from sites import *
 
 tz2txt_prog = 'tz2txt'
 tz2txt_ver  = '1.3'         # 内部框架的版本
-tz2txt_date = '2016-04-15'  # 最后更新日期
+tz2txt_date = '2016-04-25'  # 最后更新日期
 
 # read to StringIO object
 def read_input(filename):
