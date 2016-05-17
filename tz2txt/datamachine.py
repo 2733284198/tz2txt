@@ -599,7 +599,7 @@ def web_to_internal(url, pg_count):
                        flags=red.MULTILINE)
         
         # 【引用开始】、【引用结束】
-        text = red.sub(r'【(引用(?:开始|结束))】',
+        text = red.sub(r'【(引用(?:开始|结束)|补充回复)】',
                        r'[\1]',
                        text)
 
