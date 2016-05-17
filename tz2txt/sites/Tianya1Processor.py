@@ -187,5 +187,22 @@ class Tianya1Processor(BaseProcessor):
                                   rpl.text)
             quote_count += n
 
+#         # 使用'固化分组'处理引用
+#         print('>处理引用')
+#         r = (r'^(?>.*@@(\S{1,16})##)',
+#              r'.*?',
+#              r'(?<=\n)',
+#              r'(?=(?>.*?(?<=\n)', re_separater, r'\s+)',
+#              r'(?!.*?(?<=\n)', re_separater, r'\s+))',
+#              r'\s*(.*?)\s*', re_separater, r'\s+(.*)')
+#  
+#         p = red.re_dict(''.join(r), red.DOTALL)
+#  
+#         quote_count = 0
+#         for rpl in self.rlist:
+#             rpl.text, n = p.subn(r'回复 \1：\n【引用开始】\2\n【引用结束】\n\3',
+#                                   rpl.text)
+#             quote_count += n
+
         color_p = color.fore_color(quote_count, color.Fore.CYAN)
         print('...处理了{0}条引用'.format(color_p))
