@@ -53,7 +53,7 @@ class Gui(Frame):
         l4.grid(row=2, column=0)
         
         self.assist = IntVar()
-        self.assist.set(2)
+        self.assist.set(1)
         
         r1 = Radiobutton(self, text='无辅助',
                          variable=self.assist, value=1)
