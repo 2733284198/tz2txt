@@ -52,7 +52,7 @@ class FTChinesePageParser(AbPageParser):
 
     def get_title(self):
         '''标题'''
-        re = r'<h1 id="topictitle">\s*(.*?)\s*</h1>'
+        re = r'<h1 class="story-headline">\s*(.*?)\s*</h1>'
         p = red.re_dict(re, red.S)
 
         m = p.search(self.html)
@@ -69,10 +69,10 @@ class FTChinesePageParser(AbPageParser):
     def get_next_pg_url(self):
         '''下一页url，末页则返回空字符串'''
 
-        r = (r'<div class="pagination">.*?'
+        r = (r'<div class="pagination-container">.*?'
              r'<a href="([^"]+)">余下全文</a>'
              )
-        p = red.re_dict(r)
+        p = red.re_dict(r, red.S)
         m = p.search(self.html)
 
         if not m:
@@ -88,6 +88,10 @@ class FTChinesePageParser(AbPageParser):
 
         def process_text(text):
             '''子函数，返回处理后的文本'''
+            
+            # 去<script>
+            p = red.re_dict(r'<script.*?/script>', red.I|red.A)
+            text = p.sub('', text)
 
             # 去标签
             p = red.re_dict(r'(?!<br\s*/?>|</p>)<[^>]+>', red.I|red.A)
@@ -112,25 +116,16 @@ class FTChinesePageParser(AbPageParser):
         # ----------------------
         # get_replys(self) 开始
         # ----------------------
-        dt = lambda s: datetime.strptime(s, '%Y年%m月%d日 %H:%M')
         replys = list()
 
-        # 日期
-        r = (r'<a class=storytime.*?'
-             r'>(\d{4}年\d\d月\d\d日 \d\d:\d\d)'
-             )
-        p = red.re_dict(r, red.S)
-        m = p.search(self.html)
-        date_str = m.group(1)
-
         # 回复
-        re = r'<div class="content-text">(.*?)<script'
+        re = r'<div class="story-body">(.*?)<div class="clearfloat">'
 
         p = red.re_dict(re, red.DOTALL)
         m = p.search(self.html)
         
         item = Reply(self.wrap_get_louzhu(),
-                      dt(date_str),
+                      datetime.now(),
                       process_text(m.group(1)))
         replys.append(item)
 
