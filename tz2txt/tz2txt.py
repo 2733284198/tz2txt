@@ -1,6 +1,10 @@
 #! /usr/bin/python3
 # coding=utf-8
 
+tz2txt_prog = 'tz2txt'
+tz2txt_ver  = '1.3'         # 内部框架的版本
+tz2txt_date = '2016-07-04'  # 最后更新日期
+
 import sys
 import os, os.path
 if sys.version_info < (3, 4, 0):
@@ -9,17 +13,19 @@ if sys.version_info < (3, 4, 0):
     if os.name == 'nt':
         os.system('pause')
     exit()
+import pkgutil
 from io import StringIO
 
 import color
 from red import red
 import datamachine
 from tzdatastruct import *
-from sites import *
 
-tz2txt_prog = 'tz2txt'
-tz2txt_ver  = '1.3'         # 内部框架的版本
-tz2txt_date = '2016-06-15'  # 最后更新日期
+# import sites目录下的PageParser和Processor
+pkgpath = os.path.dirname(__file__)
+pkgpath = os.path.join(pkgpath, 'sites')
+for file in (name for _, name, _ in pkgutil.iter_modules([pkgpath])):
+    __import__('sites.' + file)
 
 # read to StringIO object
 def read_input(filename):
