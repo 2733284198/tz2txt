@@ -245,7 +245,7 @@ def check_file(filename):
     else:
         return False
                               
-if __name__ == '__main__':
+def main():
     color.init()
     print('tz2txt 程序版本: %s\n' % tz2txt_date)
 
@@ -428,3 +428,6 @@ if __name__ == '__main__':
         os.system('pause')
 
     color.deinit()
+
+if __name__ == '__main__':
+    main()
