@@ -24,7 +24,7 @@ from tzdatastruct import *
 # import sites目录下的PageParser和Processor
 pkgpath = os.path.dirname(__file__)
 pkgpath = os.path.join(pkgpath, 'sites')
-for file in (name for _, name, _ in pkgutil.iter_modules([pkgpath])):
+for _, file, _ in pkgutil.iter_modules([pkgpath]):
     __import__('sites.' + file)
 
 # read to StringIO object
