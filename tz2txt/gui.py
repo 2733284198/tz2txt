@@ -4,7 +4,6 @@ import os
 from red import red
 import webbrowser
 from tkinter import *
-from tkinter import messagebox
 from tkinter.ttk import Radiobutton
 
 import color
