@@ -4,7 +4,6 @@ import os
 from red import red
 import webbrowser
 from tkinter import *
-from tkinter.ttk import Radiobutton
 
 import color
 color.disable()
@@ -118,10 +117,6 @@ class Gui(Frame):
         
         # self
         self.pack()
-        
-        # fix radiobutton draw
-        self.r3.focus_force()
-        self.paste_do.focus_force()
     
     def doit(self):
         # 获取、显示网址
