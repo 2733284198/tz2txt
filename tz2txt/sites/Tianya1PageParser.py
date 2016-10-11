@@ -140,13 +140,12 @@ class Tianya1PageParser(AbPageParser):
         # 独特的第一页第1楼
         if pg_num == 1:
             regex1 = (
-                r'<div class="atl-main">'
-                r'.*?'
+                r'<div class="atl-main">.*?'
                 r'<div class="bbs-content clearfix">\s*'
                 r'(.*?)\s*'
-                r'</div>.{0,120}?<div id="alt_action"'
-                r'.*?'
-                r'_time="(\d{4}-\d\d-\d\d \d\d:\d\d:\d\d)" _name="([^"]+)">'
+                r'</div>.{0,120}?<div id="alt_action".*?'
+                r'replytime="(\d{4}-\d\d-\d\d \d\d:\d\d:\d\d)"\s*'
+                r'author="([^"]+)"'
                 )
             p = red.re_dict(regex1, red.DOTALL)
             m = p.search(self.html)
