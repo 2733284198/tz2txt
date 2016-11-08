@@ -7,11 +7,9 @@ tz2txt是一个开源的小工具，用于把帖子的楼主发言保存为txt�
 下载、安装
 ------
 
-已安装Python 3.4+运行环境的用户可以在[这里](https://github.com/animalize/tz2txt/archive/master.zip)下载纯程序，仅几十KB。  
-如果下载的zip文件出现乱码，请用7-zip软件打开。
-
-不想安装Python运行环境的Windows用户，可以到这里下载 压缩包：[http://pan.baidu.com/s/1ntwkwOD#path=%252Ftz2txt](http://pan.baidu.com/s/1ntwkwOD#path=%252Ftz2txt)  
-解压后既可使用。已自带Python 3.4运行环境，有12MB大小。
+1、安装Python 3.4及以上版本的运行环境，[点这里下载](https://www.python.org/ftp/python/3.4.4/python-3.4.4.msi)32位的Python 3.4.4 Windows安装包。  
+2、在[这里](https://github.com/animalize/tz2txt/archive/master.zip)下载纯程序，仅几十KB。  
+3、解压该zip文件。如果下载的zip文件出现乱码，请用7-zip软件打开。
 
 使用tz2txt（简易用法）
 ------
