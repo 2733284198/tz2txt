@@ -29,6 +29,7 @@ class Tianya1PageParser(AbPageParser):
         p = red.re_dict(r'<div class="wd-question">')
         m = p.search(self.html)
         if m != None:
+            print('\a')
             raise Exception('<天涯页面解析器>不支持<问答帖>')
         
         p = red.re_dict(r'var bbsGlobal = {.*?page : "(\d+)",',
