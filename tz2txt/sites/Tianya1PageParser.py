@@ -26,6 +26,11 @@ class Tianya1PageParser(AbPageParser):
 
     def get_page_num(self):
         '''页号'''
+        p = red.re_dict(r'<div class="wd-question">')
+        m = p.search(self.html)
+        if m != None:
+            raise Exception('<天涯页面解析器>不支持<问答帖>')
+        
         p = red.re_dict(r'var bbsGlobal = {.*?page : "(\d+)",',
                          red.DOTALL
                          )
