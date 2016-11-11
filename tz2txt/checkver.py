@@ -24,7 +24,7 @@ def check():
     except:
         raise Exception('无法用utf-8解码“包含版本信息的网页”')
     
-    p = r"tz2txt_date = '([^']+)'"
+    p = r'''tz2txt_date\s*=\s*['"]([^'"]+)['"]'''
     r = red.re_dict(p, red.DOTALL)
     m = r.search(html)
     if not m:

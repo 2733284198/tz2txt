@@ -283,7 +283,7 @@ class Gui(Frame):
                     except:
                         print('无法用浏览器打开下载网址：', download_url)
             elif newver != tz2txt.tz2txt_date:
-                print('当前版本比网盘版本(%s)新' % newver)
+                print('当前版本 比 网上版本(%s)新' % newver)
             else:
                 print('检查完毕，没有发现新版本')
             print()
