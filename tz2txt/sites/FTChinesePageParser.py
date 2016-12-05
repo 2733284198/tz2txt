@@ -30,14 +30,14 @@ class FTChinesePageParser(AbPageParser):
         '''页号'''
         
         # 没有页码区
-        re = r'<div class="pagination">'
+        re = r'<div class="pagination'
         p = red.re_dict(re, red.S)
         m = p.search(self.html)
         if not m:
             return 1
         
         # 不是第1页
-        re = (r'<div class="pagination">'
+        re = (r'<div class="pagination.*?'
               r'<span class="current">1</span>'
               )
         p = red.re_dict(re, red.DOTALL)
