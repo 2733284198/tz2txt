@@ -130,10 +130,10 @@ class Tieba1PageParser(AbPageParser):
             r'<img\s*username="([^"]+)".*?'
             r'class="d_post_content\s+j_d_post_content\s*">'
             r'(.*?)<div\s+class="user-hide-post.*?'
-            r'>(\d{4}-\d{1,2}-\d{1,2}\s+\d{1,2}:\d{1,2})'
+            r'class="tail-info">(\d{4}-\d{1,2}-\d{1,2}\s+\d{1,2}:\d{1,2})'
         )
         format2 = (
-            r'(?:class="j_reply_data">|date&quot;:&quot;)'
+            r'data-field=.*?date&quot;:&quot;'
             r'(\d{4}-\d{1,2}-\d{1,2}\s+\d{1,2}:\d{1,2}).*?'
             r'<img\s*username="([^"]+)".*?'
             r'class="d_post_content\s+j_d_post_content.*?>'
