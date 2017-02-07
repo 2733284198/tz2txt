@@ -96,7 +96,7 @@ class ZhihuPageParser(AbPageParser):
             # 用户名，赞同数
             if username is not None:
                 s = '【知乎用户 %s ，%s人赞同】\n' % (username, vote)
-                text = s + text
+                text = s + text + '\n'
 
             return text
 
