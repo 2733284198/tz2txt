@@ -10,7 +10,7 @@ class Sinabbs1PageParser(AbPageParser):
     '''示例页面解析器'''
 
     @staticmethod
-    def should_me(url, byte_data):
+    def should_me(url):
         if 'sina.com.cn' in url and 'thread' in url:
             return True
         else:

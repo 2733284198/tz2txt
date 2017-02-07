@@ -30,7 +30,7 @@ class AbPageParser(metaclass=ABCMeta):
     threshold = 0.8
 
     @staticmethod
-    def should_me(url, byte_data):
+    def should_me(url):
         '''返回True表示使用此页面解析器'''
         return False
 
@@ -40,11 +40,11 @@ class AbPageParser(metaclass=ABCMeta):
         return ''
 
     @staticmethod
-    def get_parser(url, byte_data):
+    def get_parser(url):
         '''返回页面解析器'''
         
         for i in AbPageParser.registered:
-            if i.should_me(url, byte_data):
+            if i.should_me(url):
                 #print('找到解析器', i)
                 return i()
         else:
@@ -118,6 +118,9 @@ class AbPageParser(metaclass=ABCMeta):
         self.html = AbPageParser.decode(byte_data, self.encoding)
         
         self.__clear_cache()
+        
+    def pre_porecess_url(self, url):
+        return url
 
     def get_hostname(self):
         '''从url得到主机域名'''

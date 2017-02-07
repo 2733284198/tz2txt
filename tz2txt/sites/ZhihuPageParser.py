@@ -14,7 +14,7 @@ class ZhihuPageParser(AbPageParser):
     '''示例页面解析器'''
 
     @staticmethod
-    def should_me(url, byte_data):
+    def should_me(url):
         if 'zhihu.com' in url:
             return True
         else:
@@ -27,6 +27,15 @@ class ZhihuPageParser(AbPageParser):
     def __init__(self):
         super().__init__()
         self.encoding = 'utf-8'
+        
+    def pre_porecess_url(self, url):
+        p = r'(https://www.zhihu.com/question/\d+)/answer/\d+'
+        r = red.re_dict(p, red.I|red.A)
+        m = r.search(url)
+        if m:
+            return m.group(1)
+        else:
+            return url
 
     def get_page_num(self):
         '''页号'''

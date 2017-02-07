@@ -10,7 +10,7 @@ class Tianya1PageParser(AbPageParser):
     '''天涯页面'''
 
     @staticmethod
-    def should_me(url, byte_data):
+    def should_me(url):
         if 'tianya.cn' in url:
             return True
         else:

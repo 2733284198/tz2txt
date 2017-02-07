@@ -479,7 +479,9 @@ def web_to_internal(url, pg_count):
     # 下载器
     f = Fetcher()
     # 页面解析器
-    parser = None
+    parser = AbPageParser.get_parser(url)
+    if not parser:
+        return None
     
     tz = Tiezi()
     dl_count = 0
@@ -490,17 +492,14 @@ def web_to_internal(url, pg_count):
             break
         
         # 下载数据
+        url = parser.pre_porecess_url(url)
         data = f.fetch_url(url)
         if not data:
             print('无法读取页面：{0}'.format(url))
             break
         
         # 准备解析器
-        if not parser:
-            parser = AbPageParser.get_parser(url, data)
-            if not parser:
-                return None
-            
+        if dl_count == 0:  
             # 检查解析器
             parser.set_page(url, data)
             if not parser.check_parse_methods():
