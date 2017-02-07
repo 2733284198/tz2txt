@@ -119,7 +119,7 @@ class AbPageParser(metaclass=ABCMeta):
         
         self.__clear_cache()
         
-    def pre_porecess_url(self, url):
+    def pre_process_url(self, url):
         return url
 
     def get_hostname(self):

@@ -28,7 +28,7 @@ class ZhihuPageParser(AbPageParser):
         super().__init__()
         self.encoding = 'utf-8'
         
-    def pre_porecess_url(self, url):
+    def pre_process_url(self, url):
         p = r'(https://www.zhihu.com/question/\d+)/answer/\d+'
         r = red.re_dict(p, red.I|red.A)
         m = r.search(url)
