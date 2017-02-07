@@ -492,7 +492,7 @@ def web_to_internal(url, pg_count):
             break
         
         # 下载数据
-        url = parser.pre_porecess_url(url)
+        url = parser.pre_process_url(url)
         data = f.fetch_url(url)
         if not data:
             print('无法读取页面：{0}'.format(url))
