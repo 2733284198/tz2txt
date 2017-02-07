@@ -65,7 +65,7 @@ class ZhihuPageParser(AbPageParser):
     def get_replys(self):
         '''返回Reply列表'''
 
-        def process_text(text, username, vote):
+        def process_text(text, username=None, vote=None):
             '''子函数，返回处理后的文本'''
 
             # 去<script>
@@ -94,19 +94,34 @@ class ZhihuPageParser(AbPageParser):
             text = text.strip()
 
             # 用户名，赞同数
-            s = '【知乎用户 %s ，%s人赞同】\n' % (username, vote)
-            text = s + text
+            if username is not None:
+                s = '【知乎用户 %s ，%s人赞同】\n' % (username, vote)
+                text = s + text
 
             return text
 
         # ----------------------
         # get_replys(self) 开始
         # ----------------------
-        dt = lambda s: datetime.strptime(s, '%Y-%m-%d')
+        dt = datetime.now()
         replys = list()
+        zhihuuser = '知乎用户'
 
-        # 第1楼
+        # 原题
+        p = (r'<div id="zh-question-detail".*?'
+             r'<div class="zm-editable-content">'
+             r'(.*?)'
+             r'</div>\s*</div>\s*<div'
+            )
+        r = red.re_dict(p, red.DOTALL)
+        m = r.search(self.html)
+        rpl = Reply(zhihuuser,
+                    dt,
+                    process_text(m.group(1))
+                    )
+        replys.append(rpl)
 
+        # 回复
         regex1 = (
             r'<span class="voters text">.*?'
             r'>(\d+)</span>&nbsp;人赞同.*?'
@@ -114,15 +129,14 @@ class ZhihuPageParser(AbPageParser):
             r'.*?data-author-name="([^"]+)".*?'
             r'<div class="zm-editable-content clearfix">'
             r'(.*?)'
-            r'</div>\s*</div>\s*<a class="zg-anchor-hidden ac".*?'
-            r'>(?:发布于|编辑于)\s*([\d-]+)</a>'
+            r'</div>\s*</div>\s*<a class="zg-anchor-hidden ac"'
         )
         p = red.re_dict(regex1, red.DOTALL)
         miter = p.finditer(self.html)
 
-        d1 = ((m.group(1), m.group(2), m.group(3), m.group(4)) for m in miter)
-        d2 = (('知乎用户', dt(date), process_text(text, user, vote))
-              for vote, user, text, date in d1)
+        d1 = ((m.group(1), m.group(2), m.group(3)) for m in miter)
+        d2 = ((zhihuuser, dt, process_text(text, user, vote))
+              for vote, user, text in d1)
         d3 = (Reply(x, y, z) for x, y, z in d2)
         replys.extend(d3)
 
