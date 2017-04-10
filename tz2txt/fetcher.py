@@ -14,8 +14,8 @@ from http.cookiejar import CookieJar
 
 class FetcherInfo:
     def __init__(self):
-        self.ua = ('Mozilla/5.0 (Windows NT 6.1; rv:38.0)'
-                   ' Gecko/20100101 Firefox/38.0')
+        self.ua = ('Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:52.0)'
+                   ' Gecko/20100101 Firefox/52.0')
         self.referer = ''
         self.open_timeout = 60
         self.retry_count = 4
