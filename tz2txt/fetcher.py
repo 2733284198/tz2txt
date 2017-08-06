@@ -56,7 +56,7 @@ class Fetcher:
             print(local_path, '文件已存在')
             return
         
-        byte_data = fetch_url(url)
+        byte_data = self.fetch_url(url)
         with open(local_path, 'wb') as f:
             f.write(byte_data)
 
