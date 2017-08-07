@@ -17,10 +17,10 @@ tz2txt是一个开源的小工具，用于把帖子的楼主发言保存为txt�
 解压后，有如下文件：  
 ![解压后文件](https://raw.githubusercontent.com/animalize/pics/master/tz2txt/1.png)
 
-双击_全自动.bat，在Windows 10上会出现风险提示，点“更多信息”：  
+双击`_全自动.bat`，在Windows 10上会出现风险提示，点`更多信息`：  
 ![风险提示](https://raw.githubusercontent.com/animalize/pics/master/tz2txt/2.png)
 
-再点击“仍要运行”：  
+再点击`仍要运行`：  
 ![继续](https://raw.githubusercontent.com/animalize/pics/master/tz2txt/3.png)
 
 在程序启动后，按提示操作既可：  
@@ -29,6 +29,6 @@ tz2txt是一个开源的小工具，用于把帖子的楼主发言保存为txt�
 
 详细用法
 ------
-
+用`语音合成软件`听帖子，见：[http://www.cnblogs.com/animalize/p/4784790.html](http://www.cnblogs.com/animalize/p/4784790.html)  
 更详细的用法，参见此文：[http://www.cnblogs.com/animalize/p/4770397.html](http://www.cnblogs.com/animalize/p/4770397.html)  
 反馈交流帖：[http://tieba.baidu.com/p/3109406847](http://tieba.baidu.com/p/3109406847)
