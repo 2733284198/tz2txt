@@ -1,7 +1,6 @@
 import re
 import os
 import sys
-import hashlib
 
 try:
     import winsound
@@ -33,17 +32,19 @@ fetcher = None
 save_dir = None
 pic_list = []
 
-pic_all = 0
 pic_count = 1
 
 
 def get_fn(url):
-    digest = hashlib.sha1(url.encode('utf-8')).hexdigest()
+    global pic_count
+
     m = re.search(r'^.*(\.\w+)$', url)
     if m:
-        fn = digest + m.group(1)
+        fn = str(pic_count) + m.group(1)
     else:
-        fn = digest + '.jpg'
+        fn = str(pic_count) + '.jpg'
+
+    pic_count += 1
 
     return fn
 
@@ -80,9 +81,11 @@ def process_reply(s):
 
 
 def download_pics():
+    pic_count = 1
+    pic_all = len(pic_list)
+
     for path, url in pic_list:
         if not os.path.exists(path):
-            global pic_count, pic_all
             print('(%d/%d)保存图片:' % (pic_count, pic_all), url)
 
             fetcher.save_file(url, path)
@@ -108,9 +111,6 @@ def main():
     print('共%d条回复，摘取%d条回复' % (len(ms), len(replys)))
 
     refer = re.search(p_refer, content).group(1)
-
-    global pic_all
-    pic_all = len(re.findall(p_img, content))
 
     # 下载器
     fetcher_info = FetcherInfo()
@@ -150,10 +150,10 @@ def main():
     # 发出响声
     if winsound != None:
         try:
-            winsound.Beep(400, 320) # (frequency, duration)
+            winsound.Beep(400, 320)  # (frequency, duration)
         except:
             pass
-    
+
     if os.name == 'nt':
         os.system('pause')
 
