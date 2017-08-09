@@ -1,6 +1,7 @@
 import re
 import os
 import sys
+import hashlib
 
 from fetcher import *
 
@@ -8,8 +9,8 @@ p_one = (r'(?:^|(?<=\n))\s*<time>[^\n]*\n'
          r'((?:(?!\n<time>).)*?)\n\s*<mark>[^\n]*?(█?)(?:(?=\n)|$)')
 p_refer = r'(?:^|(?<=\n))<page>网址:\s*([^\s]*)'
 p_img = r'\[img\s*\d*\](.*?)\[/img\]'
-p_fn = r'^.*/(.*)$'
 p_title = r'(?:^|(?<=\n))<tiezi>标题：\s*([^\n]+)'
+
 p_head = (r'<tiezi>标题：([^\n]+)\n'
           r'<tiezi>楼主：([^\n]+)\n'
           r'<tiezi>发帖时间：([^\n]+)\n'
@@ -25,9 +26,21 @@ sub_head = (r'<b>标题：\1</b><br>'
 
 fetcher = None
 save_dir = None
+pic_list = []
 
 pic_all = 0
 pic_count = 1
+
+
+def get_fn(url):
+    digest = hashlib.sha1(url.encode('utf-8')).hexdigest()
+    m = re.search(r'^.*(\.\w+)$', url)
+    if m:
+        fn = digest + m.group(1)
+    else:
+        fn = digest + '.jpg'
+
+    return fn
 
 
 def process_reply(s):
@@ -46,23 +59,29 @@ def process_reply(s):
         url = m.group(1)
 
         # 保存文件
-        fn = re.search(p_fn, url).group(1)
+        fn = get_fn(url)
 
         global save_dir
         path = os.path.join(save_dir, fn)
 
-        if not os.path.exists(path):
-            global pic_count, pic_all
-            print('(%d/%d)保存图片:' % (pic_count, pic_all), url)
-
-            fetcher.save_file(url, path)
-        pic_count += 1
+        global pic_list
+        pic_list.append((path, url))
 
         # 替换html
         ret += '<img src="%s" />' % fn
 
     ret += s[last:]
     return ret
+
+
+def download_pics():
+    for path, url in pic_list:
+        if not os.path.exists(path):
+            global pic_count, pic_all
+            print('(%d/%d)保存图片:' % (pic_count, pic_all), url)
+
+            fetcher.save_file(url, path)
+        pic_count += 1
 
 
 def main():
@@ -94,7 +113,7 @@ def main():
     global fetcher
     fetcher = Fetcher(fetcher_info)
 
-    # 目录
+    # 创建目录
     global save_dir
     save_dir = re.search(p_title, content).group(1)
     try:
@@ -119,6 +138,12 @@ def main():
     path = os.path.join(save_dir, args[1])
     with open(path, 'w', encoding='gb18030') as f:
         f.write(htmls)
+
+    # 下载
+    download_pics()
+
+    if os.name == 'nt':
+        os.system('pause')
 
 
 main()
