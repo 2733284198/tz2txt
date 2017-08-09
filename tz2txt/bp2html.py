@@ -10,6 +10,18 @@ p_refer = r'(?:^|(?<=\n))<page>网址:\s*([^\s]*)'
 p_img = r'\[img\s*\d*\](.*?)\[/img\]'
 p_fn = r'^.*/(.*)$'
 p_title = r'(?:^|(?<=\n))<tiezi>标题：\s*([^\n]+)'
+p_head = (r'<tiezi>标题：([^\n]+)\n'
+          r'<tiezi>楼主：([^\n]+)\n'
+          r'<tiezi>发帖时间：([^\n]+)\n'
+          r'<tiezi>下载时间：([^\n]+)\n'
+          r'<tiezi>起始网址：([^\n]+)\n'
+          )
+sub_head = (r'<b>标题：\1</b><br>'
+            r'楼主：\2<br>'
+            r'发帖时间：\3<br>'
+            r'下载时间：\4<br>'
+            r'起始网址：<a href="\5" target=_blank>\5</a><br><br>'
+            )
 
 fetcher = None
 save_dir = None
@@ -92,11 +104,16 @@ def main():
 
     htmls = [process_reply(reply) for reply in replys]
     htmls = '<br><br>'.join(htmls)
-
     htmls = htmls.replace('\n', '<br>\n')
 
+    m = re.search(p_head, content)
+    if m:
+        head = m.expand(sub_head)
+    else:
+        head = ''
+
     htmls = '<!DOCTYPE html><html><body bgcolor="#EEEEEE">' \
-        + htmls \
+        + head + htmls \
         + '<br><br></body></html>'
 
     path = os.path.join(save_dir, args[1])
