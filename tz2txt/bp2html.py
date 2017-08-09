@@ -3,6 +3,11 @@ import os
 import sys
 import hashlib
 
+try:
+    import winsound
+except:
+    winsound = None
+
 from fetcher import *
 
 p_one = (r'(?:^|(?<=\n))\s*<time>[^\n]*\n'
@@ -13,7 +18,7 @@ p_title = r'(?:^|(?<=\n))<tiezi>标题：\s*([^\n]+)'
 
 p_head = (r'<tiezi>标题：([^\n]+)\n'
           r'<tiezi>楼主：([^\n]+)\n'
-          r'<tiezi>发帖时间：([^\n]+)\n'
+          r'(?:<tiezi>发帖时间：([^\n]+)\n)?'
           r'<tiezi>下载时间：([^\n]+)\n'
           r'<tiezi>起始网址：([^\n]+)\n'
           )
@@ -142,6 +147,13 @@ def main():
     # 下载
     download_pics()
 
+    # 发出响声
+    if winsound != None:
+        try:
+            winsound.Beep(400, 320) # (frequency, duration)
+        except:
+            pass
+    
     if os.name == 'nt':
         os.system('pause')
 
