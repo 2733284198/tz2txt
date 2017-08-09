@@ -57,8 +57,9 @@ class Fetcher:
             return
         
         byte_data = self.fetch_url(url)
-        with open(local_path, 'wb') as f:
-            f.write(byte_data)
+        if byte_data:
+            with open(local_path, 'wb') as f:
+                f.write(byte_data)
 
     def get_hostname(self, url):
         '''从url得到主机域名'''
