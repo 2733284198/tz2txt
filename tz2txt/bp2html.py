@@ -4,14 +4,15 @@ import sys
 
 from fetcher import *
 
-p_one = r'(?:^|(?<=\n))\s*<time>[^\n]*\n(.*?)\n\s*<mark>[^\n]*█'
+p_one = (r'(?:^|(?<=\n))\s*<time>[^\n]*\n'
+         r'((?:(?!\n<time>).)*?)\n\s*<mark>[^\n]*?(█?)(?:(?=\n)|$)')
 p_refer = r'(?:^|(?<=\n))<page>网址:\s*([^\s]*)'
 p_img = r'\[img\s*\d*\](.*?)\[/img\]'
 p_fn = r'^.*/(.*)$'
 p_title = r'(?:^|(?<=\n))<tiezi>标题：\s*([^\n]+)'
 
 fetcher = None
-dir = None
+save_dir = None
 
 pic_all = 0
 pic_count = 1
@@ -35,8 +36,8 @@ def process_reply(s):
         # 保存文件
         fn = re.search(p_fn, url).group(1)
 
-        global dir
-        path = os.path.join(dir, fn)
+        global save_dir
+        path = os.path.join(save_dir, fn)
 
         if not os.path.exists(path):
             global pic_count, pic_all
@@ -66,7 +67,10 @@ def main():
         raise Exception('无法读取编排文件: ' + args[0])
 
     # 提取
-    replys = [m.group(1) for m in re.finditer(p_one, content, re.DOTALL)]
+    ms = [m for m in re.finditer(p_one, content, re.DOTALL)]
+    replys = [m.group(1) for m in ms if m.group(2)]
+    print('共%d条回复，摘取%d条回复' % (len(ms), len(replys)))
+
     refer = re.search(p_refer, content).group(1)
 
     global pic_all
@@ -79,19 +83,23 @@ def main():
     fetcher = Fetcher(fetcher_info)
 
     # 目录
-    global dir
-    dir = re.search(p_title, content).group(1)
+    global save_dir
+    save_dir = re.search(p_title, content).group(1)
     try:
-        os.mkdir(dir)
+        os.mkdir(save_dir)
     except:
         pass
 
     htmls = [process_reply(reply) for reply in replys]
-    htmls = '<br>'.join(htmls)
-    htmls = htmls.replace('\n', '<br>\n')
-    htmls += '<br><br>'
+    htmls = '<br><br>'.join(htmls)
 
-    path = os.path.join(dir, args[1])
+    htmls = htmls.replace('\n', '<br>\n')
+
+    htmls = '<!DOCTYPE html><html><body bgcolor="#EEEEEE">' \
+        + htmls \
+        + '<br><br></body></html>'
+
+    path = os.path.join(save_dir, args[1])
     with open(path, 'w', encoding='gb18030') as f:
         f.write(htmls)
 
