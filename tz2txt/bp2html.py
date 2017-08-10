@@ -1,6 +1,7 @@
 import re
 import os
 import sys
+import binascii
 
 try:
     import winsound
@@ -38,11 +39,14 @@ pic_count = 1
 def get_fn(url):
     global pic_count
 
+    crc = binascii.crc32(url.encode('utf-8'))
+    crc = '{:08x}'.format(crc)
+
     m = re.search(r'^.*(\.\w+)$', url)
     if m:
-        fn = str(pic_count) + m.group(1)
+        fn = str(pic_count) + '_' + crc + m.group(1)
     else:
-        fn = str(pic_count) + '.jpg'
+        fn = str(pic_count) + '_' + crc + '.jpg'
 
     pic_count += 1
 
