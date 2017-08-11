@@ -212,7 +212,7 @@ def count_chinese(string):
         if 0x4E00 <= c <= 0x9FFF or \
            0x3400 <= c <= 0x4DBF or \
            0xF900 <= c <= 0xFAFF or \
-           0x20000 <= c <= 0x2CEAF:
+           0x20000 <= c <= 0x2EBEF:
             count += 1
     return count
 
