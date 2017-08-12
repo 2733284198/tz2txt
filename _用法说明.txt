@@ -94,3 +94,14 @@ final.txt就是编译后的纯文本，~discard.txt就是自动处理时标记�
       例： tz2txt.py a -u http://bbs.sample.com/thread-12345.html -t 10 -o auto.txt -d ~discard.txt
              从当前页开始，一共下载10页，生成<纯文本>到auto.txt，
              并把编译过程中丢弃的回复保存到~discard.txt
+
+6、bp2html.py，把<编排文本>编译为图文并茂的html:
+      bp2html.py [-i 文件名] [-o 文件名] [-p 每页图片数]
+
+      -i 文件名：输入的<编排文本>
+      -o 文件名：输出的<html文件>
+      -p 每页图片数：可选参数，按每页图片数进行分页
+
+      例： bp2html.py -i bp.txt -o a.html -p 50
+             把<编排文本>bp.txt编译为<html文件>a.html，每页有50张图片。
+             下载图片的过程中，可以随时关闭程序。在下次运行时会跳过已下载的图片。
