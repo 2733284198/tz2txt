@@ -152,17 +152,17 @@ def page_html(parg, total, current, fn):
 
 def split_page(htm, head, parg, output):
     p = r'(?:.*?<img src="[^"]+" />){' + str(parg) + '}'
-    last = 0
+    end = 0
     lst = []
 
     # 分割html
     for m in re.finditer(p, htm, re.S):
         begin = m.start()
-        end = last = m.end()
+        end = m.end()
         lst.append(htm[begin:end].strip())
 
-    if last < len(htm) - 1:
-        lst.append(htm[last:].strip())
+    if end < len(htm) - 1:
+        lst.append(htm[end:].strip())
 
     # 依次保存
     for i, content in enumerate(lst, 1):
@@ -205,7 +205,11 @@ def main():
 
     # 创建目录
     global save_dir
-    save_dir = re.search(p_title, content).group(1)
+    try:
+        save_dir = re.search(p_title, content).group(1)
+    except:
+        save_dir = '空标题帖子'
+        
     try:
         os.mkdir(save_dir)
     except:
