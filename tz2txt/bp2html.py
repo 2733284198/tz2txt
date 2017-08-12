@@ -2,6 +2,7 @@ import re
 import os
 import sys
 import binascii
+import argparse
 
 try:
     import winsound
@@ -26,7 +27,7 @@ sub_head = (r'<b>标题：\1</b><br>'
             r'楼主：\2<br>'
             r'发帖时间：\3<br>'
             r'下载时间：\4<br>'
-            r'起始网址：<a href="\5" target=_blank>\5</a><br><br>'
+            r'起始网址：<a href="\5" target=_blank>\5</a><br>'
             )
 
 fetcher = None
@@ -96,18 +97,98 @@ def download_pics():
         pic_count += 1
 
 
+def argv():
+    parser = argparse.ArgumentParser(prog='bp2html',
+                                     description='把<编排文本>编译为图文html'
+                                     )
+    parser.add_argument('-i',
+                        type=str, help='输入的编排文件',
+                        metavar='文件名',
+                        required=True,
+                        dest='input')
+    parser.add_argument('-o',
+                        type=str, help='输出的编排文件',
+                        metavar='文件名',
+                        required=True,
+                        dest='output')
+    parser.add_argument('-p',
+                        type=int, help='分页的页数',
+                        metavar='页数',
+                        default=0,
+                        dest='page')
+
+    args = parser.parse_args()
+    return args
+
+
+def add_html(htm, head):
+    htmls = '<!DOCTYPE html><html><body bgcolor="#EEEEEE">' \
+        + head + htm \
+        + '<br><br></body></html>'
+
+    return htmls
+
+
+def get_pg_fn(fn, page):
+    p = r'^(.*)(\.\w+)$'
+    m = re.search(p, fn)
+    if m:
+        return m.group(1) + '_%d' % page + m.group(2)
+    else:
+        return fn + '_%d' % page
+
+
+def page_html(parg, total, current, fn):
+    s = '每页%d图，共%d页 ' % (parg, total)
+    for i, _ in enumerate(range(total), 1):
+        if i == current:
+            s += '<strong>%d</strong> ' % i
+        else:
+            s += '<a href="%s">%d</a> ' % (get_pg_fn(fn, i), i)
+    s += '<br>'
+
+    return s
+
+
+def split_page(htm, head, parg, output):
+    p = r'(?:.*?<img src="[^"]+" />){' + str(parg) + '}'
+    last = 0
+    lst = []
+
+    # 分割html
+    for m in re.finditer(p, htm, re.S):
+        begin = m.start()
+        end = last = m.end()
+        lst.append(htm[begin:end].strip())
+
+    if last < len(htm) - 1:
+        lst.append(htm[last:].strip())
+
+    # 依次保存
+    for i, content in enumerate(lst, 1):
+        # 当前文件名
+        fn = get_pg_fn(output, i)
+        path = os.path.join(save_dir, fn)
+
+        # 上下pages
+        pages = page_html(parg, len(lst), i, output)
+        content = pages + '<br>' + content + '<br><br>' + pages
+
+        # 添加head
+        content = add_html(content, head)
+
+        with open(path, 'w', encoding='gb18030') as f:
+            f.write(content)
+
+
 def main():
-    args = sys.argv[1:]
-    if len(args) != 2:
-        print('用法：bp2html.py <bp.txt> <out.html>')
-        print('尖括号内为两个参数，前者为编排文件，后者为输出文件')
-        sys.exit()
+    args = argv()
 
     try:
-        with open(args[0], encoding='gb18030') as f:
+        with open(args.input, encoding='gb18030') as f:
             content = f.read()
     except:
-        raise Exception('无法读取编排文件: ' + args[0])
+        raise Exception('无法读取编排文件: ' + args.input)
 
     # 提取
     ms = [m for m in re.finditer(p_one, content, re.DOTALL)]
@@ -130,23 +211,28 @@ def main():
     except:
         pass
 
+    # html主体
     htmls = [process_reply(reply) for reply in replys]
     htmls = '<br><br>'.join(htmls)
     htmls = htmls.replace('\n', '<br>\n')
 
+    # 头信息
     m = re.search(p_head, content)
     if m:
         head = m.expand(sub_head)
     else:
         head = ''
 
-    htmls = '<!DOCTYPE html><html><body bgcolor="#EEEEEE">' \
-        + head + htmls \
-        + '<br><br></body></html>'
+    if args.page > 0:
+        split_page(htmls, head, args.page, args.output)
+    else:
+        htmls = '<!DOCTYPE html><html><body bgcolor="#EEEEEE">' \
+            + head + '<br>' + htmls \
+            + '<br><br></body></html>'
 
-    path = os.path.join(save_dir, args[1])
-    with open(path, 'w', encoding='gb18030') as f:
-        f.write(htmls)
+        path = os.path.join(save_dir, args.output)
+        with open(path, 'w', encoding='gb18030') as f:
+            f.write(htmls)
 
     # 下载
     download_pics()

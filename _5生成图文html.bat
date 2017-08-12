@@ -1,1 +1,1 @@
-.\tz2txt\bp2html.py bp.txt a.html
+.\tz2txt\bp2html.py -i bp.txt -o a.html -p 30
