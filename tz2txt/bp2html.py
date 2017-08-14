@@ -139,18 +139,22 @@ def argv():
     return args
 
 
-def compose_html(head, pages, htm):
-    html_head = '''\
+def compose_html(title, page, head, pages, htm):
+    h1 = '''\
 <!DOCTYPE html><html><head>
 <meta charset="gb18030">
+<title>'''
+
+    h2 = '''\
+</title>
 <style>
-img {
-    max-width:100%;
-    height:auto;
-}
+img{max-width:100%;height:auto}
 </style>
 </head>
 '''
+    current = ' - 第%d页' % page if page else ''
+    html_head = h1 + title + current + h2
+
     if pages:
         htmls = html_head + '<body bgcolor="#EEEEEE">' \
             + head + pages + '<br>' + htm + '<br><br>' + pages \
@@ -202,6 +206,8 @@ def split_page(save_dir, htm, head, parg, output):
         if temp:
             lst.append(temp)
 
+    print('分为%d页' % len(lst))
+
     # 依次保存
     for i, content in enumerate(lst, 1):
         # 当前文件名
@@ -212,7 +218,7 @@ def split_page(save_dir, htm, head, parg, output):
         pages = page_html(parg, len(lst), i, output)
 
         # 添加head
-        content = compose_html(head, pages, content)
+        content = compose_html(save_dir, i, head, pages, content)
 
         with open(path, 'w', encoding='gb18030') as f:
             f.write(content)
@@ -259,7 +265,7 @@ def main():
     if args.page > 0:
         split_page(save_dir, htmls, head, args.page, args.output)
     else:
-        htmls = compose_html(head, '', htmls)
+        htmls = compose_html(save_dir, 0, head, '', htmls)
 
         path = os.path.join(save_dir, args.output)
         with open(path, 'w', encoding='gb18030') as f:
