@@ -11,12 +11,6 @@ except:
 
 from fetcher import *
 
-p_one = (r'(?:^|(?<=\n))\s*<time>[^\n]*\n'
-         r'((?:(?!\n<time>).)*?)\n\s*<mark>[^\n]*?(█?)(?:(?=\n)|$)')
-p_refer = r'(?:^|(?<=\n))<page>网址:\s*([^\s]*)'
-
-p_title = r'(?:^|(?<=\n))<tiezi>标题：\s*([^\n]+)'
-
 p_head = (r'<tiezi>标题：([^\n]+)\n'
           r'<tiezi>楼主：([^\n]+)\n'
           r'(?:<tiezi>发帖时间：([^\n]+)\n)?'
@@ -42,29 +36,11 @@ img {
 </head>
 '''
 
-pic_count = 1
-
-
-def get_fn(url):
-    global pic_count
-
-    crc = binascii.crc32(url.encode('utf-8'))
-    crc = '{:08x}'.format(crc)
-
-    m = re.search(r'^.*(\.\w+)$', url)
-    if m:
-        fn = str(pic_count) + '_' + crc + m.group(1)
-    else:
-        fn = str(pic_count) + '_' + crc + '.jpg'
-
-    pic_count += 1
-
-    return fn
-
 
 def process_replys(reply_list, save_dir):
     p_img = r'\[img\s*\d*\](.*?)\[/img\]'
 
+    pic_count = 1
     pic_list = list()  # 值为 ('路径', 'url')
     pic_url_fn = dict()
 
@@ -89,7 +65,17 @@ def process_replys(reply_list, save_dir):
             if url in pic_url_fn:
                 fn = pic_url_fn[url]
             else:
-                fn = get_fn(url)
+                # 得到图片的本地文件名
+                crc = binascii.crc32(url.encode('utf-8'))
+                crc = '{:08x}'.format(crc)
+
+                m = re.search(r'^.*(\.\w+)$', url)
+                if m:
+                    fn = str(pic_count) + '_' + crc + m.group(1)
+                else:
+                    fn = str(pic_count) + '_' + crc + '.jpg'
+
+                pic_count += 1
 
                 # 去重字典
                 pic_url_fn[url] = fn
@@ -229,14 +215,19 @@ def main():
         raise Exception('无法读取编排文件: ' + args.input)
 
     # 提取所有回复
+    p_one = (r'(?:^|(?<=\n))\s*<time>[^\n]*\n'
+             r'((?:(?!\n<time>).)*?)\n\s*<mark>[^\n]*?(█?)(?:(?=\n)|$)')
     ms = [m for m in re.finditer(p_one, content, re.DOTALL)]
     replys = [m.group(1) for m in ms if m.group(2)]
     print('共%d条回复，摘取%d条回复' % (len(ms), len(replys)))
 
+    # refer
+    p_refer = r'(?:^|(?<=\n))<page>网址:\s*([^\s]*)'
     refer = re.search(p_refer, content).group(1)
 
     # 创建目录
     try:
+        p_title = r'(?:^|(?<=\n))<tiezi>标题：\s*([^\n]+)'
         save_dir = re.search(p_title, content).group(1)
     except:
         save_dir = '空标题帖子'
