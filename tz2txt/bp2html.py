@@ -42,7 +42,6 @@ img {
 </head>
 '''
 
-fetcher = None
 save_dir = None
 pic_list = list()
 pic_url_fn = dict()
@@ -106,7 +105,12 @@ def process_reply(s):
     return ret
 
 
-def download_pics():
+def download_pics(refer):
+    # 下载器
+    fetcher_info = FetcherInfo()
+    fetcher_info.referer = refer
+    fetcher = Fetcher(fetcher_info)
+
     pic_count = 1
     pic_all = len(pic_list)
 
@@ -215,18 +219,12 @@ def main():
     except:
         raise Exception('无法读取编排文件: ' + args.input)
 
-    # 提取
+    # 提取所有回复
     ms = [m for m in re.finditer(p_one, content, re.DOTALL)]
     replys = [m.group(1) for m in ms if m.group(2)]
     print('共%d条回复，摘取%d条回复' % (len(ms), len(replys)))
 
     refer = re.search(p_refer, content).group(1)
-
-    # 下载器
-    fetcher_info = FetcherInfo()
-    fetcher_info.referer = refer
-    global fetcher
-    fetcher = Fetcher(fetcher_info)
 
     # 创建目录
     global save_dir
@@ -264,7 +262,7 @@ def main():
             f.write(htmls)
 
     # 下载
-    download_pics()
+    download_pics(refer)
 
     # 发出响声
     if winsound != None:
