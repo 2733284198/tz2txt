@@ -11,18 +11,6 @@ except:
 
 from fetcher import *
 
-html_head = '''\
-<!DOCTYPE html><html><head>
-<meta charset="gb18030">
-<style>
-img {
-    max-width:100%;
-    height:auto;
-}
-</style>
-</head>
-'''
-
 
 def get_tieze_head(content):
     p_head = (r'<tiezi>标题：([^\n]+)\n'
@@ -151,10 +139,26 @@ def argv():
     return args
 
 
-def add_html(htm, head):
-    htmls = html_head + '<body bgcolor="#EEEEEE">' \
-        + head + htm \
-        + '<br><br></body></html>'
+def compose_html(head, pages, htm):
+    html_head = '''\
+<!DOCTYPE html><html><head>
+<meta charset="gb18030">
+<style>
+img {
+    max-width:100%;
+    height:auto;
+}
+</style>
+</head>
+'''
+    if pages:
+        htmls = html_head + '<body bgcolor="#EEEEEE">' \
+            + head + pages + '<br>' + htm + '<br><br>' + pages \
+            + '<br></body></html>'
+    else:
+        htmls = html_head + '<body bgcolor="#EEEEEE">' \
+            + head + '<br>' + htm \
+            + '<br><br></body></html>'
 
     return htmls
 
@@ -206,10 +210,9 @@ def split_page(save_dir, htm, head, parg, output):
 
         # 上下pages
         pages = page_html(parg, len(lst), i, output)
-        content = pages + '<br>' + content + '<br><br>' + pages
 
         # 添加head
-        content = add_html(content, head)
+        content = compose_html(head, pages, content)
 
         with open(path, 'w', encoding='gb18030') as f:
             f.write(content)
@@ -256,9 +259,7 @@ def main():
     if args.page > 0:
         split_page(save_dir, htmls, head, args.page, args.output)
     else:
-        htmls = html_head + '<body bgcolor="#EEEEEE">' \
-            + head + '<br>' + htmls \
-            + '<br><br></body></html>'
+        htmls = compose_html(head, '', htmls)
 
         path = os.path.join(save_dir, args.output)
         with open(path, 'w', encoding='gb18030') as f:
