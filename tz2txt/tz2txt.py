@@ -3,7 +3,7 @@
 
 tz2txt_prog = 'tz2txt'
 tz2txt_ver  = '1.4'         # 内部框架的版本
-tz2txt_date = '2017-08-14b'  # 最后更新日期
+tz2txt_date = '2017-08-14c'  # 最后更新日期
 
 import sys
 import os, os.path

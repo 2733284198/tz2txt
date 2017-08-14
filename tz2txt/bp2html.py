@@ -30,6 +30,18 @@ sub_head = (r'<b>标题：\1</b><br>'
             r'起始网址：<a href="\5" target=_blank>\5</a><br>'
             )
 
+html_head = '''\
+<!DOCTYPE html><html><head>
+<meta charset="gb18030">
+<style>
+img {
+    max-width:100%;
+    height:auto;
+}
+</style>
+</head>
+'''
+
 fetcher = None
 save_dir = None
 pic_list = []
@@ -124,7 +136,7 @@ def argv():
 
 
 def add_html(htm, head):
-    htmls = '<!DOCTYPE html><html><body bgcolor="#EEEEEE">' \
+    htmls = html_head + '<body bgcolor="#EEEEEE">' \
         + head + htm \
         + '<br><br></body></html>'
 
@@ -236,7 +248,7 @@ def main():
     if args.page > 0:
         split_page(htmls, head, args.page, args.output)
     else:
-        htmls = '<!DOCTYPE html><html><body bgcolor="#EEEEEE">' \
+        htmls = html_head + '<body bgcolor="#EEEEEE">' \
             + head + '<br>' + htmls \
             + '<br><br></body></html>'
 
