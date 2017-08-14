@@ -63,7 +63,9 @@ def process_reply(s):
         if m is None:
             break
 
-        ret += s[last:last + m.start(0)]
+        temp = s[last:last + m.start(0)]
+        ret += temp.strip()
+
         last = last + m.end(0)
 
         # 提取图片url
@@ -81,7 +83,11 @@ def process_reply(s):
         # 替换html
         ret += '<img src="%s" />' % fn
 
-    ret += s[last:]
+    # 最后一段
+    temp = s[last:].strip()
+    if temp:
+        ret += temp
+
     return ret
 
 
@@ -209,7 +215,7 @@ def main():
         save_dir = re.search(p_title, content).group(1)
     except:
         save_dir = '空标题帖子'
-        
+
     try:
         os.mkdir(save_dir)
     except:
