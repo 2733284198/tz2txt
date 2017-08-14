@@ -35,7 +35,7 @@ def get_tieze_head(content):
     return head
 
 
-def process_replys(reply_list, save_dir):
+def process_replys(reply_list, tz_title):
     p_img = r'\[img\s*\d*\](.*?)\[/img\]'
 
     pic_count = 1
@@ -79,7 +79,7 @@ def process_replys(reply_list, save_dir):
                 pic_url_fn[url] = fn
 
                 # 下载列表
-                path = os.path.join(save_dir, fn)
+                path = os.path.join(tz_title, fn)
                 pic_list.append((path, url))
 
             # 替换html
@@ -188,7 +188,7 @@ def page_html(parg, total, current, fn):
     return s
 
 
-def split_page(save_dir, htm, head, parg, output):
+def split_page(tz_title, htm, head, parg, output):
     p = r'(?:(?=(.*?<img src="[^"]+" />))\1){' + str(parg) + '}'
     p_strip = r'^(?:<br>|\s)*(.*?)(?:<br>|\s)*$'
     end = 0
@@ -206,19 +206,19 @@ def split_page(save_dir, htm, head, parg, output):
         if temp:
             lst.append(temp)
 
-    print('分为%d页' % len(lst))
+    print('每页%d图，分为%d页' % (parg, len(lst)))
 
     # 依次保存
     for i, content in enumerate(lst, 1):
         # 当前文件名
         fn = get_pg_fn(output, i)
-        path = os.path.join(save_dir, fn)
+        path = os.path.join(tz_title, fn)
 
         # 上下pages
         pages = page_html(parg, len(lst), i, output)
 
         # 添加head
-        content = compose_html(save_dir, i, head, pages, content)
+        content = compose_html(tz_title, i, head, pages, content)
 
         with open(path, 'w', encoding='gb18030') as f:
             f.write(content)
@@ -247,27 +247,27 @@ def main():
     # 创建目录
     try:
         p_title = r'(?:^|(?<=\n))<tiezi>标题：\s*([^\n]+)'
-        save_dir = re.search(p_title, content).group(1)
+        tz_title = re.search(p_title, content).group(1)
     except:
-        save_dir = '空标题帖子'
+        tz_title = '空标题帖子'
 
     try:
-        os.mkdir(save_dir)
+        os.mkdir(tz_title)
     except:
         pass
 
     # html主体、下载列表
-    htmls, pic_list = process_replys(replys, save_dir)
+    htmls, pic_list = process_replys(replys, tz_title)
 
     # 头信息
     head = get_tieze_head(content)
 
     if args.page > 0:
-        split_page(save_dir, htmls, head, args.page, args.output)
+        split_page(tz_title, htmls, head, args.page, args.output)
     else:
-        htmls = compose_html(save_dir, 0, head, '', htmls)
+        htmls = compose_html(tz_title, 0, head, '', htmls)
 
-        path = os.path.join(save_dir, args.output)
+        path = os.path.join(tz_title, args.output)
         with open(path, 'w', encoding='gb18030') as f:
             f.write(htmls)
 
