@@ -167,9 +167,9 @@ def get_pg_fn(fn, page):
     p = r'^(.*)(\.\w+)$'
     m = re.search(p, fn)
     if m:
-        return m.group(1) + '_%d' % page + m.group(2)
+        return m.group(1) + ('_%d' % page) + m.group(2)
     else:
-        return fn + '_%d' % page
+        return fn + ('_%d' % page)
 
 
 def page_html(parg, total, current, fn):
