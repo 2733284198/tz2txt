@@ -63,9 +63,7 @@ def process_reply(s):
         if m is None:
             break
 
-        temp = s[last:last + m.start(0)]
-        ret += temp.strip()
-
+        ret += s[last:last + m.start(0)]
         last = last + m.end(0)
 
         # 提取图片url
@@ -84,9 +82,7 @@ def process_reply(s):
         ret += '<img src="%s" />' % fn
 
     # 最后一段
-    temp = s[last:].strip()
-    if temp:
-        ret += temp
+    ret += s[last:]
 
     return ret
 
@@ -158,6 +154,7 @@ def page_html(parg, total, current, fn):
 
 def split_page(htm, head, parg, output):
     p = r'(?:.*?<img src="[^"]+" />){' + str(parg) + '}'
+    p_strip = r'^(?:<br>|\s)*(.*?)(?:<br>|\s)*$'
     end = 0
     lst = []
 
@@ -165,10 +162,13 @@ def split_page(htm, head, parg, output):
     for m in re.finditer(p, htm, re.S):
         begin = m.start()
         end = m.end()
-        lst.append(htm[begin:end].strip())
+        temp = re.sub(p_strip, r'\1', htm[begin:end], flags=re.S)
+        lst.append(temp)
 
     if end < len(htm) - 1:
-        lst.append(htm[end:].strip())
+        temp = re.sub(p_strip, r'\1', htm[end:], flags=re.S)
+        if temp:
+            lst.append(temp)
 
     # 依次保存
     for i, content in enumerate(lst, 1):
