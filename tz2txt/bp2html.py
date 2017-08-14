@@ -44,7 +44,8 @@ img {
 
 fetcher = None
 save_dir = None
-pic_list = []
+pic_list = list()
+pic_url_fn = dict()
 
 pic_count = 1
 
@@ -81,9 +82,15 @@ def process_reply(s):
         # 提取图片url
         url = m.group(1)
 
-        # 保存文件
-        fn = get_fn(url)
+        # 重复的图片
+        global pic_url_fn
+        if url in pic_url_fn:
+            fn = pic_url_fn[url]
+        else:
+            fn = get_fn(url)
+            pic_url_fn[url] = fn
 
+        # 图片path
         global save_dir
         path = os.path.join(save_dir, fn)
 
