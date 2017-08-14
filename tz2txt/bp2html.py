@@ -11,19 +11,6 @@ except:
 
 from fetcher import *
 
-p_head = (r'<tiezi>标题：([^\n]+)\n'
-          r'<tiezi>楼主：([^\n]+)\n'
-          r'(?:<tiezi>发帖时间：([^\n]+)\n)?'
-          r'<tiezi>下载时间：([^\n]+)\n'
-          r'<tiezi>起始网址：([^\n]+)\n'
-          )
-sub_head = (r'<b>标题：\1</b><br>'
-            r'楼主：\2<br>'
-            r'发帖时间：\3<br>'
-            r'下载时间：\4<br>'
-            r'起始网址：<a href="\5" target=_blank>\5</a><br>'
-            )
-
 html_head = '''\
 <!DOCTYPE html><html><head>
 <meta charset="gb18030">
@@ -35,6 +22,29 @@ img {
 </style>
 </head>
 '''
+
+
+def get_tieze_head(content):
+    p_head = (r'<tiezi>标题：([^\n]+)\n'
+              r'<tiezi>楼主：([^\n]+)\n'
+              r'(?:<tiezi>发帖时间：([^\n]+)\n)?'
+              r'<tiezi>下载时间：([^\n]+)\n'
+              r'<tiezi>起始网址：([^\n]+)\n'
+              )
+    sub_head = (r'<b>标题：\1</b><br>'
+                r'楼主：\2<br>'
+                r'发帖时间：\3<br>'
+                r'下载时间：\4<br>'
+                r'起始网址：<a href="\5" target=_blank>\5</a><br>'
+                )
+
+    m = re.search(p_head, content)
+    if m:
+        head = m.expand(sub_head)
+    else:
+        head = ''
+
+    return head
 
 
 def process_replys(reply_list, save_dir):
@@ -237,15 +247,11 @@ def main():
     except:
         pass
 
-    # html主体
+    # html主体、下载列表
     htmls, pic_list = process_replys(replys, save_dir)
 
     # 头信息
-    m = re.search(p_head, content)
-    if m:
-        head = m.expand(sub_head)
-    else:
-        head = ''
+    head = get_tieze_head(content)
 
     if args.page > 0:
         split_page(save_dir, htmls, head, args.page, args.output)
