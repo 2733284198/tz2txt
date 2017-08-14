@@ -8,8 +8,10 @@ tz2txt是一个开源的小工具，用于把帖子的楼主发言保存为txt�
 ------
 
 1、安装Python 3.4或以上版本的运行环境。  
-   [点这里下载](https://www.python.org/ftp/python/3.4.4/python-3.4.4.msi)Python 3.4的Windows安装包（32位），安装时把`Add Python.exe to PATH`勾选上。  
-2、在[这里](https://github.com/animalize/tz2txt/archive/master.zip)下载tz2txt的纯程序，仅几十KB。  
+   [点这里下载](https://www.python.org/ftp/python/3.4.4/python-3.4.4.msi)Python 3.4的Windows安装包（32位），安装时把`Add Python.exe to PATH`勾选上。
+   
+2、在[这里](https://github.com/animalize/tz2txt/archive/master.zip)下载tz2txt的纯程序，仅几十KB。
+
 3、解压该zip文件。如果解压后出现乱码，请用7-zip软件打开。
 
 使用tz2txt（简易用法）
