@@ -153,7 +153,7 @@ def page_html(parg, total, current, fn):
 
 
 def split_page(htm, head, parg, output):
-    p = r'(?:.*?<img src="[^"]+" />){' + str(parg) + '}'
+    p = r'(?:(?=(.*?<img src="[^"]+" />))\1){' + str(parg) + '}'
     p_strip = r'^(?:<br>|\s)*(.*?)(?:<br>|\s)*$'
     end = 0
     lst = []
