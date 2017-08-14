@@ -14,7 +14,7 @@ from fetcher import *
 p_one = (r'(?:^|(?<=\n))\s*<time>[^\n]*\n'
          r'((?:(?!\n<time>).)*?)\n\s*<mark>[^\n]*?(█?)(?:(?=\n)|$)')
 p_refer = r'(?:^|(?<=\n))<page>网址:\s*([^\s]*)'
-p_img = r'\[img\s*\d*\](.*?)\[/img\]'
+
 p_title = r'(?:^|(?<=\n))<tiezi>标题：\s*([^\n]+)'
 
 p_head = (r'<tiezi>标题：([^\n]+)\n'
@@ -42,10 +42,6 @@ img {
 </head>
 '''
 
-save_dir = None
-pic_list = list()
-pic_url_fn = dict()
-
 pic_count = 1
 
 
@@ -66,46 +62,59 @@ def get_fn(url):
     return fn
 
 
-def process_reply(s):
-    ret = ''
-    last = 0
+def process_replys(reply_list, save_dir):
+    p_img = r'\[img\s*\d*\](.*?)\[/img\]'
 
-    while True:
-        m = re.search(p_img, s[last:], re.I)
-        if m is None:
-            break
+    pic_list = list()  # 值为 ('路径', 'url')
+    pic_url_fn = dict()
 
-        ret += s[last:last + m.start(0)]
-        last = last + m.end(0)
+    for i in range(len(reply_list)):
+        s = reply_list[i]
 
-        # 提取图片url
-        url = m.group(1)
+        new = ''
+        last = 0
 
-        # 重复的图片
-        global pic_url_fn
-        if url in pic_url_fn:
-            fn = pic_url_fn[url]
-        else:
-            fn = get_fn(url)
-            pic_url_fn[url] = fn
+        while True:
+            m = re.search(p_img, s[last:], re.I)
+            if m is None:
+                break
 
-        # 图片path
-        global save_dir
-        path = os.path.join(save_dir, fn)
+            new += s[last:last + m.start(0)]
+            last = last + m.end(0)
 
-        global pic_list
-        pic_list.append((path, url))
+            # 提取图片url
+            url = m.group(1)
 
-        # 替换html
-        ret += '<img src="%s" />' % fn
+            # 重复的图片
+            if url in pic_url_fn:
+                fn = pic_url_fn[url]
+            else:
+                fn = get_fn(url)
 
-    # 最后一段
-    ret += s[last:]
+                # 去重字典
+                pic_url_fn[url] = fn
 
-    return ret
+                # 下载列表
+                path = os.path.join(save_dir, fn)
+                pic_list.append((path, url))
+
+            # 替换html
+            new += '<img src="%s" />' % fn
+
+        # 最后一段
+        new += s[last:]
+
+        reply_list[i] = new
+
+    # join
+    htmls = '<br><br>'.join(reply_list)
+    # 换行
+    htmls = htmls.replace('\n', '<br>\n')
+
+    return htmls, pic_list
 
 
-def download_pics(refer):
+def download_pics(refer, pic_list):
     # 下载器
     fetcher_info = FetcherInfo()
     fetcher_info.referer = refer
@@ -175,7 +184,7 @@ def page_html(parg, total, current, fn):
     return s
 
 
-def split_page(htm, head, parg, output):
+def split_page(save_dir, htm, head, parg, output):
     p = r'(?:(?=(.*?<img src="[^"]+" />))\1){' + str(parg) + '}'
     p_strip = r'^(?:<br>|\s)*(.*?)(?:<br>|\s)*$'
     end = 0
@@ -227,7 +236,6 @@ def main():
     refer = re.search(p_refer, content).group(1)
 
     # 创建目录
-    global save_dir
     try:
         save_dir = re.search(p_title, content).group(1)
     except:
@@ -239,9 +247,7 @@ def main():
         pass
 
     # html主体
-    htmls = [process_reply(reply) for reply in replys]
-    htmls = '<br><br>'.join(htmls)
-    htmls = htmls.replace('\n', '<br>\n')
+    htmls, pic_list = process_replys(replys, save_dir)
 
     # 头信息
     m = re.search(p_head, content)
@@ -251,7 +257,7 @@ def main():
         head = ''
 
     if args.page > 0:
-        split_page(htmls, head, args.page, args.output)
+        split_page(save_dir, htmls, head, args.page, args.output)
     else:
         htmls = html_head + '<body bgcolor="#EEEEEE">' \
             + head + '<br>' + htmls \
@@ -262,7 +268,7 @@ def main():
             f.write(htmls)
 
     # 下载
-    download_pics(refer)
+    download_pics(refer, pic_list)
 
     # 发出响声
     if winsound != None:
