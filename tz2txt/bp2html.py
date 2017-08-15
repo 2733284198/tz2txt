@@ -1,8 +1,12 @@
+#! /usr/bin/python3
+# coding=utf-8
+
 import re
 import os
 import sys
 import binascii
 import argparse
+from html import escape
 
 try:
     import winsound
@@ -10,6 +14,18 @@ except:
     winsound = None
 
 from fetcher import *
+
+
+def save_print(print_str):
+    try:
+        print(print_str)
+    except UnicodeEncodeError:
+        for char in print_str:
+            try:
+                print(char, end='')
+            except:
+                print('?', end='')
+        print()
 
 
 def get_tieze_head(content):
@@ -43,7 +59,7 @@ def process_replys(reply_list, tz_title):
     pic_url_fn = dict()
 
     for i in range(len(reply_list)):
-        s = reply_list[i]
+        s = escape(reply_list[i])
 
         new = ''
         last = 0
@@ -153,7 +169,7 @@ img{max-width:100%;height:auto}
 </head>
 '''
     current = ' - 第%d页' % page if page else ''
-    html_head = h1 + title + current + h2
+    html_head = h1 + escape(title) + current + h2
 
     if pages:
         htmls = html_head + '<body bgcolor="#EEEEEE">' \
@@ -244,13 +260,30 @@ def main():
     p_refer = r'(?:^|(?<=\n))<page>网址:\s*([^\s]*)'
     refer = re.search(p_refer, content).group(1)
 
-    # 创建目录
+    # 提取标题
     try:
         p_title = r'(?:^|(?<=\n))<tiezi>标题：\s*([^\n]+)'
         tz_title = re.search(p_title, content).group(1)
+
+        # 文件名的非法字符
+        table = {
+            ord('<'): '＜',
+            ord('>'): '＞',
+            ord('"'): '＂',
+            ord('/'): '／',
+            ord('\\'): '／',
+            ord('|'): '｜',
+            ord('.'): '．',
+            ord('?'): '？',
+            ord('*'): '★',
+        }
+        tz_title = tz_title.translate(table)
+
     except:
         tz_title = '空标题帖子'
 
+    # 创建目录
+    save_print('输出目录：' + tz_title)
     try:
         os.mkdir(tz_title)
     except:
