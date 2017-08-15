@@ -3,7 +3,6 @@
 
 import re
 import os
-import sys
 import binascii
 import argparse
 from html import escape
