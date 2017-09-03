@@ -248,6 +248,8 @@ def check_file(filename):
 def main():
     color.init()
     print('tz2txt 程序版本: %s\n' % tz2txt_date)
+    
+    pause = True
 
     import argparse
     parser = argparse.ArgumentParser(prog=tz2txt_prog,
@@ -340,6 +342,11 @@ def main():
                           metavar='page或floor',
                           default='',
                           dest='label')
+    parser_a.add_argument('-s',
+                          type=str, help='运行后暂停，等待用户确认',
+                          metavar='如传入任意非空字符串，表示不暂停',
+                          default='',
+                          dest='silence')
 
     args = parser.parse_args()
     
@@ -418,13 +425,15 @@ def main():
                           )
                     auto(url, args.tillnum, args.output, 
                          args.discard, args.label)
+                    
+                pause = args.silence == ''
     
     else:
         parser.print_help()
 
     print()
 
-    if os.name == 'nt':
+    if pause and os.name == 'nt':
         os.system('pause')
 
     color.deinit()
