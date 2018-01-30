@@ -33,6 +33,10 @@ class CSDNPageParser(AbPageParser):
         p = red.re_dict(re, red.DOTALL)
 
         m = p.search(self.html)
+        
+        if not m:
+            return 1
+        
         #print('pg_num:', m.group(1))
 
         return int(m.group(1))
@@ -114,16 +118,17 @@ class CSDNPageParser(AbPageParser):
         replys = list()
 
         re = (
-            r'class="post_info.*?" data-username="(.*?)".*?'
-            r'<span class="time">.*?于：(.*?)</span>.*?'
-            r'<div class="post_body">(.*?)'
-            r'''(?:<div id='topic-extra-info'>|</td>)'''
+            r'<table.*?" data-username="(.*?)".*?'
+            r'<div class="post_body">\s*'
+            r'(?:<div class="tag">.*?</div>)?'  # tag
+            r'(.*?)(?:<div class="control">|<style).*?' # text
+            r'<span class="time">.*?于：(.*?)</span>'
         )
 
         p = red.re_dict(re, red.DOTALL)
         retlst = p.finditer(self.html)
         
-        d1 = ((m.group(1), m.group(2).strip(), m.group(3)) for m in retlst)
+        d1 = ((m.group(1), m.group(3).strip(), m.group(2)) for m in retlst)
         d2 = ((x, dt(y), process_text(z)) for x, y, z in d1)
         d3 = (Reply(x, y, z) for x, y, z in d2)
         replys.extend(d3)
