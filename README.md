@@ -32,8 +32,10 @@ tz2txt是一个开源的小工具，用于把帖子的楼主发言保存为txt�
 
 详细用法
 ------
-用`语音合成软件`听帖子，见：[http://www.cnblogs.com/animalize/p/4784790.html](http://www.cnblogs.com/animalize/p/4784790.html)
-
 更详细的用法，参见此文：[http://www.cnblogs.com/animalize/p/4770397.html](http://www.cnblogs.com/animalize/p/4770397.html)
+
+在安卓设备上用**语音合成软件**听帖子，见：[https://github.com/animalize/Ting_Android](https://github.com/animalize/Ting_Android)
+
+在电脑上用**语音合成软件**听帖子，见：[http://www.cnblogs.com/animalize/p/4784790.html](http://www.cnblogs.com/animalize/p/4784790.html)
 
 反馈交流帖：[http://tieba.baidu.com/p/3109406847](http://tieba.baidu.com/p/3109406847)
