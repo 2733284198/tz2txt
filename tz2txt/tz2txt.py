@@ -3,7 +3,7 @@
 
 tz2txt_prog = 'tz2txt'
 tz2txt_ver  = '1.4'         # 内部框架的版本
-tz2txt_date = '2017-08-15'  # 最后更新日期
+tz2txt_date = '2018-03-17'  # 最后更新日期
 
 import sys
 import os, os.path
@@ -403,6 +403,8 @@ def main():
                             args.discard, args.label)
 
     elif args.subparser == 'a':
+        pause = args.silence == ''
+        
         if args.output == None:
             print('输出文件名不能为空')
         else:
@@ -425,8 +427,6 @@ def main():
                           )
                     auto(url, args.tillnum, args.output, 
                          args.discard, args.label)
-                    
-                pause = args.silence == ''
     
     else:
         parser.print_help()
