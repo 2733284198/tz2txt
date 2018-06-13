@@ -149,7 +149,7 @@ class Tianya1PageParser(AbPageParser):
                 r'<div class="atl-main">.*?'
                 r'<div class="bbs-content clearfix">\s*'
                 r'(.*?)\s*'
-                r'</div>.{0,120}?<div id="alt_action".*?'
+                r'<div (?:class="action-tyf"|id="alt_action").*?'
                 r'replytime="(\d{4}-\d\d-\d\d \d\d:\d\d:\d\d)"\s*'
                 r'author="([^"]+)"'
                 )
