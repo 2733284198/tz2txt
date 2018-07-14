@@ -75,7 +75,7 @@ re_list = (
                  ),
                 re.S,
                 r'\1',
-                STRICT.ONE
+                STRICT.NO
             ],
            
             # 去掉 目录
