@@ -20,18 +20,6 @@ class Tieba1PageParser(AbPageParser):
     @staticmethod
     def get_local_processor():
         return 'null'
-    
-    def pre_process_url(self, url):
-        # 从贴吧搜索得到的某一楼层url，转换为帖子第一页url
-        # (?!pn=)表示忽略正常翻页
-        p = r'^\s*(https?://tieba.baidu.com/p/\d+)\?(?!pn=).+$'
-        r = red.re_dict(p, red.I|red.S)
-        
-        m = r.search(url)
-        if m:
-            return r.sub(r'\1', url)
-        
-        return url
 
     def __init__(self):
         super().__init__()
