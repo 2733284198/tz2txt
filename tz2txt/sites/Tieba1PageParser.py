@@ -24,7 +24,7 @@ class Tieba1PageParser(AbPageParser):
     def pre_process_url(self, url):
         # 从贴吧搜索得到的某一楼层url，转换为帖子第一页url
         # (?!pn=)表示忽略正常翻页
-        p = r'^\s*(https?://tieba.baidu.com/p/\d+)\?(?!pn=).*$'
+        p = r'^\s*(https?://tieba.baidu.com/p/\d+)\?(?!pn=).+$'
         r = red.re_dict(p, red.I|red.S)
         
         m = r.search(url)
