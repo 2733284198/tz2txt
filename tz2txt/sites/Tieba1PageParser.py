@@ -24,8 +24,6 @@ class Tieba1PageParser(AbPageParser):
     def __init__(self):
         super().__init__()
         self.encoding = 'utf-8'
-        # 会在检查解析器时判断版式，1或2
-        self.tb_format = 0
 
     def get_page_num(self):
         '''页号'''
@@ -125,49 +123,18 @@ class Tieba1PageParser(AbPageParser):
         dt = lambda s: datetime.strptime(s, '%Y-%m-%d %H:%M')
         replys = list()
 
-        # 两种版式
         format1 = (
             r'<img\s*username="([^"]+)".*?'
-            r'class="d_post_content\s+j_d_post_content\s*">'
+            r'class="d_post_content\s+j_d_post_content\s*".*?>'
             r'(.*?)<div\s+class="user-hide-post.*?'
             r'class="tail-info">(\d{4}-\d{1,2}-\d{1,2}\s+\d{1,2}:\d{1,2})'
         )
-        format2 = (
-            r'data-field=.*?date&quot;:&quot;'
-            r'(\d{4}-\d{1,2}-\d{1,2}\s+\d{1,2}:\d{1,2}).*?'
-            r'<img\s*username="([^"]+)".*?'
-            r'class="d_post_content\s+j_d_post_content.*?>'
-            r'(.*?)<div\s+class="user-hide-post'
-        )
-        
-        # 检测解析器时确定版式
-        if self.tb_format == 0:
-
-            ttt = (r'''class="d_post_content\s+'''
-                   r'''j_d_post_content\s+clearfix\s*"\s*>''')
-            ppp = red.re_dict(ttt)
-            if ppp.search(self.html):
-                self.tb_format = 2
-            else:
-                self.tb_format = 1
-            print('百度贴吧 版式%d' % self.tb_format)
-                
-        # 用相应版式的正则式
-        if self.tb_format == 1:
-            regex = format1
-        elif self.tb_format == 2:
-            regex = format2
 
         # 提取
-        p = red.re_dict(regex, red.DOTALL)
+        p = red.re_dict(format1, red.DOTALL)
         retlst = p.findall(self.html)
       
-        # 用相应版式的解析次序
-        if self.tb_format == 1:
-            d1 = ((m[0], m[2], m[1]) for m in retlst)
-        elif self.tb_format == 2:
-            d1 = ((m[1], m[0], m[2]) for m in retlst)     
-
+        d1 = ((m[0], m[2], m[1]) for m in retlst)   
         d2 = ((x, dt(y), process_text(z)) for x, y, z in d1)
         d3 = (Reply(x, y, z) for x, y, z in d2)
         replys.extend(d3)
