@@ -52,7 +52,7 @@ class Tianya1Processor(BaseProcessor):
 
                 # 一行结尾是长线
                 [
-                    (r'(?!<\n)(?<!', re_line , r')', 
+                    (r'(?<!\n)(?<!', re_line , r')', 
                      re_longseparater, r'\n'),
                     0,
                     r'\n===============\n'
